@@ -1,0 +1,37 @@
+/* DragonStrap v0.5.0 — FastFlag Manager 2.0 */
+.fastflag-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(360px,.82fr);gap:12px;align-items:start}
+.fastflag-browser-card{min-height:700px;display:flex;flex-direction:column}
+.fastflag-side-column{display:grid;gap:12px}
+.fastflag-editor-card,.fastflag-pending-card,.fastflag-presets-card{min-height:0}
+.fastflag-count{align-self:flex-start;min-width:72px;padding:7px 10px;border-radius:999px;border:1px solid rgba(193,116,255,.28);background:rgba(130,48,191,.12);color:#debaff;font-size:9px;font-weight:800;letter-spacing:.14em;text-align:center;box-shadow:inset 0 0 12px rgba(181,80,255,.07)}
+.fastflag-toolbar{display:grid;grid-template-columns:minmax(220px,1fr) repeat(4,max-content);gap:8px;margin-top:18px;align-items:center}
+.fastflag-toolbar .small-action{white-space:nowrap;padding-inline:12px}
+.fastflag-search{height:38px;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(10,7,15,.54);border:1px solid rgba(194,133,242,.16);box-shadow:inset 2px 2px 7px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.025)}
+.fastflag-search span{color:#b276e6;font-size:17px}.fastflag-search input{width:100%;border:0;outline:0;background:transparent;color:#eee3fb;font-size:11px}
+.fastflag-meta{display:grid;grid-template-columns:2fr .65fr .5fr .7fr;gap:8px;margin:12px 0}
+.fastflag-meta>div{min-width:0;padding:10px 11px;border-radius:9px;border:1px solid rgba(187,122,234,.10);background:rgba(9,6,14,.35);display:flex;flex-direction:column;gap:5px}
+.fastflag-meta span{font-size:8px;letter-spacing:.16em;color:#8f7ca4;text-transform:uppercase}.fastflag-meta strong{font-size:11px;color:#dbc8eb}.fastflag-meta code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:9px Consolas,monospace;color:#c790ed}
+.fastflag-list-head,.fastflag-row{display:grid;grid-template-columns:minmax(230px,1.55fr) minmax(110px,.8fr) 80px 92px;gap:10px;align-items:center}
+.fastflag-list-head{padding:8px 12px;border-top:1px solid rgba(255,255,255,.055);border-bottom:1px solid rgba(255,255,255,.055);font-size:8px;letter-spacing:.16em;color:#7e6f8d}
+.fastflag-list{flex:1;min-height:430px;max-height:570px;overflow:auto;padding:6px 2px 4px 0;scrollbar-color:#6c2ca4 #110c17}
+.fastflag-row{width:100%;min-height:48px;padding:7px 11px;border:1px solid transparent;border-radius:9px;background:transparent;color:#d7c4e6;text-align:left;cursor:pointer;transition:.16s ease}
+.fastflag-row:hover{border-color:rgba(176,89,244,.18);background:rgba(139,52,199,.08)}
+.fastflag-row.selected{border-color:rgba(193,102,255,.44);background:linear-gradient(90deg,rgba(117,40,178,.24),rgba(56,20,83,.08));box-shadow:inset 0 0 12px rgba(174,75,255,.07)}
+.fastflag-row.pending{border-color:rgba(223,168,255,.25)}.fastflag-row.removing{opacity:.62;text-decoration:line-through}
+.fastflag-key{min-width:0;font:10px Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#efdfff}.fastflag-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#cbb5dc}
+.fastflag-type{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#9d86b3}.fastflag-state-pill{justify-self:start;padding:5px 7px;border-radius:999px;font-size:7px;font-weight:800;letter-spacing:.11em;border:1px solid rgba(164,104,211,.18);color:#a98dbd;background:rgba(57,36,73,.36)}
+.fastflag-state-pill.locked{border-color:rgba(177,91,240,.34);color:#d3a6f2;background:rgba(104,35,151,.16)}.fastflag-state-pill.changed{border-color:rgba(99,230,174,.28);color:#76efba;background:rgba(40,128,91,.10)}
+.fastflag-empty{padding:30px 12px;text-align:center;color:#887795;font-size:10px;line-height:1.6}
+.fastflag-form{display:grid;gap:11px;margin-top:16px}.fastflag-form label{display:grid;gap:6px;color:#a995ba;font-size:9px;letter-spacing:.04em}.fastflag-form input,.fastflag-form select,.fastflag-preset-form input,.fastflag-presets-card select{height:39px;border-radius:9px;border:1px solid rgba(197,135,243,.15);background:rgba(9,6,14,.54);color:#e6d7f2;padding:0 11px;outline:none;box-shadow:inset 2px 2px 6px rgba(0,0,0,.28)}
+.fastflag-form input:focus,.fastflag-form select:focus,.fastflag-preset-form input:focus,.fastflag-presets-card select:focus{border-color:rgba(187,91,255,.48);box-shadow:0 0 0 2px rgba(163,69,236,.10),inset 2px 2px 6px rgba(0,0,0,.28)}
+.fastflag-editor-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fastflag-editor-actions button{height:42px}.fastflag-hint{font-size:9px!important;line-height:1.5;color:#8e7d9d!important}.fastflag-hint.error{color:#ff9dbc!important}.fastflag-hint.ok{color:#75e7b2!important}
+.fastflag-pending-list{display:grid;gap:6px;min-height:86px;max-height:180px;overflow:auto;margin:13px 0}.fastflag-pending-item{display:grid;grid-template-columns:55px 1fr;gap:7px;padding:8px 10px;border-radius:8px;border:1px solid rgba(181,111,230,.12);background:rgba(9,6,14,.34);font-size:9px}.fastflag-pending-item b{font-size:7px;letter-spacing:.1em;color:#c68bed}.fastflag-pending-item.remove b{color:#ff9dbf}.fastflag-pending-item span{font:9px Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#d6c4e4}
+.fastflag-pending-actions{display:grid;grid-template-columns:1.1fr .75fr 1fr;gap:7px}.fastflag-pending-actions button{height:40px;font-size:8px}
+.fastflag-preset-form{display:grid;grid-template-columns:1fr max-content;gap:8px;margin:14px 0 9px}.fastflag-presets-card>select{width:100%}.fastflag-preset-actions{display:grid;grid-template-columns:1fr .55fr;gap:8px;margin-top:9px}.fastflag-preset-actions button{height:39px;font-size:8px}.danger-lite{border-color:rgba(255,100,151,.18)!important;color:#eab1c5!important}.danger-lite:hover{border-color:rgba(255,100,151,.38)!important;box-shadow:0 0 12px rgba(255,75,135,.09)!important}
+
+@media(max-width:1400px){
+  .fastflag-layout{grid-template-columns:1fr}.fastflag-side-column{grid-template-columns:repeat(3,minmax(0,1fr))}.fastflag-toolbar{grid-template-columns:minmax(180px,1fr) repeat(4,max-content)}.fastflag-list{max-height:430px}.fastflag-pending-actions{grid-template-columns:1fr}.fastflag-preset-form{grid-template-columns:1fr}.fastflag-preset-actions{grid-template-columns:1fr}
+}
+@media(max-width:1050px){
+  .fastflag-side-column{grid-template-columns:1fr}.fastflag-toolbar{grid-template-columns:1fr 1fr}.fastflag-search{grid-column:1/-1}.fastflag-meta{grid-template-columns:1fr 1fr}.fastflag-list-head,.fastflag-row{grid-template-columns:minmax(180px,1.3fr) minmax(100px,.8fr) 70px 78px}
+}

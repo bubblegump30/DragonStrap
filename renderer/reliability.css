@@ -1,0 +1,17 @@
+/* DragonStrap v0.9.5 — Reliability / Updater / Release Polish */
+.settings-release-grid{align-items:stretch}
+.settings-release-grid>.card{min-height:300px}
+.update-state-grid,.reliability-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px}
+.update-state-grid>div,.reliability-grid>div{padding:12px 14px;border:1px solid rgba(202,162,241,.12);border-radius:10px;background:rgba(8,6,13,.24);display:flex;flex-direction:column;gap:5px;min-width:0}
+.update-state-grid span,.reliability-grid span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9f8daf}
+.update-state-grid strong,.reliability-grid strong{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.update-controls{margin-top:15px;gap:10px}
+.release-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.release-note{margin-top:12px;color:#9d8bac;font-size:10px;line-height:1.55}
+#updateFeedStatus.ready,#updateLatestVersion.newer{color:#63e6ae}
+#updateFeedStatus.warning{color:#d8a4ff}
+#updateFeedStatus.error{color:#ff9bbd}
+#previousSessionState.recovered{color:#ffd08a}
+#previousSessionState.clean{color:#63e6ae}
+.reliability-card #openReliabilityLogsBtn{width:100%;margin-top:18px}
+@media(max-width:980px){.update-state-grid,.reliability-grid,.release-actions{grid-template-columns:1fr}}

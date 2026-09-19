@@ -1,0 +1,759 @@
+:root{
+  --bg:#09070f; --panel:#15101f; --panel2:#1b1428; --edge:#4a3d5d; --text:#f3ebff;
+  --muted:#a99bbd; --purple:#9a4dff; --purple2:#ca8cff; --deep:#4e1d85; --green:#63e6ae;
+  --shadow-dark:#050308; --shadow-light:#332742;
+}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(circle at 40% -20%,#25133f 0,#0c0813 36%,#060409 100%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;overflow:auto}
+button,input{font:inherit}.app-shell{min-height:100vh;padding:10px}.panel-edge,.card{border:1px solid rgba(205,160,255,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.65),0 16px 28px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.45);background:linear-gradient(145deg,rgba(30,22,43,.96),rgba(15,12,23,.98));}
+.topbar{height:76px;border-radius:20px;display:grid;grid-template-columns:280px 1fr 470px;align-items:center;padding:0 22px;margin-bottom:10px}.brand{display:flex;align-items:center;gap:14px}.brand-logo{width:50px;filter:drop-shadow(0 7px 16px rgba(141,58,255,.55))}.brand-name{letter-spacing:.45em;font-weight:800}.brand-sub{letter-spacing:.32em;font-size:10px;color:#a899c4;margin-top:4px}.topbar-center{text-align:center;letter-spacing:.55em;font-size:11px;color:#a99abd}.topbar-center span{color:#d6a6ff;margin:0 12px}.topbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px}.search-box{width:185px;height:38px;border-radius:20px;display:flex;align-items:center;padding:0 13px;background:linear-gradient(145deg,#120d1b,#20172e);box-shadow:inset 3px 3px 8px #0a0710,inset -2px -2px 7px #2a2039;border:1px solid rgba(213,175,255,.22)}.search-box svg,.icon-button svg{width:18px;fill:none;stroke:#bca8d5;stroke-width:2}.search-box input{width:100%;background:none;border:0;outline:0;color:#fff;margin-left:8px}.icon-button{position:relative;width:38px;height:38px;border:0;background:transparent}.icon-button i{position:absolute;width:8px;height:8px;border-radius:50%;background:#a64dff;top:5px;right:4px;box-shadow:0 0 10px #b760ff}.avatar{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#ca8cff,#55208f 52%,#0e0a15 56%);border:1px solid #b679ff;box-shadow:inset 0 0 14px rgba(255,255,255,.18),0 0 14px rgba(152,70,255,.35)}.operator{display:flex;flex-direction:column;font-size:12px}.operator span{color:var(--muted);margin-top:4px}
+.workspace{display:grid;grid-template-columns:185px 1fr;gap:10px}.sidebar{border-radius:16px;min-height:790px;position:relative;overflow:hidden;padding:16px 10px}.sidebar nav{display:grid;gap:10px}.nav-item{height:47px;border:0;border-radius:11px;background:transparent;color:#b9aacd;text-align:left;padding:0 16px;font-size:15px;cursor:pointer;transition:.2s}.nav-item span{margin-left:12px}.nav-item:hover{background:rgba(147,74,255,.08);color:#fff}.nav-item.active{color:white;background:linear-gradient(90deg,rgba(158,73,255,.78),rgba(90,36,155,.15));box-shadow:inset 0 0 0 1px rgba(199,151,255,.25),0 0 18px rgba(127,51,255,.25)}.sidebar-art{position:absolute;inset:auto 0 0;height:285px;background:linear-gradient(to top,rgba(14,9,22,.15),rgba(12,9,18,.96)),url('assets/reference-concept.png') 2% 82%/950px auto no-repeat;opacity:.75}.tagline{position:absolute;left:22px;bottom:35px;font-size:10px;line-height:1.8;letter-spacing:.35em;color:#bb87f4}
+.dashboard{display:grid;grid-template-columns:1.2fr 1.25fr .96fr;grid-template-rows:350px 390px;gap:10px}.card{border-radius:15px;padding:21px;overflow:hidden}.card-head{display:flex;justify-content:space-between;align-items:flex-start}.card h2{font-size:14px;letter-spacing:.22em;margin:0 0 6px}.card p{margin:0;color:var(--muted);font-size:12px}.round-btn,.dot-menu{width:40px;height:40px;border-radius:50%;color:#bd9cdd;border:1px solid rgba(202,163,242,.26);background:linear-gradient(145deg,#21172f,#0e0a15);box-shadow:4px 4px 8px #0a0710,-2px -2px 8px #2c203e,inset 0 0 0 1px rgba(255,255,255,.03)}.dot-menu{border-radius:10px;background:transparent;box-shadow:none;border:0;font-size:22px}.master-grid{display:grid;grid-template-columns:1.15fr .8fr;gap:18px;height:calc(100% - 58px);align-items:center}.mega-knob-wrap{text-align:center}.mega-knob{width:190px;aspect-ratio:1;border-radius:50%;margin:auto;position:relative;background:conic-gradient(from 220deg,#1a1324 0 12%,#cb90ff 13% 38%,#6f28c5 39% 48%,#1a1324 49% 100%);box-shadow:0 0 0 6px #0d0913,0 0 0 8px #49375f,0 0 28px rgba(156,67,255,.45),inset 0 0 18px #000}.mega-knob::before{content:"";position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a6a9d 0,#4a365c 18%,#22172d 48%,#0f0a15 72%);box-shadow:inset 7px 7px 14px rgba(255,255,255,.08),inset -8px -9px 16px #09060d,0 7px 16px #060409}.mega-knob::after{content:"";position:absolute;left:50%;top:10%;width:4px;height:37%;transform-origin:50% 100%;transform:rotate(54deg);background:linear-gradient(#eee0ff,#a849ff);border-radius:8px;box-shadow:0 0 10px #ae54ff}.mega-knob span{position:absolute;inset:30px;border-radius:50%;background:conic-gradient(from 45deg,transparent,rgba(255,255,255,.09),transparent 30%);mix-blend-mode:screen}.knob-scale{display:flex;justify-content:space-between;width:200px;margin:5px auto 12px;color:#b7a5cb;font-size:10px}.mode-label{font-size:10px;letter-spacing:.22em;font-weight:700}.mega-knob-wrap small{color:#81758f;font-size:9px}.mode-stack{display:grid;gap:10px}.mode-btn{height:48px;border-radius:9px;border:1px solid rgba(202,162,241,.14);background:linear-gradient(145deg,#1f1729,#120d19);color:#cebce0;text-align:left;padding:0 16px;box-shadow:4px 5px 9px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.04)}.mode-btn span{margin-left:10px}.mode-btn.active{color:#fff;border-color:#b76eff;background:linear-gradient(145deg,#5f2793,#20102d);box-shadow:inset 0 0 12px rgba(204,133,255,.2),0 0 14px rgba(156,61,255,.3)}
+.gauges{height:calc(100% - 55px);display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:center}.gauge{text-align:center}.gauge-ring{width:130px;aspect-ratio:1;margin:0 auto 15px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 220deg,#9a4dff 0 calc(var(--value)*.72%),#3d3349 calc(var(--value)*.72%) 72%,#17111f 72% 100%);box-shadow:inset 0 0 0 8px #0b0810,0 0 0 10px #413650,0 8px 18px #08050c}.gauge-ring::before{content:"";position:absolute}.gauge-ring>div{width:96px;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at 35% 30%,#241932,#0c0911 70%);box-shadow:inset 5px 5px 14px rgba(255,255,255,.03),inset -4px -4px 12px #050407}.gauge b{font-size:27px}.gauge span{font-size:12px;margin-top:5px;color:#c9b3df}.gauge small{color:#c490ef}
+.temp-card{position:relative;background:linear-gradient(145deg,rgba(28,20,40,.97),rgba(14,10,19,.92)),url('assets/reference-concept.png') 92% 18%/760px auto no-repeat}.temperature-list{display:grid;gap:15px;margin-top:25px;position:relative;z-index:1}.temp-row{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.08)}.temp-icon{width:44px;height:44px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,#24172f,#0e0914);border:1px solid rgba(196,149,239,.15)}.temp-row span{display:block;font-size:11px;color:#b3a2c5}.temp-row strong{font-size:16px}.meter{height:5px;background:#31263d;border-radius:10px;margin-top:8px;overflow:hidden}.meter i{display:block;height:100%;background:linear-gradient(90deg,#8c3df2,#cc8cff);border-radius:inherit;box-shadow:0 0 8px #a548ff}
+.audio-layout{display:grid;grid-template-columns:1fr 90px;gap:18px;height:calc(100% - 60px);align-items:end}.sliders{height:270px;display:flex;align-items:flex-end;justify-content:space-around;border-right:1px solid rgba(255,255,255,.08)}.sliders label{height:250px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:12px;color:#cbbbe0;font-size:11px}.vslider{appearance:none;width:190px;height:11px;transform:rotate(-90deg);background:linear-gradient(90deg,#9a4dff 0 65%,#191220 65%);border-radius:8px;box-shadow:inset 2px 2px 5px #09060e}.vslider::-webkit-slider-thumb{appearance:none;width:32px;height:22px;border-radius:10px;background:linear-gradient(#d2c2da,#6b5b74);box-shadow:0 3px 6px #000,inset 0 2px 2px rgba(255,255,255,.5);border:1px solid #d5c3e3}.mini-knobs{display:grid;gap:15px}.mini-knobs>div{text-align:center;color:#bca9d1;font-size:11px}.small-knob,.fan-knob{width:56px;aspect-ratio:1;border-radius:50%;border:1px solid #735393;background:radial-gradient(circle at 35% 30%,#826a95,#372640 45%,#100a16 74%);box-shadow:inset 4px 4px 8px rgba(255,255,255,.08),inset -5px -6px 10px #07050b,0 5px 8px #050408;margin-bottom:5px}
+.profile-list{display:grid;gap:9px;margin-top:20px}.profile-btn{height:61px;border:1px solid rgba(195,149,237,.14);border-radius:8px;background:linear-gradient(145deg,#1d1527,#110c17);color:#d3c1e5;display:grid;grid-template-columns:45px 1fr 18px;align-items:center;text-align:left;padding:0 13px;box-shadow:4px 5px 9px rgba(0,0,0,.25)}.profile-btn b{font-size:21px}.profile-btn span{display:flex;flex-direction:column}.profile-btn small{color:#9d8bad;margin-top:4px}.profile-btn i{width:8px;height:8px;border-radius:50%;background:#be6bff;box-shadow:0 0 10px #be6bff}.profile-btn.active{border-color:#a94cff;background:linear-gradient(145deg,#5e248d,#281038);box-shadow:inset 0 0 12px rgba(210,145,255,.15),0 0 12px rgba(159,60,255,.28)}
+.fan-row{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;margin:25px 0 14px}.fan-row>div{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px}.fan-knob{width:70px;font-size:24px;color:#ad79d5}.segmented{display:grid;grid-template-columns:1fr 1fr;border-radius:20px;padding:3px;background:#0d0913;border:1px solid #443554}.segmented button{height:31px;border:0;border-radius:16px;background:transparent;color:#9e8cb2}.segmented .active{background:linear-gradient(#7429b2,#301044);color:#fff;box-shadow:inset 0 0 10px rgba(226,174,255,.2),0 0 9px rgba(162,64,255,.35)}.fan-chart{height:70px;margin-top:12px;background:linear-gradient(180deg,#161021,#0d0914);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:8px}.fan-chart svg{width:100%;height:100%;overflow:visible}.fan-chart path{fill:none;stroke:#a34dff;stroke-width:2}.fan-chart circle{fill:#d7b1ff}.status-line{font-size:10px;color:#b7a8c7;margin-top:9px}.status-line i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#45e6a0;box-shadow:0 0 8px #45e6a0;margin-right:8px}
+.power-switch{display:flex;align-items:center;gap:15px;margin:42px 0 27px}.power-switch input{display:none}.power-switch span{width:84px;height:40px;border-radius:22px;position:relative;background:#1a1125;border:1px solid #6d3e8d;box-shadow:inset 4px 4px 9px #09060d,inset -2px -2px 5px #372143}.power-switch span::after{content:"";width:32px;height:32px;border-radius:50%;position:absolute;top:3px;left:5px;background:#d8c9e1;box-shadow:0 0 0 2px #c29be3,0 0 16px #a547ff;transition:.25s}.power-switch input:checked+span{background:linear-gradient(90deg,#3c155d,#8b31d1)}.power-switch input:checked+span::after{left:45px;background:#fff}.power-switch strong{font-size:12px;color:#c8a4e4}.power-stats{border-top:1px solid rgba(255,255,255,.08);padding-top:17px;display:grid;gap:15px}.power-stats div{display:flex;justify-content:space-between;font-size:11px}.power-stats span{color:#9f8db3}.power-stats strong{font-size:12px}.green{color:var(--green)}.signature{text-align:right;font-family:Georgia,serif;font-style:italic;color:#b68ad4;margin-top:38px}
+.footer{height:55px;border-radius:0 0 18px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 22px;letter-spacing:.34em;color:#766b86;font-size:9px}.footer span{margin:0 10px}.footer-right{margin-left:auto!important}
+@media (max-width:1350px){.topbar{grid-template-columns:250px 1fr 390px}.operator{display:none}.dashboard{grid-template-columns:1fr 1fr;grid-template-rows:auto}.temp-card,.power-card{min-height:350px}.sidebar{min-height:1180px}.workspace{grid-template-columns:170px 1fr}}
+@media (max-width:980px){.app-shell{padding:6px}.topbar{grid-template-columns:1fr auto;height:68px}.topbar-center,.search-box{display:none}.workspace{grid-template-columns:74px 1fr}.sidebar{padding:12px 6px}.nav-item{padding:0;text-align:center;font-size:20px}.nav-item span,.sidebar-art{display:none}.dashboard{grid-template-columns:1fr}.card{min-height:340px}.master-card{min-height:380px}.footer-right{display:none}}
+
+/* DragonStrap v0.1.0 additions — extends the NeoPurpleGUI visual system without flattening it. */
+.content-area{min-width:0}.view{display:none}.view.active{display:block}.dragon-avatar{display:grid;place-items:center;overflow:hidden}.dragon-avatar img{width:78%;height:78%;filter:drop-shadow(0 0 9px #a64dff)}
+.launch-knob{border:0;cursor:pointer;color:white}.launch-knob b{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;letter-spacing:.15em;text-shadow:0 0 12px #b460ff;z-index:3}.launch-knob:active{transform:translateY(2px);filter:brightness(.9)}
+.page-heading{display:flex;align-items:center;justify-content:space-between;margin:4px 4px 16px;padding:18px 20px;border:1px solid rgba(202,163,242,.12);border-radius:14px;background:linear-gradient(145deg,rgba(29,20,41,.78),rgba(12,8,18,.86));box-shadow:inset 0 1px rgba(255,255,255,.03),0 8px 22px rgba(0,0,0,.22)}.page-heading h1{font-size:17px;letter-spacing:.25em;margin:0 0 7px}.page-heading p{margin:0;color:var(--muted);font-size:12px}.phase-badge{font-size:9px;letter-spacing:.22em;padding:9px 11px;border-radius:15px;border:1px solid rgba(184,100,255,.35);color:#d8b0ff;background:rgba(118,39,181,.12);box-shadow:inset 0 0 12px rgba(176,77,255,.06)}
+.feature-grid{display:grid;gap:10px}.two-col{grid-template-columns:repeat(2,minmax(0,1fr))}.three-col{grid-template-columns:repeat(3,minmax(0,1fr))}.feature-card{min-height:245px}.feature-card.full-span{grid-column:1/-1;min-height:150px}.full-page-card{min-height:610px}.hero-card{border-color:rgba(174,84,255,.24)}.feature-body{height:calc(100% - 50px);display:flex;flex-direction:column;justify-content:center;gap:13px}.feature-body>strong{font-size:23px}.feature-body>span{font-size:11px;color:var(--muted);word-break:break-all}.primary-action,.secondary-action,.small-action{border-radius:9px;border:1px solid rgba(202,162,241,.18);font-weight:700;letter-spacing:.12em;cursor:pointer}.primary-action{height:49px;color:white;background:linear-gradient(145deg,#7730b9,#2d1045);box-shadow:inset 0 0 12px rgba(217,154,255,.14),0 0 16px rgba(157,59,255,.22)}.secondary-action{height:44px;color:#e0c8f5;background:linear-gradient(145deg,#21172e,#100b17);box-shadow:4px 5px 9px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.04)}.small-action{height:36px;padding:0 15px;color:#e0c8f5;background:#171020}.primary-action:hover,.secondary-action:hover,.small-action:hover{filter:brightness(1.14)}.primary-action:disabled,.secondary-action:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.status-dot{width:11px;height:11px;border-radius:50%;background:#5f536b;box-shadow:0 0 8px rgba(255,255,255,.12)}.status-dot.online{background:var(--green);box-shadow:0 0 10px var(--green)}.status-dot.offline{background:#a24a78;box-shadow:0 0 8px rgba(162,74,120,.4)}
+.control-list{display:grid;gap:15px;margin-top:25px}.control-list label{display:grid;gap:8px;color:#b8a7ca;font-size:11px}.control-list select{height:42px;border-radius:9px;border:1px solid rgba(200,154,239,.16);background:#110c18;color:#e4d5f1;padding:0 12px}.toggle-row{grid-template-columns:1fr auto!important;align-items:center}.toggle-row input{accent-color:#9d44f4;width:18px;height:18px}.check-list{display:grid;gap:16px;margin-top:27px;font-size:12px;color:#cdb8df}
+.data-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:25px}.data-list>div{padding:14px;border:1px solid rgba(200,158,237,.1);border-radius:9px;background:rgba(10,7,15,.34);display:flex;flex-direction:column;gap:7px}.data-list .wide{grid-column:1/-1}.data-list span{font-size:10px;color:#9c8bad;letter-spacing:.08em}.data-list strong{font-size:14px}.data-list code,.path-box{font:11px/1.55 Consolas,monospace;color:#c79ae9;word-break:break-all}.path-box{display:block;margin-top:25px;padding:18px;border-radius:9px;background:#0d0914;border:1px solid rgba(185,125,231,.13)}
+.big-value{height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center}.big-value strong{font-size:46px;text-shadow:0 0 20px rgba(171,77,255,.25)}.big-value span{font-size:11px;color:#b699cf;letter-spacing:.14em}.horizontal-slider{width:100%;accent-color:#9e49f6}.vertical-choice{grid-template-columns:1fr;margin-top:28px;border-radius:10px}.vertical-choice button{border-radius:8px}.safety-callout{margin-top:28px;padding:19px;border-radius:10px;border:1px solid rgba(179,95,246,.18);background:linear-gradient(145deg,rgba(85,32,121,.18),rgba(15,10,21,.65));display:flex;flex-direction:column;gap:9px}.safety-callout b{font-size:10px;letter-spacing:.16em;color:#cc9af3}.safety-callout span{font-size:11px;line-height:1.6;color:#aa98b9}
+.empty-state{min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:600px;margin:auto;color:#a998ba}.empty-state.compact{min-height:150px}.empty-state h3{color:#e4d6ef;letter-spacing:.06em;margin:14px 0 8px}.empty-state p{line-height:1.7}.empty-orb{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;font-size:31px;color:#d8b0ff;background:radial-gradient(circle at 35% 30%,#705083,#2d1b39 45%,#100a16 74%);box-shadow:inset 5px 5px 12px rgba(255,255,255,.07),inset -6px -7px 13px #07050b,0 0 24px rgba(160,61,255,.23)}
+.profile-page-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.profile-tile{min-height:230px;border-radius:15px;border:1px solid rgba(194,145,236,.14);background:linear-gradient(145deg,#1d1527,#100b16);color:#d5c3e5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:6px 7px 14px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.03);cursor:pointer}.profile-tile b{font-size:36px}.profile-tile span{font-size:10px;color:#9f8eb0}.profile-tile.active{border-color:#a94cff;background:linear-gradient(145deg,#5e248d,#281038);box-shadow:inset 0 0 14px rgba(210,145,255,.15),0 0 16px rgba(159,60,255,.28)}
+.toast{position:fixed;right:30px;bottom:76px;max-width:420px;padding:13px 17px;border-radius:9px;border:1px solid rgba(197,144,240,.2);background:rgba(18,12,25,.96);box-shadow:0 12px 30px rgba(0,0,0,.45),0 0 15px rgba(144,46,238,.17);font-size:11px;color:#dac6eb;opacity:0;transform:translateY(10px);pointer-events:none;transition:.22s;z-index:50}.toast.show{opacity:1;transform:none}.toast.error{border-color:rgba(255,98,156,.3);color:#ffb6d1}
+@media(max-width:1350px){.two-col,.three-col{grid-template-columns:1fr}.profile-page-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:980px){.two-col,.three-col,.profile-page-grid{grid-template-columns:1fr}.page-heading{align-items:flex-start;gap:14px;flex-direction:column}.feature-card{min-height:220px}}
+.sidebar nav{position:relative;z-index:2}.sidebar-art{height:170px;opacity:.48;pointer-events:none}.sidebar .tagline{bottom:18px}
+
+/* DragonStrap v0.1.1 — UI/UX Polish Hotfix
+   High-DPI control refinement, exact header centering, and corrected vertical sliders. */
+
+/* Keep the center motto geometrically centered in the window, independent of side content. */
+.topbar{
+  position:relative;
+  grid-template-columns:minmax(270px,1fr) auto minmax(430px,1fr);
+}
+.topbar-center{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:max-content;
+  max-width:34vw;
+  white-space:nowrap;
+  text-align:center;
+  letter-spacing:.52em;
+  font-weight:600;
+  text-rendering:geometricPrecision;
+  -webkit-font-smoothing:antialiased;
+  text-shadow:0 1px 0 rgba(255,255,255,.03),0 0 12px rgba(172,88,255,.08);
+  pointer-events:none;
+  z-index:2;
+}
+.topbar-center span{margin:0 14px;text-shadow:0 0 10px rgba(199,124,255,.42)}
+.brand,.topbar-actions{position:relative;z-index:3}
+
+/* Global high-DPI button behavior. */
+button{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+  -webkit-tap-highlight-color:transparent;
+}
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile){
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  transition:transform .16s ease,filter .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease;
+  text-shadow:0 1px 1px rgba(0,0,0,.48);
+}
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile)::before{
+  content:"";
+  position:absolute;
+  inset:1px 1px auto;
+  height:42%;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0));
+  pointer-events:none;
+  z-index:-1;
+}
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile):hover{
+  transform:translateY(-1px);
+  filter:brightness(1.09) saturate(1.04);
+}
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile):active{
+  transform:translateY(1px);
+  filter:brightness(.97);
+}
+.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action{
+  border-color:rgba(215,178,255,.21);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 -1px 0 rgba(0,0,0,.55),
+    0 5px 12px rgba(0,0,0,.30),
+    0 0 0 1px rgba(0,0,0,.25);
+}
+.mode-btn.active,.profile-btn.active,.segmented .active{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 18px rgba(206,128,255,.13),
+    0 7px 18px rgba(0,0,0,.34),
+    0 0 16px rgba(161,65,255,.25);
+}
+.nav-item.active{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(211,168,255,.26),
+    0 6px 16px rgba(0,0,0,.22),
+    0 0 17px rgba(127,51,255,.22);
+}
+
+/* Round/icon controls: sharper layered materials without oversized glow. */
+.round-btn,.icon-button,.small-knob,.fan-knob{
+  cursor:pointer;
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease,border-color .16s ease;
+  -webkit-font-smoothing:antialiased;
+}
+.round-btn,.small-knob,.fan-knob{
+  border-color:rgba(199,147,239,.38);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.10),
+    inset 0 -6px 12px rgba(0,0,0,.26),
+    0 5px 12px rgba(0,0,0,.34),
+    0 0 10px rgba(151,63,235,.10);
+}
+.round-btn:hover,.icon-button:hover,.small-knob:hover,.fan-knob:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.10) saturate(1.04);
+  border-color:rgba(213,166,255,.52);
+}
+.round-btn:active,.icon-button:active,.small-knob:active,.fan-knob:active{transform:translateY(1px);filter:brightness(.95)}
+
+/* PLAY control: smaller, cleaner, pointer-free, with concentric 4K-style surface detail. */
+.mega-knob{
+  width:166px;
+  border:1px solid rgba(210,168,255,.34);
+  background:
+    conic-gradient(from 220deg,#171020 0 12%,#bd7df5 13% 37%,#6924b6 38% 47%,#171020 48% 100%);
+  box-shadow:
+    0 0 0 5px #0c0811,
+    0 0 0 7px rgba(90,65,112,.86),
+    0 9px 24px rgba(0,0,0,.46),
+    0 0 24px rgba(153,61,244,.28),
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 0 18px rgba(0,0,0,.72);
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+.mega-knob::before{
+  inset:12px;
+  background:
+    radial-gradient(circle at 34% 28%,rgba(197,153,224,.44) 0 2%,rgba(126,94,145,.48) 12%,rgba(66,46,80,.96) 32%,rgba(29,19,39,.99) 58%,#0d0912 78%);
+  border:1px solid rgba(235,206,255,.08);
+  box-shadow:
+    inset 6px 6px 12px rgba(255,255,255,.055),
+    inset -9px -10px 17px rgba(0,0,0,.72),
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    0 7px 16px rgba(0,0,0,.55);
+}
+.mega-knob::after{display:none!important}
+.mega-knob span{
+  inset:23px;
+  border:1px solid rgba(222,184,255,.05);
+  background:
+    radial-gradient(circle at 36% 28%,rgba(255,255,255,.055),transparent 34%),
+    conic-gradient(from 35deg,transparent,rgba(255,255,255,.055),transparent 27%);
+}
+.launch-knob b{
+  font-size:22px;
+  letter-spacing:.18em;
+  transform:translateX(.09em);
+  text-shadow:0 1px 0 rgba(255,255,255,.12),0 0 11px rgba(179,89,255,.48),0 3px 9px rgba(0,0,0,.66);
+}
+.launch-knob:hover{
+  transform:translateY(-2px) scale(1.012);
+  filter:brightness(1.08) saturate(1.04);
+  box-shadow:
+    0 0 0 5px #0c0811,
+    0 0 0 7px rgba(105,75,130,.92),
+    0 11px 26px rgba(0,0,0,.50),
+    0 0 27px rgba(161,66,255,.36),
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 0 18px rgba(0,0,0,.70);
+}
+.launch-knob:active{transform:translateY(1px) scale(.99);filter:brightness(.95)}
+.knob-scale{width:176px;margin-top:9px}
+
+/* Correct Launch Options layout. Native vertical ranges avoid transformed-track clipping. */
+.audio-card{overflow:hidden}
+.audio-layout{
+  grid-template-columns:minmax(0,1fr) 82px;
+  gap:12px;
+  height:calc(100% - 58px);
+  align-items:center;
+  overflow:hidden;
+}
+.sliders{
+  height:278px;
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(42px,1fr));
+  align-items:end;
+  justify-items:center;
+  gap:4px;
+  padding:8px 8px 4px 2px;
+  border-right:1px solid rgba(255,255,255,.07);
+  overflow:hidden;
+}
+.sliders label{
+  width:100%;
+  height:252px;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  color:#cbbbe0;
+  font-size:10px;
+  text-align:center;
+}
+.vslider{
+  appearance:none;
+  -webkit-appearance:none;
+  writing-mode:vertical-lr;
+  direction:rtl;
+  transform:none;
+  width:12px;
+  height:205px;
+  min-height:205px;
+  margin:0;
+  border-radius:8px;
+  border:1px solid rgba(182,121,232,.16);
+  background:linear-gradient(180deg,#21162d,#8f42e9 45%,#b768ff 100%);
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,.65),0 0 9px rgba(159,63,255,.14);
+  cursor:pointer;
+}
+.vslider::-webkit-slider-runnable-track{
+  width:10px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#21162d,#7d36ca 52%,#b767ff);
+  box-shadow:inset 1px 1px 4px rgba(0,0,0,.70);
+}
+.vslider::-webkit-slider-thumb{
+  appearance:none;
+  -webkit-appearance:none;
+  width:26px;
+  height:19px;
+  margin-left:-8px;
+  border-radius:8px;
+  border:1px solid rgba(235,219,246,.82);
+  background:linear-gradient(180deg,#e6dbe9 0%,#a894b2 47%,#65596e 100%);
+  box-shadow:0 4px 8px rgba(0,0,0,.58),inset 0 1px 1px rgba(255,255,255,.72),0 0 8px rgba(186,104,255,.16);
+}
+.mini-knobs{
+  width:100%;
+  justify-items:center;
+  align-content:center;
+  gap:13px;
+  overflow:visible;
+}
+.small-knob{width:52px}
+
+/* High-DPI text and geometry tuning at desktop resolutions. */
+@media (min-width:1400px){
+  .card h2{font-weight:800;text-rendering:geometricPrecision}
+  .mode-btn,.profile-btn,.nav-item{letter-spacing:.01em}
+}
+@media (max-width:1350px){
+  .topbar{grid-template-columns:250px 1fr 390px}
+  .topbar-center{max-width:32vw;letter-spacing:.38em;font-size:10px}
+  .mega-knob{width:158px}
+  .knob-scale{width:168px}
+}
+@media (max-width:980px){
+  .topbar-center{display:none}
+  .audio-layout{grid-template-columns:1fr 74px}
+  .sliders{grid-template-columns:repeat(4,minmax(36px,1fr))}
+}
+
+/* DragonStrap v0.1.2 — Header Geometry & Control Precision Hotfix
+   Fixes the v0.1.1 topbar grid regression visible at the 1600px production window. */
+.topbar{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(300px,1fr) minmax(280px,340px) minmax(410px,1fr);
+  align-items:center;
+  column-gap:18px;
+}
+.brand{
+  grid-column:1;
+  justify-self:start;
+  min-width:0;
+  z-index:4;
+}
+.topbar-center{
+  position:static;
+  grid-column:2;
+  justify-self:center;
+  transform:none;
+  width:auto;
+  max-width:none;
+  white-space:nowrap;
+  text-align:center;
+  letter-spacing:.42em;
+  font-size:10px;
+  line-height:1;
+  color:#b8a8c7;
+  z-index:2;
+}
+.topbar-center span{
+  margin:0 10px;
+}
+.topbar-actions{
+  grid-column:3;
+  justify-self:end;
+  width:max-content;
+  max-width:100%;
+  min-width:0;
+  gap:10px;
+  z-index:4;
+}
+.search-box{
+  width:190px;
+  flex:0 0 190px;
+}
+.operator{
+  min-width:82px;
+  line-height:1.05;
+}
+.operator strong{white-space:nowrap}
+
+/* Slightly tighter launch control: premium material without dominating the card. */
+.mega-knob{
+  width:156px;
+  box-shadow:
+    0 0 0 4px #0c0811,
+    0 0 0 6px rgba(102,75,126,.90),
+    0 8px 20px rgba(0,0,0,.48),
+    0 0 20px rgba(153,61,244,.24),
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 0 16px rgba(0,0,0,.74);
+}
+.mega-knob::before{inset:11px}
+.mega-knob span{inset:21px}
+.launch-knob b{
+  font-size:21px;
+  letter-spacing:.16em;
+}
+.knob-scale{width:166px;margin-top:10px}
+
+/* Uniform optical sharpness for every interactive surface. */
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile,.round-btn,.icon-button,.small-knob,.fan-knob){
+  outline:none;
+  backface-visibility:hidden;
+}
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.segmented button,.profile-tile):focus-visible,
+:where(.round-btn,.icon-button,.small-knob,.fan-knob,.mega-knob):focus-visible{
+  box-shadow:0 0 0 2px #0c0811,0 0 0 4px rgba(190,110,255,.75),0 0 18px rgba(165,73,255,.34);
+}
+
+/* Keep the production 1600px layout collision-free and degrade cleanly below it. */
+@media (max-width:1500px){
+  .topbar{grid-template-columns:minmax(285px,1fr) minmax(240px,300px) minmax(380px,1fr);column-gap:12px}
+  .topbar-center{letter-spacing:.31em;font-size:9px}
+  .topbar-center span{margin:0 7px}
+  .search-box{width:160px;flex-basis:160px}
+  .topbar-actions{gap:8px}
+}
+@media (max-width:1250px){
+  .topbar{grid-template-columns:minmax(250px,1fr) minmax(210px,250px) minmax(300px,1fr)}
+  .search-box{display:none}
+  .operator{min-width:72px}
+  .topbar-center{letter-spacing:.24em}
+}
+@media (max-width:980px){
+  .topbar{grid-template-columns:1fr auto}
+  .topbar-center{display:none}
+  .topbar-actions{grid-column:2}
+}
+
+/* DragonStrap v0.1.3 — 4K Glow Controls & Sidebar Cleanup
+   Reference target: sculpted dark-violet controls with crisp illuminated edges. */
+
+/* The sidebar is now a clean material column; decorative reference artwork is removed. */
+.sidebar{
+  background:
+    radial-gradient(circle at 52% -6%,rgba(116,56,166,.12),transparent 32%),
+    linear-gradient(180deg,rgba(31,24,42,.98),rgba(17,13,24,.99));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    inset -1px 0 0 rgba(211,155,255,.08),
+    0 14px 30px rgba(0,0,0,.34),
+    0 0 0 1px rgba(0,0,0,.40);
+}
+.sidebar-art,.sidebar .tagline{display:none!important;background:none!important}
+.sidebar nav{gap:11px}
+
+/* Premium sidebar controls: matte center + bright violet edge + soft controlled bloom. */
+.nav-item{
+  height:56px;
+  border-radius:16px;
+  padding:0 17px;
+  border:1px solid rgba(178,117,238,.22);
+  color:#d4c5e4;
+  font-size:15px;
+  font-weight:500;
+  background:
+    radial-gradient(120% 95% at 50% -10%,rgba(255,255,255,.07),transparent 38%),
+    linear-gradient(180deg,rgba(48,38,62,.96) 0%,rgba(31,24,42,.98) 46%,rgba(22,17,31,.99) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(146,73,208,.30),
+    inset 0 0 18px rgba(132,65,190,.045),
+    0 7px 14px rgba(0,0,0,.30),
+    0 1px 0 rgba(190,118,255,.13);
+  text-shadow:0 1px 1px rgba(0,0,0,.62),0 0 8px rgba(202,151,255,.07);
+}
+.nav-item span{margin-left:14px}
+.nav-item:hover{
+  color:#fff;
+  border-color:rgba(190,112,255,.68);
+  background:
+    radial-gradient(120% 100% at 50% -12%,rgba(255,255,255,.10),transparent 40%),
+    linear-gradient(180deg,rgba(55,42,70,.98),rgba(36,27,48,.99) 48%,rgba(25,18,35,.99));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -1px 0 rgba(205,126,255,.68),
+    inset 0 0 22px rgba(170,80,239,.075),
+    0 8px 16px rgba(0,0,0,.34),
+    0 0 8px rgba(153,61,241,.28),
+    0 3px 15px rgba(138,51,232,.28);
+}
+.nav-item.active{
+  color:#fff;
+  border-color:rgba(201,132,255,.82);
+  background:
+    radial-gradient(120% 110% at 45% -12%,rgba(244,214,255,.18),transparent 38%),
+    linear-gradient(135deg,rgba(113,48,167,.95) 0%,rgba(73,31,112,.96) 42%,rgba(37,21,51,.99) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -1px 0 rgba(223,154,255,.84),
+    inset 0 0 22px rgba(205,130,255,.14),
+    0 8px 18px rgba(0,0,0,.34),
+    0 0 9px rgba(176,75,255,.44),
+    0 4px 18px rgba(141,48,236,.36);
+}
+.nav-item:active{
+  transform:translateY(1px) scale(.995);
+  box-shadow:
+    inset 0 2px 7px rgba(0,0,0,.30),
+    inset 0 -1px 0 rgba(202,128,255,.58),
+    0 3px 8px rgba(0,0,0,.34),
+    0 0 8px rgba(148,59,233,.20);
+}
+
+/* Shared high-resolution illuminated material for rectangular controls. */
+:where(.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.profile-tile){
+  border-color:rgba(181,117,235,.30);
+  background:
+    radial-gradient(130% 100% at 50% -16%,rgba(255,255,255,.075),transparent 42%),
+    linear-gradient(180deg,rgba(45,35,58,.98),rgba(29,22,39,.99) 50%,rgba(18,13,25,.99));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.105),
+    inset 0 -1px 0 rgba(160,83,219,.26),
+    0 6px 14px rgba(0,0,0,.31),
+    0 0 6px rgba(139,55,226,.08);
+}
+:where(.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.profile-tile):hover{
+  border-color:rgba(198,126,255,.66);
+  filter:brightness(1.055) saturate(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -1px 0 rgba(211,131,255,.62),
+    0 8px 17px rgba(0,0,0,.34),
+    0 0 9px rgba(160,67,247,.29),
+    0 3px 16px rgba(137,47,229,.21);
+}
+:where(.mode-btn.active,.profile-btn.active,.profile-tile.active){
+  border-color:rgba(205,132,255,.80);
+  background:
+    radial-gradient(125% 110% at 46% -15%,rgba(248,222,255,.16),transparent 42%),
+    linear-gradient(135deg,rgba(108,44,160,.97),rgba(67,28,102,.98) 48%,rgba(31,18,43,.99));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.19),
+    inset 0 -1px 0 rgba(224,155,255,.75),
+    inset 0 0 18px rgba(204,126,255,.11),
+    0 8px 17px rgba(0,0,0,.34),
+    0 0 10px rgba(175,73,255,.39),
+    0 4px 18px rgba(143,49,235,.28);
+}
+
+/* Segmented controls use the same edge-lit surface while retaining their compact geometry. */
+.segmented{
+  border:1px solid rgba(180,116,232,.30);
+  background:linear-gradient(180deg,#130e1b,#0a0710);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.70),0 0 0 1px rgba(255,255,255,.015);
+}
+.segmented button{
+  border:1px solid transparent;
+  text-shadow:0 1px 1px rgba(0,0,0,.62);
+}
+.segmented button:hover{color:#efe2fa;background:rgba(137,61,195,.09)}
+.segmented .active{
+  border-color:rgba(206,134,255,.67);
+  background:
+    radial-gradient(120% 100% at 50% -20%,rgba(255,255,255,.15),transparent 44%),
+    linear-gradient(180deg,#8134bf,#481762 62%,#2b0f3a);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -1px 0 rgba(224,151,255,.55),
+    0 0 10px rgba(169,69,255,.39),
+    0 3px 12px rgba(119,38,202,.24);
+}
+
+/* Circular/icon controls: polished lens with a thin violet corona. */
+:where(.round-btn,.icon-button,.small-knob,.fan-knob){
+  border-color:rgba(191,132,242,.42);
+  background:
+    radial-gradient(circle at 35% 28%,rgba(255,255,255,.12),transparent 22%),
+    radial-gradient(circle at 50% 48%,#3c2a4a 0%,#21162d 48%,#0e0914 78%);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.13),
+    inset -5px -7px 12px rgba(0,0,0,.34),
+    0 6px 13px rgba(0,0,0,.34),
+    0 0 8px rgba(153,63,237,.15);
+}
+:where(.round-btn,.icon-button,.small-knob,.fan-knob):hover{
+  border-color:rgba(208,145,255,.76);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.17),
+    inset -5px -7px 12px rgba(0,0,0,.31),
+    0 7px 14px rgba(0,0,0,.36),
+    0 0 11px rgba(174,76,255,.35),
+    0 3px 14px rgba(130,43,223,.22);
+}
+
+/* Keep glow on geometry, not glyphs, so text remains clean at 4K/high-DPI. */
+:where(.nav-item,.mode-btn,.profile-btn,.primary-action,.secondary-action,.small-action,.profile-tile,.segmented button){
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+
+@media (max-width:1500px){
+  .nav-item{height:53px;border-radius:15px}
+  .sidebar nav{gap:9px}
+}
+
+/* DragonStrap v0.1.4 — Card Clarity & Option Rail Fix
+   Removes ghost artwork from Installation Status and rebuilds the Launch Options mode rail. */
+
+/* Installation Status must be an opaque dashboard surface — no reference-concept imagery. */
+.temp-card{
+  position:relative;
+  isolation:isolate;
+  background-image:
+    radial-gradient(120% 90% at 18% -8%,rgba(126,67,177,.13),transparent 46%),
+    linear-gradient(145deg,rgba(32,24,43,.995) 0%,rgba(23,17,32,.995) 52%,rgba(15,11,21,1) 100%) !important;
+  background-color:#171120 !important;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-position:center !important;
+}
+.temp-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 20%),
+    radial-gradient(80% 70% at 100% 0%,rgba(116,54,167,.055),transparent 62%);
+}
+.temp-card>.card-head,.temp-card>.temperature-list{position:relative;z-index:1}
+.temp-card .temperature-list{gap:14px;margin-top:24px}
+.temp-card .temp-row{
+  grid-template-columns:52px minmax(0,1fr);
+  gap:14px;
+  min-height:70px;
+  padding:8px 0 15px;
+  border-bottom:1px solid rgba(217,178,244,.085);
+}
+.temp-card .temp-row:last-child{border-bottom:0}
+.temp-card .temp-icon{
+  width:48px;
+  height:48px;
+  border-radius:11px;
+  border:1px solid rgba(191,125,243,.24);
+  background:
+    radial-gradient(circle at 34% 25%,rgba(255,255,255,.08),transparent 25%),
+    linear-gradient(145deg,#2a1d36,#120d18 72%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 5px 11px rgba(0,0,0,.28),0 0 8px rgba(151,60,235,.08);
+}
+.temp-card .temp-row span{font-size:12px;color:#b9a9c9}
+.temp-card .temp-row strong{display:block;margin-top:2px;font-size:20px;line-height:1.05;color:#f6efff;text-shadow:0 1px 1px rgba(0,0,0,.58)}
+.temp-card .meter{height:6px;margin-top:12px;background:#30253a;box-shadow:inset 0 1px 3px rgba(0,0,0,.58)}
+.temp-card .meter i{background:linear-gradient(90deg,#8f3bf1 0%,#c773ff 58%,#d49aff 100%);box-shadow:0 0 9px rgba(175,78,255,.34)}
+
+/* Launch Options: wider dedicated rail, with each control and label treated as one aligned row. */
+.audio-layout{
+  grid-template-columns:minmax(0,1fr) 132px;
+  gap:16px;
+  align-items:center;
+  overflow:visible;
+}
+.sliders{
+  padding-right:13px;
+  overflow:visible;
+}
+.mini-knobs{
+  width:132px;
+  min-width:132px;
+  height:100%;
+  display:grid;
+  grid-template-rows:repeat(3,minmax(68px,1fr));
+  align-content:center;
+  justify-items:stretch;
+  gap:8px;
+  padding:10px 2px 10px 0;
+  overflow:visible;
+}
+.mini-knobs>div{
+  width:100%;
+  min-width:0;
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  align-items:center;
+  justify-items:start;
+  column-gap:12px;
+  text-align:left;
+  color:#cbb9dd;
+  font-size:12px;
+  white-space:nowrap;
+}
+.mini-knobs>div span{
+  display:block;
+  min-width:0;
+  line-height:1.2;
+  font-weight:600;
+  letter-spacing:.01em;
+  color:#d5c6e5;
+  text-shadow:0 1px 1px rgba(0,0,0,.58);
+}
+.mini-knobs .small-knob{
+  width:56px;
+  height:56px;
+  margin:0;
+  flex:0 0 56px;
+}
+.audio-card .round-btn{flex:0 0 auto}
+
+@media (max-width:1350px){
+  .audio-layout{grid-template-columns:minmax(0,1fr) 116px;gap:10px}
+  .mini-knobs{width:116px;min-width:116px}
+  .mini-knobs>div{grid-template-columns:52px minmax(0,1fr);column-gap:8px;font-size:11px}
+  .mini-knobs .small-knob{width:50px;height:50px}
+}
+@media (max-width:980px){
+  .audio-layout{grid-template-columns:minmax(0,1fr) 108px}
+  .mini-knobs{width:108px;min-width:108px}
+}
+
+/* DragonStrap v0.6.3 — Dashboard Watermark Alignment
+   Matches the approved target more closely: the dragon sits behind the central dashboard cards,
+   is easier to read, and does not dominate the full content area. */
+.content-area{
+  position:relative;
+}
+.view[data-view="home"] .dashboard{
+  position:relative;
+  isolation:isolate;
+}
+.view[data-view="home"] .dashboard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:url('assets/dragon-watermark.png');
+  background-repeat:no-repeat;
+  background-position:50% 45%;
+  background-size:clamp(520px,48vw,760px) auto;
+  opacity:.125;
+  filter:saturate(1.02) brightness(.98) contrast(1.06) drop-shadow(0 0 26px rgba(151,62,241,.16));
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+}
+.view[data-view="home"] .dashboard > .card{
+  position:relative;
+  z-index:1;
+}
+
+/* Installation Status remains intentionally clean/opaque. */
+.temp-card{
+  background-color:#171120 !important;
+}
+
+@media (max-width:1500px){
+  .view[data-view="home"] .dashboard::before{
+    background-size:clamp(470px,46vw,660px) auto;
+    opacity:.115;
+  }
+}
+@media (max-width:980px){
+  .view[data-view="home"] .dashboard::before{
+    background-size:min(72vw,520px) auto;
+    background-position:50% 44%;
+    opacity:.095;
+  }
+}
+
+
+/* DragonStrap v0.1.8 — Transparent Home Cards
+   Makes the home dashboard cards more glass-like so the centered dragon watermark can be seen through them. */
+.view[data-view="home"] .dashboard > .card{
+  background:linear-gradient(145deg,rgba(31,23,45,.72),rgba(12,9,19,.56)) !important;
+  backdrop-filter:blur(12px) saturate(1.12);
+  -webkit-backdrop-filter:blur(12px) saturate(1.12);
+}
+.view[data-view="home"] .dashboard > .card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0) 32%);
+  pointer-events:none;
+  z-index:0;
+}
+.view[data-view="home"] .dashboard > .card > *{
+  position:relative;
+  z-index:1;
+}
+.view[data-view="home"] .temp-card{
+  background:linear-gradient(145deg,rgba(29,21,41,.68),rgba(11,8,17,.50)) !important;
+}
+.view[data-view="home"] .power-card{
+  background:linear-gradient(145deg,rgba(29,21,42,.64),rgba(11,8,18,.48)) !important;
+}
+
+
+/* DragonStrap v0.1.9 — Dragon Application Icon */
+.brand-logo{
+  width:52px;
+  height:52px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(181,77,255,.55));
+}
+.dragon-avatar img{
+  width:88%;
+  height:88%;
+  object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(181,77,255,.6));
+}

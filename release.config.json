@@ -1,0 +1,6 @@
+{
+  "provider": "github",
+  "repository": "bubblegump30/DragonStrap",
+  "releaseChannel": "stable",
+  "notes": "Official DragonStrap GitHub release feed."
+}
