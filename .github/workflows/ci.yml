@@ -1,0 +1,31 @@
+name: DragonStrap CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Source check
+        run: npm run check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Release verification
+        run: npm run release:verify

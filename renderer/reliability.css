@@ -1,4 +1,4 @@
-/* DragonStrap v0.9.5 — Reliability / Updater / Release Polish */
+/* DragonStrap v1.0.0 — Stable Release */
 .settings-release-grid{align-items:stretch}
 .settings-release-grid>.card{min-height:300px}
 .update-state-grid,.reliability-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px}

@@ -1,76 +1,47 @@
-$ErrorActionPreference = "Stop"
+param(
+    [string]$RepoUrl = "https://github.com/bubblegump30/DragonStrap.git",
+    [string]$CommitMessage = "DragonStrap v1.0.0 - Stable Release"
+)
 
-$RepoUrl = "https://github.com/bubblegump30/DragonStrap.git"
-$CommitMessage = "DragonStrap v0.9.5 - initial public repository baseline"
-$ProjectRoot = Split-Path -Parent $PSScriptRoot
-Set-Location $ProjectRoot
+$ErrorActionPreference = 'Stop'
+Set-Location (Split-Path -Parent $PSScriptRoot)
 
-Write-Host "== DragonStrap GitHub Publisher ==" -ForegroundColor Magenta
+Write-Host '== DragonStrap GitHub Publisher ==' -ForegroundColor Magenta
+npm run check
+npm test
+npm run release:verify
 
-if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    throw "Git is not installed or is not available in PATH. Install Git for Windows, reopen PowerShell, and run this script again."
+$wasNewRepository = -not (Test-Path '.git')
+if ($wasNewRepository) {
+    git init
+    git branch -M main
 }
 
-# Verify the source before publishing.
-if (Get-Command node -ErrorAction SilentlyContinue) {
-    Write-Host "Running source verification..." -ForegroundColor Cyan
-    node .\scripts\check-source.js
-    if ($LASTEXITCODE -ne 0) { throw "DragonStrap source verification failed." }
-
-    Write-Host "Running tests..." -ForegroundColor Cyan
-    node --test .\tests\*.test.js
-    if ($LASTEXITCODE -ne 0) { throw "DragonStrap tests failed." }
-} else {
-    Write-Warning "Node.js was not found. Git publishing can continue, but local source/tests were not re-run."
-}
-
-if (-not (Test-Path ".git")) {
-    git init -b main
-    if ($LASTEXITCODE -ne 0) { throw "git init failed." }
-}
-
-# Ensure main is the branch we publish.
-git branch -M main
-
-# A freshly initialized repository has no remotes. Query the remote names first so
-# Git never has to emit an expected "No such remote" error under ErrorActionPreference=Stop.
 $remoteNames = @(git remote)
-if ($LASTEXITCODE -ne 0) { throw "Unable to read Git remotes." }
-
-if ($remoteNames -contains "origin") {
+if ($remoteNames -contains 'origin') {
     $existing = (git remote get-url origin).Trim()
-    if ($LASTEXITCODE -ne 0) { throw "Unable to read the origin remote." }
-
     if ($existing -ne $RepoUrl) {
         git remote set-url origin $RepoUrl
-        if ($LASTEXITCODE -ne 0) { throw "Unable to update the origin remote." }
     }
 } else {
     git remote add origin $RepoUrl
-    if ($LASTEXITCODE -ne 0) { throw "Unable to add the origin remote." }
 }
 
-# Refuse to commit generated/dependency directories even if they were created locally.
-if (Test-Path "node_modules") { Write-Host "node_modules is ignored by .gitignore." -ForegroundColor DarkGray }
-if (Test-Path "dist") { Write-Host "dist is ignored by .gitignore." -ForegroundColor DarkGray }
+# When this ZIP is extracted into a fresh directory, attach its first commit to
+# the existing public main branch instead of creating an unrelated Git history.
+if ($wasNewRepository) {
+    git fetch origin main
+    git reset --mixed origin/main
+}
 
+git branch -M main
 git add --all
-if ($LASTEXITCODE -ne 0) { throw "git add failed." }
-
 $pending = git status --porcelain
-if ([string]::IsNullOrWhiteSpace(($pending -join ""))) {
-    Write-Host "Nothing new to commit." -ForegroundColor Yellow
-} else {
+if ($pending) {
     git commit -m $CommitMessage
-    if ($LASTEXITCODE -ne 0) {
-        throw "git commit failed. If Git asks for your identity, configure user.name and user.email and run this script again."
-    }
+} else {
+    Write-Host 'No local changes to commit.' -ForegroundColor Yellow
 }
 
-Write-Host "Pushing main to $RepoUrl ..." -ForegroundColor Cyan
 git push -u origin main
-if ($LASTEXITCODE -ne 0) {
-    throw "git push failed. Complete GitHub authentication in Git Credential Manager/browser if prompted, then run this script again."
-}
-
-Write-Host "DragonStrap v0.9.5 is published to GitHub." -ForegroundColor Green
+Write-Host 'DragonStrap main branch is synchronized with GitHub.' -ForegroundColor Green

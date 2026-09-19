@@ -1,3 +1,16 @@
+## v1.0.0 — Stable Release
+
+- Declared the current DragonStrap feature set stable for normal Windows use.
+- Replaced remaining prototype/foundation product wording with stable-release status text.
+- Finalized the official GitHub release feed for `bubblegump30/DragonStrap`.
+- Added stable release policy and v1.0.0 release documentation.
+- Added Windows GitHub Actions validation for source checks, automated tests, and release verification.
+- Strengthened release verification to require the official repository, stable update channel, release documentation, and CI workflow.
+- Improved Windows release-build output with explicit signed/unsigned status.
+- Added repository/homepage/issue metadata to `package.json`.
+- Preserved explicit scope boundaries: channel deployment replacement and Studio FastFlag writes remain intentionally disabled.
+- Corrected the historical v0.6.1 dashboard space-fill changelog heading.
+
 ## v0.9.5 — Reliability / Updater / Release Polish
 
 - Added single-instance protection; a second launch focuses the existing DragonStrap window.
@@ -55,7 +68,7 @@
 - Shifted the watermark upward so it stays visually centered behind the main dashboard cards instead of drifting into the bottom strip.
 - Kept the transparent glass cards and full-width bottom status strip intact.
 
-## v0.6.2 — Home Dashboard Space-Fill Hotfix
+## v0.6.1 — Home Dashboard Space-Fill Hotfix
 
 - Expanded the bottom DragonStrap foundation/status card across the full dashboard width.
 - Reworked its internal layout into a horizontal status strip so the additional width is actually used.

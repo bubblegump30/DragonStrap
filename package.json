@@ -1,9 +1,9 @@
 {
   "name": "dragonstrap",
   "productName": "DragonStrap",
-  "version": "0.9.5",
+  "version": "1.0.0",
   "private": true,
-  "description": "DragonStrap Roblox bootstrapper with Purple Dragon UI, launch/performance/server/studio/channel/maintenance centers, reliability safeguards, and release update checking",
+  "description": "DragonStrap stable Windows Roblox bootstrapper and launcher with Purple Dragon UI, Launch Center, Performance+, FastFlag management, Server Intelligence, Studio tools, channel tracking, repair, diagnostics, and release update checking",
   "main": "main.js",
   "author": "DragonStrap Project",
   "scripts": {
@@ -65,5 +65,13 @@
     "portable": {
       "artifactName": "DragonStrap-Portable-${version}-${arch}.${ext}"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bubblegump30/DragonStrap.git"
+  },
+  "homepage": "https://github.com/bubblegump30/DragonStrap",
+  "bugs": {
+    "url": "https://github.com/bubblegump30/DragonStrap/issues"
   }
 }
