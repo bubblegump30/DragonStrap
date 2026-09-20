@@ -16,7 +16,13 @@ const DEFAULTS = Object.freeze({
   notifications: true,
   checkForUpdates: true,
   updateChannel: 'stable',
+  updateDeferredUntil: 0,
+  updateDeferredVersion: '',
   lastLaunchTarget: '',
+  serverSort: 'ping',
+  serverOccupancy: 'any',
+  serverFavoritesOnly: false,
+  serverHideFull: false,
   theme: 'neo-purple'
 });
 
@@ -25,6 +31,8 @@ const RENDER_MODES = new Set(['default', 'd3d11', 'vulkan']);
 const MSAA_MODES = new Set(['default', '1', '2', '4']);
 const REFRESH_INTERVALS = new Set([60, 120, 300, 600]);
 const UPDATE_CHANNELS = new Set(['stable', 'prerelease']);
+const SERVER_SORTS = new Set(['ping','history','players','space','occupancy','uptime','region']);
+const SERVER_OCCUPANCY = new Set(['any','empty','low','medium','busy','almost-full','full']);
 
 function sanitizeSetting(key, value) {
   switch (key) {
@@ -43,11 +51,20 @@ function sanitizeSetting(key, value) {
     case 'notifications':
     case 'checkForUpdates': return typeof value === 'boolean' ? value : undefined;
     case 'updateChannel': return UPDATE_CHANNELS.has(value) ? value : undefined;
+    case 'updateDeferredUntil': {
+      const number = Number(value);
+      return Number.isSafeInteger(number) && number >= 0 && number <= 4102444800000 ? number : undefined;
+    }
+    case 'updateDeferredVersion': return typeof value === 'string' && /^[0-9A-Za-z.-]{0,64}$/.test(value) ? value : undefined;
     case 'refreshSeconds': {
       const number = Number(value);
       return REFRESH_INTERVALS.has(number) ? number : undefined;
     }
     case 'lastLaunchTarget': return typeof value === 'string' ? value.slice(0, 2048) : undefined;
+    case 'serverSort': return SERVER_SORTS.has(value) ? value : undefined;
+    case 'serverOccupancy': return SERVER_OCCUPANCY.has(value) ? value : undefined;
+    case 'serverFavoritesOnly':
+    case 'serverHideFull': return typeof value === 'boolean' ? value : undefined;
     case 'channel': {
       if (typeof value !== 'string') return undefined;
       const trimmed = value.trim();

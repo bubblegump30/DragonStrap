@@ -1,0 +1,797 @@
+{
+  "product": "DragonStrap",
+  "version": "2.0.4",
+  "generatedAt": "2026-09-20T22:28:54.750Z",
+  "files": [
+    {
+      "file": ".github/FUNDING.yml",
+      "sha256": "26f0cc6a910e9fe8a926ac07aba181711e89680bf363c5677259c99e44cee633",
+      "size": 127
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "f9928ec0f360030f100ab03c521cac562613d50d98f0286a7a8146e06e3acb2a",
+      "size": 522
+    },
+    {
+      "file": ".gitignore",
+      "sha256": "89458fdcf9ce16578fff74b10da9a7111beeeb0b3f4fd691dac8a39a009269a5",
+      "size": 71
+    },
+    {
+      "file": "CHANGELOG.md",
+      "sha256": "8680abb17ffa255d4e95d36e82ca150c893ba52763f842aaab6d81d8d89c6ae1",
+      "size": 28747
+    },
+    {
+      "file": "README.md",
+      "sha256": "78fcd1bf24d1a93dc10fbc8e50c54fb03cfd63bba41d6e1675224469fba610f1",
+      "size": 3064
+    },
+    {
+      "file": "THIRD_PARTY_NOTICES.md",
+      "sha256": "7adfabdb13ae2d8a0957d1f94cfa3f899ee55a31c78a793aa550591b80407fea",
+      "size": 2174
+    },
+    {
+      "file": "VERSION",
+      "sha256": "137f467241023dadfa605db00e630b25a9394d0fc7232718812983ba24b93945",
+      "size": 6
+    },
+    {
+      "file": "assets/DragonStrap.ico",
+      "sha256": "bbcd055464530a0dacc0d829c7b9ecab3572e55558583d3ef6904cef3253d40f",
+      "size": 131345
+    },
+    {
+      "file": "assets/DragonStrap.png",
+      "sha256": "e7e0f703a07a7f9cc069682411743bae123a89673b570db96da34b6527e22999",
+      "size": 985996
+    },
+    {
+      "file": "docs/ARCHITECTURE.md",
+      "sha256": "aa935ac2087f8bfc1255f480dfc3f79493c018d0f24eccb424e027f4935dd5e2",
+      "size": 3597
+    },
+    {
+      "file": "docs/CHANNEL-VERSION-MANAGER-v0.8.0.md",
+      "sha256": "b3a524c451ab4dcb06158e2d4d1e7a33343e04079ed2e98c2b1a7cc3e15db6b1",
+      "size": 1052
+    },
+    {
+      "file": "docs/CORE-API-v2.md",
+      "sha256": "d47d1b4369357eccb446ba635c0435803a1739972bf9311eade04100b6d3e29b",
+      "size": 1290
+    },
+    {
+      "file": "docs/FASTFLAG-MANAGER-v0.5.0.md",
+      "sha256": "7c99113befb3102b8860a898fac872b5a15ea239ab417ec8da9ed347c3205e61",
+      "size": 1273
+    },
+    {
+      "file": "docs/FASTFLAG-MANAGER-v1.4.0.md",
+      "sha256": "9e3bb6bd37a7f4e5f9c479065e0f8907935fd0d73bc0c34ab4944d3d350c6a79",
+      "size": 2677
+    },
+    {
+      "file": "docs/GITHUB-BASELINE.md",
+      "sha256": "06dc2c5cc2e523921b17939f93393fc2f4f2fad1535228d359d81a9f688fa3c8",
+      "size": 440
+    },
+    {
+      "file": "docs/LAUNCH-CENTER-v0.3.0.md",
+      "sha256": "6dd687efea45ee4a88f1c4068b18989dce809263c033f5463b72001a3fdffd1a",
+      "size": 869
+    },
+    {
+      "file": "docs/PERFORMANCE-CENTER-v1.5.0.md",
+      "sha256": "6d89c7b80832233b8498d1cd2ab49e621ebcf83d49f0f90217c56cae811c6ac1",
+      "size": 2342
+    },
+    {
+      "file": "docs/PERFORMANCE-PLUS-v0.4.0.md",
+      "sha256": "6956db81427e5a0222bc8eb0cd619491221209e3797256ca168d8c59820f7c8b",
+      "size": 458
+    },
+    {
+      "file": "docs/PROFILES-CONFIGURATION-v1.8.0.md",
+      "sha256": "a8bec02d92471e4528c53023fe5c7e5f102a97b3ed8958853330f35ba342a09e",
+      "size": 2158
+    },
+    {
+      "file": "docs/RELEASE-POLICY.md",
+      "sha256": "afd2bfb574727e51d68ee9dac3377dbba2ce6e46aeadc8042dc1f0bd6bbb3563",
+      "size": 2762
+    },
+    {
+      "file": "docs/RELEASE-v0.9.5.md",
+      "sha256": "68a9cd9f8db22b9d8a0b8f92e6294e428da5b57a5677db6c3ab0972d179a8d18",
+      "size": 1165
+    },
+    {
+      "file": "docs/RELEASE-v1.0.0.md",
+      "sha256": "fc3adb9a0e8d3d054b29bdb3d216949e3b428fbde4d7ed38f1a2f680a96273dd",
+      "size": 1589
+    },
+    {
+      "file": "docs/RELEASE-v1.1.0.md",
+      "sha256": "953909412825c01c6e9bcfd0417d98fdb2dbbf4e10f667144d37049b08247567",
+      "size": 985
+    },
+    {
+      "file": "docs/RELEASE-v1.1.1.md",
+      "sha256": "6810d352a3f409be4ffd73b06c626d4ec8cba36ce32449c5a18b00cb9d655b2e",
+      "size": 788
+    },
+    {
+      "file": "docs/RELEASE-v1.1.2.md",
+      "sha256": "47db70b9ec9ed03e6e9ca9dc9fb17dbb67418bfa7d0f975f4d191b5d0b6839b9",
+      "size": 1240
+    },
+    {
+      "file": "docs/RELEASE-v1.3.0.md",
+      "sha256": "a0146438d8235a49c43625bf87746d6b77d26aa88f373f483f05ae6f9ae9633c",
+      "size": 1416
+    },
+    {
+      "file": "docs/RELEASE-v1.4.0.md",
+      "sha256": "32a6b13091bf431c9110549d9fee80ed34b46ffe6a371da272758b96be42b5cd",
+      "size": 1481
+    },
+    {
+      "file": "docs/RELEASE-v1.5.0.md",
+      "sha256": "3771f1f8f6bef2548f2cd41aaef1faf60357bddc28d37ac628bcf813ecfc512d",
+      "size": 1294
+    },
+    {
+      "file": "docs/RELEASE-v1.5.1.md",
+      "sha256": "edd9c354ce9b0cec04af88d0b22786a6c299a5885b863cd8378baf54c412e1ed",
+      "size": 968
+    },
+    {
+      "file": "docs/RELEASE-v1.5.2.md",
+      "sha256": "43cf762a3c134fa47e46624158b1330eb7884f60caa5206a074232ea4270e039",
+      "size": 1688
+    },
+    {
+      "file": "docs/RELEASE-v1.6.0.md",
+      "sha256": "884f3813d885ff82cdf057593b7bd2b305eedef699bd701fc42637129d2c5a6a",
+      "size": 1003
+    },
+    {
+      "file": "docs/RELEASE-v1.7.0.md",
+      "sha256": "d8ed7e3c394bc4a5175d21bd374de9d817ce29fd1c0a029a99779c78a8a86bef",
+      "size": 1123
+    },
+    {
+      "file": "docs/RELEASE-v1.8.0.md",
+      "sha256": "f36af563d768a1ac7d9ecdb5820cd37989f3aee1af82c0a41f5009ff42feade8",
+      "size": 1066
+    },
+    {
+      "file": "docs/RELEASE-v1.9.0.md",
+      "sha256": "40728686944caa1d1a7ffe6dd64d6607dd853e5ca0e006cd77b6bb46ea118ab8",
+      "size": 990
+    },
+    {
+      "file": "docs/RELEASE-v2.0.0.md",
+      "sha256": "ef66502657da1f23cb809efb1d3ca4b93b62eb8888348f0ea51fb7fd0ef87d53",
+      "size": 1680
+    },
+    {
+      "file": "docs/RELEASE-v2.0.1.md",
+      "sha256": "9aeed37ef95ae9300aa33c7c24b4a92170caf20989c30d0d3dbd6cc3d84b42ef",
+      "size": 773
+    },
+    {
+      "file": "docs/RELEASE-v2.0.2.md",
+      "sha256": "4ce721179a3fc3b7100490aa4c5fd0a33cb853b34d8281aca695f2815ac713b8",
+      "size": 795
+    },
+    {
+      "file": "docs/RELEASE-v2.0.3.md",
+      "sha256": "98084931b9327958e648d846706b3566f21518fdc6a5f310164caca6a54ac920",
+      "size": 553
+    },
+    {
+      "file": "docs/RELEASE-v2.0.4.md",
+      "sha256": "7b420dc7cfc3928617a75096a351843aab8ca3979384f95f157f29a67615ec3d",
+      "size": 816
+    },
+    {
+      "file": "docs/RELIABILITY-RECOVERY-v1.9.0.md",
+      "sha256": "c96bbb0730248e2d7ca11840f129af4d3933a0e5e4358ec964532e37d8764f1f",
+      "size": 2996
+    },
+    {
+      "file": "docs/REPAIR-CACHE-DIAGNOSTICS-v0.9.0.md",
+      "sha256": "7ecc9f782ca96103b056794c2c893c83f8f88b50e65dee994093b1d0804fa0c6",
+      "size": 1026
+    },
+    {
+      "file": "docs/ROBLOX-INSTALL-UPDATE-v1.1.0.md",
+      "sha256": "62a01bc9a1a344fd6c57c5a67a39ce3a0fa4e0968f165e8cde042e95700401f2",
+      "size": 1907
+    },
+    {
+      "file": "docs/SERVER-INTELLIGENCE-v0.6.0.md",
+      "sha256": "51a2756ec5186054f9330225cdf907fb331a9e744411ef744df5194b0b36e373",
+      "size": 977
+    },
+    {
+      "file": "docs/SERVER-INTELLIGENCE-v1.6.0.md",
+      "sha256": "d0bcd57ee50c2ddcb62dae98d7c934980e43832db9bb9720149178f221162478",
+      "size": 1925
+    },
+    {
+      "file": "docs/STUDIO-CENTER-v0.7.0.md",
+      "sha256": "2425d964f5378b0fb0b1fdcac02aa01ea673109396367c98ad36d00d9b1f2031",
+      "size": 541
+    },
+    {
+      "file": "docs/STUDIO-CENTER-v1.7.0.md",
+      "sha256": "cd9d508716a43e2981cda3e1f1d5507597d0c2bda25d6d52ef4954692287366e",
+      "size": 1865
+    },
+    {
+      "file": "docs/UI-POLISH-v0.1.2.md",
+      "sha256": "066a4923b0e63cb16657286bf8ef4f9667d5bfc7e90cfda3ab9ca04318180952",
+      "size": 849
+    },
+    {
+      "file": "docs/UI-POLISH-v0.1.3.md",
+      "sha256": "45375d15e020d7b6d074d749e27541219ed694b96d26fc2f1deb8d5f9a38ef4e",
+      "size": 708
+    },
+    {
+      "file": "docs/UI-POLISH-v0.1.4.md",
+      "sha256": "ee07fe2293d5764bcce39e496aa74cd248100ede080ba777e8e4d98c14474117",
+      "size": 669
+    },
+    {
+      "file": "docs/UI-POLISH-v0.1.5.md",
+      "sha256": "0fb180b5f5ac9d5fdd3313bf32f5c603f402a81b269e2ffc46c68a1495a96f71",
+      "size": 849
+    },
+    {
+      "file": "docs/UI-UX-v0.2.0.md",
+      "sha256": "d79faa4995db9b3329f6871217898fff29fc8d1b8ec7c1d96aad8ba7103fb562",
+      "size": 838
+    },
+    {
+      "file": "docs/UPSTREAM.md",
+      "sha256": "cacaa666023e2e11a98ee6f7210af4f4ff9db93204a3a4cdf054146044857863",
+      "size": 1518
+    },
+    {
+      "file": "main.js",
+      "sha256": "bf631c6ae1417e313d4bed161f5013b6214261ffc554fabfd87cca535f5ff05f",
+      "size": 49783
+    },
+    {
+      "file": "package.json",
+      "sha256": "ab9f059fada6828ab6d452dec1397006957b16d8f1c311d4792b732c4bf18ad5",
+      "size": 2154
+    },
+    {
+      "file": "preload.js",
+      "sha256": "5c5f3bb5d1ede4dd1329504ca14bed1f405661cb34d10f6595b0f2ccc3a3a1a0",
+      "size": 9980
+    },
+    {
+      "file": "release.config.json",
+      "sha256": "3b468ad479081f44ccd3ef39c4ba2c11d8847ca7db95d722440221919e41780a",
+      "size": 157
+    },
+    {
+      "file": "renderer/app.js",
+      "sha256": "0565375b4f8ed7d36e018e559b36166c6165db982c53ba4878c70e4db86ba708",
+      "size": 170603
+    },
+    {
+      "file": "renderer/assets/dragon-app-icon.png",
+      "sha256": "e7e0f703a07a7f9cc069682411743bae123a89673b570db96da34b6527e22999",
+      "size": 985996
+    },
+    {
+      "file": "renderer/assets/dragon-watermark.png",
+      "sha256": "55c6ac879592a5d84bf8993eba33488897421aee758fb4dad544dbf98a2fddb7",
+      "size": 2037583
+    },
+    {
+      "file": "renderer/assets/logo.svg",
+      "sha256": "b6875d813468eb0644f879dd36335e9f2ae856ea0cdfbcd82f7a785d1954e114",
+      "size": 927
+    },
+    {
+      "file": "renderer/assets/reference-concept.png",
+      "sha256": "0a295018961d1d0d7da6c92a53041c3819d0dc7d6f6f7a94f8b1afd6ba3da6e3",
+      "size": 1960315
+    },
+    {
+      "file": "renderer/channels.css",
+      "sha256": "0af1a40910f779c6d49299fa95c4875b56a785ce8a975a4b459978dc84e4867b",
+      "size": 5678
+    },
+    {
+      "file": "renderer/dragon-2.css",
+      "sha256": "4b9b03e4f4c8d94cbb068c5f092071cf321051b4097d35c7d7312b7af32b52f5",
+      "size": 6879
+    },
+    {
+      "file": "renderer/fastflags.css",
+      "sha256": "d4c3f3100178fa7c9734fe4d481996584aad95bbdf23a68e138f9b99975be090",
+      "size": 12969
+    },
+    {
+      "file": "renderer/index.html",
+      "sha256": "76497c0635bc9f696de1d9e6ebd4cdd2e03df067e4b4963234771ca07de1b022",
+      "size": 80279
+    },
+    {
+      "file": "renderer/maintenance.css",
+      "sha256": "c4bf61493f6fb0db882f12f6cf877b75545c24c9754bbfe291aef93ddb40efb4",
+      "size": 8390
+    },
+    {
+      "file": "renderer/performance-center.css",
+      "sha256": "d7d03853e2703d664e42d57498a10604f64174babcfeeff72c84e44ace9f48dd",
+      "size": 6837
+    },
+    {
+      "file": "renderer/profiles.css",
+      "sha256": "3ac4d7074a623e29fae21a317d665f3a6d55c3d99d63caeed3c7b3eb41442243",
+      "size": 2819
+    },
+    {
+      "file": "renderer/purple-dragon.css",
+      "sha256": "278bba2eb39143c43ef035e96b247e64bef1a4cb7f8d4be8a74f8987332d68ea",
+      "size": 23106
+    },
+    {
+      "file": "renderer/reliability.css",
+      "sha256": "1455826e6c78ae9dff752b09ee7479dc39d4152c7870f998255cde815566b0eb",
+      "size": 1327
+    },
+    {
+      "file": "renderer/servers.css",
+      "sha256": "77056fb7e8595b2ba60c8c88d61488fb71e1c3432ef85d8f57f56153eedd78e6",
+      "size": 10001
+    },
+    {
+      "file": "renderer/studio.css",
+      "sha256": "240eb083dde3a4e51bf91e9020a088c1d220d579d0701b07730535e3d9a86f87",
+      "size": 8567
+    },
+    {
+      "file": "renderer/styles.css",
+      "sha256": "405d79e9cebbdd1b328abf2d21f6d6d473be6beeeec2ea9f40f9c36701b6c615",
+      "size": 43930
+    },
+    {
+      "file": "renderer/update-center.css",
+      "sha256": "b4f3ea08ff3e3779beb9d72640c1a6cee5bd7b928804c90564718ead8d429005",
+      "size": 3353
+    },
+    {
+      "file": "scripts/Build-Windows-Release.ps1",
+      "sha256": "61cfc5480951a78543bcb35235f7e69fa1397d55f8e2a7ec37ac29e130a0a21c",
+      "size": 1483
+    },
+    {
+      "file": "scripts/Publish-To-GitHub.ps1",
+      "sha256": "d5b56d6c1f2bb9e5eb4786f05f779380cd9a192213515364a8c09758bff283c9",
+      "size": 1749
+    },
+    {
+      "file": "scripts/Start-DragonStrap.bat",
+      "sha256": "797d6d6eabb12b714622c049633d1ea1c994d548ba384c0dc3f5a983d12fcf81",
+      "size": 273
+    },
+    {
+      "file": "scripts/Start-DragonStrap.vbs",
+      "sha256": "21fda360a4890b521fe4b870d4a92881b418889741dce7afde4efe502f349c5e",
+      "size": 804
+    },
+    {
+      "file": "scripts/Tag-Stable-Release.ps1",
+      "sha256": "93c414b2f7d9355833c3ba4673c20c012c1f7f5610739631c88ea62ad0686eba",
+      "size": 709
+    },
+    {
+      "file": "scripts/check-source.js",
+      "sha256": "e0a004d497fb6865ebacf6fa4fcb1ce51575d64e789a180f1ff89618b26ef31f",
+      "size": 2295
+    },
+    {
+      "file": "scripts/prepare-release.js",
+      "sha256": "1df6104f6c43677c772ac7e7e3b8cb311f392fc39700bf87fe0e2555c34d3e13",
+      "size": 1285
+    },
+    {
+      "file": "scripts/verify-release.js",
+      "sha256": "98377800040a59ec75955e254f16cfb5e7256137d1b5cec01efd62b2ae532e54",
+      "size": 5066
+    },
+    {
+      "file": "src/core/api-contract.js",
+      "sha256": "0310a179ef19fb8197102be5f137137fea45c4e3d51c976518e5da85b5d66875",
+      "size": 179
+    },
+    {
+      "file": "src/core/app-kernel.js",
+      "sha256": "7ca5206aeac4f62d001abc2fe1cd41e9b1ada6c50dd48b9f14fc1dd633081fac",
+      "size": 9573
+    },
+    {
+      "file": "src/core/bootstrap-pipeline.js",
+      "sha256": "5d6c050133152d43ba9ca9b353089d9e8fd6daa1c441b16ab04172870954097d",
+      "size": 2864
+    },
+    {
+      "file": "src/core/operation-coordinator.js",
+      "sha256": "035fe3a15cefd8046fa929d5a70d1d1005b875929707ab7fb733b64bc016cd3d",
+      "size": 2330
+    },
+    {
+      "file": "src/core/plugin-host.js",
+      "sha256": "eefd59c43e4e587c0a051b3810fd2813baf4a3633aa61721210e3c22b9b997fc",
+      "size": 2771
+    },
+    {
+      "file": "src/core/roblox-status-cache.js",
+      "sha256": "9684f0e7e8f0c3d8e1b73fc0e55d084d74d72a8eaa3ede70ad25f0eab235075f",
+      "size": 1124
+    },
+    {
+      "file": "src/core/service-registry.js",
+      "sha256": "f0b6efecd3e939d1d1c60e8e7a4d6ee65d90a7c01a3a588779ca65881667581c",
+      "size": 2091
+    },
+    {
+      "file": "src/services/channel-version-service.js",
+      "sha256": "a11b7a4c5234f640efb14691de295434400eefb708ae9b1b301dbaad2895c244",
+      "size": 8250
+    },
+    {
+      "file": "src/services/configuration-profile-service.js",
+      "sha256": "ac1a238c1e44ac0b1323755846230c7e01dc599e366ebd94549e295625045ec6",
+      "size": 6216
+    },
+    {
+      "file": "src/services/configuration-profile-store.js",
+      "sha256": "d22264cfcc43975bfe43b1869d3118aaa6a9f2378994925f271e6a0188297093",
+      "size": 9645
+    },
+    {
+      "file": "src/services/fastflag-metadata.js",
+      "sha256": "5caf30894eb71d502a3f336a31e1c167496cfa779652c7f7106278f330784e1c",
+      "size": 8433
+    },
+    {
+      "file": "src/services/fastflag-preset-store.js",
+      "sha256": "e28acd710e216240b4fd5452753e0da7513125e186d0e13b9ca10dc300e0424b",
+      "size": 4056
+    },
+    {
+      "file": "src/services/fastflag-service.js",
+      "sha256": "4fc1704142804e45e48a71e91cac4ad1dfccabfcb835c08937263fc806a57ae5",
+      "size": 15376
+    },
+    {
+      "file": "src/services/fastflag-snapshot-store.js",
+      "sha256": "eea991487760df02bcf7181681c46c3542bf8ce2fc86f36574cd24d548bbff9d",
+      "size": 2871
+    },
+    {
+      "file": "src/services/launch-history-store.js",
+      "sha256": "398d2e0cbcfbea00cdf00745e08168a5c927dc77c52b590838a4fbb62c31eb88",
+      "size": 1588
+    },
+    {
+      "file": "src/services/launch-service.js",
+      "sha256": "f6adc1df3bed676a4837a00fdb0eb7b806a96a0248af2969367b726b678d7798",
+      "size": 2142
+    },
+    {
+      "file": "src/services/launch-target-service.js",
+      "sha256": "b52bc83cdb6b2977995fb9ee9fc5e0906643124a518c7b4eee1bc90b901fc430",
+      "size": 4415
+    },
+    {
+      "file": "src/services/maintenance-service.js",
+      "sha256": "dfb1da76cd2d88bd050b184bcbe2e903c9bdaf5163e157294558b3a84db8cd63",
+      "size": 13998
+    },
+    {
+      "file": "src/services/performance-center-service.js",
+      "sha256": "c90308142100f72eb381680d72b83cf75460a74bc319a2e7d00364b6392cc73b",
+      "size": 13875
+    },
+    {
+      "file": "src/services/performance-profile-store.js",
+      "sha256": "9d9cac35554be8196a3cf1b4a5d367b08975ba78ee259d909bd21f137e001937",
+      "size": 8639
+    },
+    {
+      "file": "src/services/performance-service.js",
+      "sha256": "e545802a37aff2cfc115175d15d24a6fda3230f3f5a8cdae9d7cb273d5cd4106",
+      "size": 4557
+    },
+    {
+      "file": "src/services/recovery-service.js",
+      "sha256": "3f3a28bb0838b438b5953bb6aa2d481b28767ae82c124e9d100504530520bfa8",
+      "size": 13143
+    },
+    {
+      "file": "src/services/reliability-service.js",
+      "sha256": "c1e799077351866029021d030e3365d07cdeaa8abff24cb457238e6a32309f29",
+      "size": 3236
+    },
+    {
+      "file": "src/services/roblox-installation.js",
+      "sha256": "abd43d596e1e1265ab90db97f14b29e2c73f8368017287e0c187789062aeee5b",
+      "size": 1887
+    },
+    {
+      "file": "src/services/roblox-update-engine.js",
+      "sha256": "624ca17ef6e59e71442e5049cc5fb5885a432c2a3235dcf50cb5503d41e80387",
+      "size": 35367
+    },
+    {
+      "file": "src/services/self-update-service.js",
+      "sha256": "9bf8885c6b52e415650e0ba058c8ce6467d1f2975b50c3253a3769258a243c9d",
+      "size": 25435
+    },
+    {
+      "file": "src/services/server-intelligence-service.js",
+      "sha256": "478f2af24dad04abaf24f3dd3cf625cd5351744f05d2b1a7758f2ef4506c153e",
+      "size": 13982
+    },
+    {
+      "file": "src/services/server-intelligence-store.js",
+      "sha256": "915ca3d83186ff00914fa452550bceaaba8be4a5f94a20eb277a9ebef6a8ff9f",
+      "size": 9403
+    },
+    {
+      "file": "src/services/settings-store.js",
+      "sha256": "0fb0b336407d62851257a5214166f0e7e3bf0ffee64a48cdc402b4fd82b0b61c",
+      "size": 4684
+    },
+    {
+      "file": "src/services/studio-backup-service.js",
+      "sha256": "bd3a7a0cd03020f1a348112a08ef49199f239b8a029f037845099801d3a08835",
+      "size": 5147
+    },
+    {
+      "file": "src/services/studio-fastflag-service.js",
+      "sha256": "05f46a73c0a25a09e11ef9a9a96e4b9033da654700c7f587ab72273b26de438f",
+      "size": 9297
+    },
+    {
+      "file": "src/services/studio-project-history-store.js",
+      "sha256": "b7e629d72d777eb4ed303c15a4c3fe2633cf3c83cc3a401cbaca23173b7ce884",
+      "size": 2714
+    },
+    {
+      "file": "src/services/studio-service.js",
+      "sha256": "74099d9a57dcd2c31ef26f3a59009ba4cb36c5aa5ceb6a191ab86f4e23313095",
+      "size": 2782
+    },
+    {
+      "file": "src/services/studio-settings-store.js",
+      "sha256": "9593549f91dd0c3e936b21917284012d656526acb18e4fd538f37c023eab10a2",
+      "size": 3045
+    },
+    {
+      "file": "src/services/update-service.js",
+      "sha256": "954ac04e9030889f2c44ba6b39ef88b5c1289690157437aafaac984f0f73a6ac",
+      "size": 6419
+    },
+    {
+      "file": "tests/bootstrap-pipeline.test.js",
+      "sha256": "16c22205228719778453fd412f062712e98d56b5da2262222ebbf97c25b5e25c",
+      "size": 2490
+    },
+    {
+      "file": "tests/channel-version-service.test.js",
+      "sha256": "84f3261638d476859fa54659a0a2d7105de4a1c8faa965d48e806619584413d3",
+      "size": 3295
+    },
+    {
+      "file": "tests/configuration-profile-service.test.js",
+      "sha256": "d5981a5c21f1d5ede776a39f2069ebf27c3690e93dbc5e61dd064a98ef9ffa75",
+      "size": 5188
+    },
+    {
+      "file": "tests/configuration-profile-store.test.js",
+      "sha256": "711ad6b8bee696d9d2a061d5d2d231596f5598e1dc444fd60b25b8cab4ed2f0f",
+      "size": 3176
+    },
+    {
+      "file": "tests/configuration-profiles-ui.test.js",
+      "sha256": "a87931d3b998e57421e9e77150db904f57ba97be3955503b445656662d5f2ab8",
+      "size": 1131
+    },
+    {
+      "file": "tests/core-architecture.test.js",
+      "sha256": "cbb9bdc68c4e3a68d7e5dcde3a8eb3b19693438e0daf735d74cc3a07a6b1789b",
+      "size": 3872
+    },
+    {
+      "file": "tests/dragonstrap-2-ui.test.js",
+      "sha256": "0127c130550d995fddd95fca50cd603bac8fcc02abe75a4b3be80272c151d8c9",
+      "size": 1282
+    },
+    {
+      "file": "tests/fastflag-preset-store.test.js",
+      "sha256": "1719ccdd471e3a03f71ea7c1b33e0d4f737fe628a210de96aeea657c21bc9880",
+      "size": 2045
+    },
+    {
+      "file": "tests/fastflag-service.test.js",
+      "sha256": "c8c3c812a9bef5e531ba82c32f7ab8ecb8ba06d539d556efef351fb1ff61f3e0",
+      "size": 7702
+    },
+    {
+      "file": "tests/fastflag-snapshot-store.test.js",
+      "sha256": "afa2976b6b88a68ab08f69259e6e6bcb0367c409c0ca646d6d4cf9a10ff41399",
+      "size": 2550
+    },
+    {
+      "file": "tests/fastflag-v3-ui.test.js",
+      "sha256": "9437a4c4d7b2b524ec578381bb092e5b33d1aaa57d617311d711ec9a41d363dc",
+      "size": 1535
+    },
+    {
+      "file": "tests/home-performance-widget.test.js",
+      "sha256": "6e83a9383061a783aba65bdd5915871166f2e7537fdecf0180b229d0a78db4aa",
+      "size": 1891
+    },
+    {
+      "file": "tests/installer-current-ui.test.js",
+      "sha256": "ecd076523b94b6be851e2856f00eade616e54a57316289544b3ed828c700d633",
+      "size": 818
+    },
+    {
+      "file": "tests/launch-history-store.test.js",
+      "sha256": "f372f5c84dc5c36a5f97c36d5de5c77c9a6f36c4b5c5d8a85977d616d388adaa",
+      "size": 856
+    },
+    {
+      "file": "tests/launch-service.test.js",
+      "sha256": "f20d02e81331427ba2a89015c20aeca1c3b3381e6e36e929c3b7953eff3ac691",
+      "size": 2433
+    },
+    {
+      "file": "tests/launch-target-service.test.js",
+      "sha256": "5b5922b3fee144e0974efd0475f8bb91d6b56367e7f290a8966e253f0c993ef3",
+      "size": 1287
+    },
+    {
+      "file": "tests/maintenance-service.test.js",
+      "sha256": "8a64fb35136d13ac8363d73ff4a3c12fbf3b544acb00f7ea1ac2b813b455fc8b",
+      "size": 4478
+    },
+    {
+      "file": "tests/performance-center-layout.test.js",
+      "sha256": "8d655fcd09864ede30788f86eeb23a9f1221cf78b9a95afad685b6a286111098",
+      "size": 1137
+    },
+    {
+      "file": "tests/performance-center-service.test.js",
+      "sha256": "a7045732061baa1d4c638e9075368d570421ec378997b5ace131a87fe770433e",
+      "size": 4063
+    },
+    {
+      "file": "tests/performance-center-ui.test.js",
+      "sha256": "424bc75ab2f3ad244d3165cecce89dd26d1210fd0bb7d57b68f35f5b48f2650b",
+      "size": 1970
+    },
+    {
+      "file": "tests/performance-profile-store.test.js",
+      "sha256": "624663a1be30d12715e4199728479b14a68a606a593534c9be11e6cb255593ca",
+      "size": 3412
+    },
+    {
+      "file": "tests/performance-service.test.js",
+      "sha256": "365828749ad75e0ee6073953853ec8d6ad35eb1130bf9cdfdbb82f9e8a106454",
+      "size": 3248
+    },
+    {
+      "file": "tests/product-menu-ui.test.js",
+      "sha256": "7e2b9d8be4a870872cebbae29af70dcb3a1f9caae444a5a63f745e4a312ba949",
+      "size": 1608
+    },
+    {
+      "file": "tests/recovery-service.test.js",
+      "sha256": "e8426b38e9b80d45cada8fe51a8086ea9206a6ec21519285d7c99c29974cb812",
+      "size": 4413
+    },
+    {
+      "file": "tests/reliability-recovery-ui.test.js",
+      "sha256": "64e362220cad8f4cdd1e5d43a680c86aa69e9d3d086c718300b0edea688d2d6e",
+      "size": 1094
+    },
+    {
+      "file": "tests/reliability-service.test.js",
+      "sha256": "62d7c5d3ea6e7ab5a1aa09b587d6d8e23fe7fd0612ee26428e3b2a264be79d0e",
+      "size": 1018
+    },
+    {
+      "file": "tests/roblox-installation.test.js",
+      "sha256": "8fa33b75f13a8c55c08655567fa998cc54b1a34870cb5656fa4e395d2bd336dd",
+      "size": 1342
+    },
+    {
+      "file": "tests/roblox-overview-ui.test.js",
+      "sha256": "a0a2f45b5420e1f955e5ea4de01c3364d03cc3aea968930bc1062e793d19e511",
+      "size": 1445
+    },
+    {
+      "file": "tests/roblox-update-engine.test.js",
+      "sha256": "2a367f1b9f743c71f9a16842314e62e1610e74f34975d69fa67e0174ade8cc90",
+      "size": 12578
+    },
+    {
+      "file": "tests/self-update-service.test.js",
+      "sha256": "4083422ea8e94d4a5b70e1f486928dba49e73b1e0fa9a53f928f42041c9af32d",
+      "size": 9128
+    },
+    {
+      "file": "tests/server-intelligence-service.test.js",
+      "sha256": "ef606d429774517c2f663717829d516f4e26e23ebe0aa925f84cdefb436a0c0d",
+      "size": 7849
+    },
+    {
+      "file": "tests/server-intelligence-store.test.js",
+      "sha256": "3d478b4e6d082496b278ed507ed66567e2ddd8f1e524d42d09e2392f37c23fb4",
+      "size": 3150
+    },
+    {
+      "file": "tests/server-intelligence-ui.test.js",
+      "sha256": "a777360635ec62a56222c8a0c0c88c3137970c23712e3b19d773f686cff4d7d9",
+      "size": 1043
+    },
+    {
+      "file": "tests/settings-store.test.js",
+      "sha256": "ec847b7098d1c51a68ba350766459025f1ea9d90cd74785374e80de0c8d048f0",
+      "size": 3703
+    },
+    {
+      "file": "tests/studio-backup-service.test.js",
+      "sha256": "3776a66fba9013ea2b31e2664097cd9b3cccb636d84116571e0277302dc0fbec",
+      "size": 1884
+    },
+    {
+      "file": "tests/studio-center-v2-ui.test.js",
+      "sha256": "23cf4581a115b3bd39e9d3cbe87bc9cf9009c311df3dd476a2d3260e8c8480d1",
+      "size": 974
+    },
+    {
+      "file": "tests/studio-fastflag-service.test.js",
+      "sha256": "b0095001f7b4771c7373aa1bd8be298e1626ca71f303109392b7ce438446a48b",
+      "size": 2249
+    },
+    {
+      "file": "tests/studio-project-history-store.test.js",
+      "sha256": "b0a006040b72a71b083f9ae1f930cf82cd4fb72bf295f6c2646a470d381146df",
+      "size": 1041
+    },
+    {
+      "file": "tests/studio-service.test.js",
+      "sha256": "34075882f2eb4c7b97e76d13ecbeb9068f38697e8f107d5bdd926bb0b91e8864",
+      "size": 1020
+    },
+    {
+      "file": "tests/studio-settings-store.test.js",
+      "sha256": "8d0782a4f98940a773fee358b09079ce83b8e2f59e4ab2a0c72481c0b1fbd30f",
+      "size": 1467
+    },
+    {
+      "file": "tests/update-service.test.js",
+      "sha256": "ca975acdbf2693cc1ce60e8dc8c42746794e47d3e19221127ab285d64b926918",
+      "size": 4253
+    }
+  ]
+}

@@ -1,67 +1,68 @@
-# DragonStrap Architecture — v0.7.0
+# DragonStrap Architecture — v2.0.0
 
-## Design goals
+## Goals
 
-1. Keep the NeoPurple interface independent from bootstrapper internals.
-2. Keep privileged filesystem/process operations out of the renderer.
-3. Make upstream bootstrapper integration replaceable behind service interfaces.
-4. Avoid arbitrary shell execution and arbitrary renderer-supplied executable paths.
-5. Store user preferences separately from install/update state.
+DragonStrap 2.0 consolidates the bootstrapper around explicit service contracts while preserving the renderer/main-process security boundary established in v1.x.
 
-## Process boundary
+1. Privileged filesystem, process, installation, update, and recovery work remains in the Electron main process.
+2. Renderer code receives only typed preload operations and never arbitrary execution capability.
+3. Service dependencies are constructed once by `AppKernel` and registered in a sealed `ServiceRegistry`.
+4. Destructive bootstrap/update/recovery workflows share an exclusive `OperationCoordinator`.
+5. Roblox Player state reads are cached briefly in the main process to avoid repeated directory scans during dense UI refreshes.
+6. Feature centers lazy-load on navigation instead of all querying their backends during startup.
+7. Future plugin integrations target versioned extension points rather than importing directly into existing services.
 
-The Electron renderer has no Node.js access. `preload.js` exposes only specific DragonStrap methods. `main.js` validates the operation by choosing the executable path from the installation service rather than accepting an arbitrary path from the UI.
+## Core graph
 
-## v0.2+ integration plan
+```text
+Electron main.js
+    |
+    v
+AppKernel
+    |-- ServiceRegistry
+    |-- OperationCoordinator
+    |-- PluginHost (contracts only; external loading disabled)
+    |-- RobloxStatusCache
+    `-- BootstrapPipeline
+            |-- RobloxUpdateEngine
+            |-- SelfUpdateService
+            |-- UpdateService
+            `-- SettingsStore
+```
 
-A future `BootstrapperService` should own:
+The v1.x domain services remain focused components under `src/services/`. `src/core/` now owns composition, lifecycle contracts, operation coordination, extension metadata, and cross-domain bootstrap orchestration.
 
-- Roblox version metadata lookup
-- package download and hash verification
-- atomic installation/update staging
-- rollback/recovery
-- channel metadata
-- launch protocol handling
-- update locking / single-instance coordination
+## Bootstrap/update pipeline
 
-Fishstrap/Bloxstrap-derived code, if used, should live behind this boundary and preserve upstream licenses.
+`BootstrapPipeline` is the common entry point for Player install planning, Player installation, rollback, DragonStrap update download/apply, and launch-readiness checks. It does not replace the lower-level services; it coordinates them.
 
+Destructive operations acquire the shared operation lock. This prevents a Player installation, self-update, rollback, or configuration recovery from starting over another active destructive core operation.
 
-## v0.2.0 renderer design layer
+Cancellation remains owned by the lower-level service so in-progress network/archive work can be aborted safely while the coordinator holds the operation lease until the task settles.
 
-`renderer/purple-dragon.css` is the DragonStrap-owned visual system loaded after the NeoPurple foundation stylesheet. New UI work should target this layer instead of adding release-specific hotfix blocks to `styles.css`.
+## Stable Core API
 
-## v0.3.0 Launch Center services
+`preload.js` exposes `apiVersion = "2.0.0"` and a read-only `getCoreState()` operation. Existing v1.x preload methods remain available for compatibility. The Core API reports service contracts, pipeline state, exclusive-operation state, and extension-point metadata without exposing raw service objects to the renderer.
 
-The Launch Center adds two isolated backend components:
+See `CORE-API-v2.md`.
 
-- `LaunchTargetService` parses user-entered Place IDs, Roblox game URLs, and supported `roblox://experiences/start` links, then emits a normalized Roblox deep link.
-- `LaunchHistoryStore` persists a bounded local history of launch attempts in the Electron user-data directory.
+## Plugin-ready boundary
 
-The renderer never receives arbitrary filesystem execution capability. It can only request the typed launch actions exposed through `preload.js`; executable paths continue to come exclusively from `RobloxInstallationService`.
+`PluginHost` defines these v2 extension points:
 
+- `launch.adapter`
+- `server.enrichment`
+- `diagnostics.contributor`
+- `profile.section`
 
-## v0.4.0 Performance+ service
+Only DragonStrap built-in manifests are registered in v2.0.0. External plugin discovery/loading is deliberately disabled until a future release defines signing, permission, isolation, version negotiation, and revocation policy.
 
-`src/services/performance-service.js` owns the only Player ClientSettings writes in v0.4.0. The renderer cannot provide arbitrary flag names or file paths. IPC exposes only get-state, apply-current-settings, and restore-managed-settings operations. The service resolves the current detected Player version, merges a four-key allowlist into `ClientSettings/ClientAppSettings.json`, and preserves unrelated keys.
+## Renderer performance
 
+The renderer startup path now loads shell/home state first. Performance, FastFlags, Studio, Channels, Recovery, Servers, and other center-specific data is requested when the user enters that center. This removes unnecessary filesystem/network/process queries from normal startup.
 
-## v0.5.0 FastFlag Manager 2.0
+Inactive views use the final `dragon-2.css` consolidation layer to reduce layout/paint work while preserving the Purple Dragon visual system.
 
-`src/services/fastflag-service.js` owns general Roblox Player `ClientAppSettings.json` access. The renderer receives a normalized inventory and can submit only validated flag patches; it never supplies a target path. `PerformanceService` retains exclusive ownership of its four managed keys, which FastFlag Manager exposes as protected/read-only.
+## Compatibility
 
-The FastFlag service serializes values as strings for Roblox/Bloxstrap interoperability, validates flag identifiers and scalar types, uses a temporary file + rename for atomic writes, and creates a one-time sibling backup before its first modification of an existing settings file.
-
-`src/services/fastflag-preset-store.js` persists local named snapshots in DragonStrap's user-data directory. Presets contain only editable flags and are loaded into the renderer as pending changes before the user applies them. Import/export runs in the main process through Electron native dialogs.
-
-
-## v0.6.0 Server Intelligence + RoValra
-
-`src/services/server-intelligence-service.js` owns all public-server network access. The renderer can provide only a Place ID or supported Roblox game URL; it never provides an arbitrary endpoint. The service queries Roblox's public server list first, then optionally enriches public server IDs through RoValra's server detail/count endpoints.
-
-RoValra failure is non-fatal: Roblox player count, capacity, ping and FPS continue to render without region/uptime enrichment. Lookups are user-initiated, cached briefly in memory, and do not send Roblox authentication cookies to RoValra. Specific-server Join actions continue through `LaunchTargetService` and `LaunchService` rather than executing renderer-provided commands.
-
-
-## v0.7.0 Roblox Studio Center
-
-The Studio Center adds a main-process Studio service and a local recent-project store. `.rbxl` and `.rbxlx` files are chosen through a native file dialog and validated before launch. Recent projects are relaunched by opaque history ID so the renderer does not submit arbitrary file paths. Studio settings remain read-only in this milestone.
+v2.0.0 preserves the v1.x data files and service-specific schemas. No forced profile/FastFlag/server-history migration is required for this architecture release.

@@ -1,40 +1,50 @@
 # DragonStrap
 
-**v1.0.0 — Stable Release**
+**v2.0.4 — Roblox Overview Status Polish**
 
-DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v1.0.0 marks the first stable release of the current feature set.
+DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.0.4 keeps the DragonStrap 2.0 architecture and makes the Home Roblox Overview present real build identifiers and status state instead of unlabeled GUID fragments or decorative percentage-style gauges.
 
-## Included in v1.0.0
+## DragonStrap 2.0 architecture
 
-- Purple Dragon desktop UI/UX
-- Roblox Player and Studio detection
-- Roblox Launch Center with Place ID / server-instance launch support
-- Performance+ with reviewed Player configuration controls
-- FastFlag Manager 2.0 with backup, import/export, presets, and queued changes
-- Server Intelligence with optional RoValra enrichment and Roblox-only fallback
-- Roblox Studio Center with validated local project launching
-- Channel & Version Manager for Player and Studio deployment metadata
-- Repair, Cache & Diagnostics Center
-- Single-instance protection and structured reliability logging
-- GitHub Releases update checking for the official repository
-- Windows portable/installer release build tooling
-- Persistent settings, launch history, Studio history, and FastFlag presets
+- `AppKernel` owns service construction and dependency wiring instead of `main.js` creating services ad hoc.
+- A sealed `ServiceRegistry` exposes explicit capabilities and contract versions for core services.
+- `BootstrapPipeline` coordinates Roblox Player installation/rollback and DragonStrap self-update operations.
+- `OperationCoordinator` prevents destructive install/update/recovery workflows from colliding.
+- Core API version `2.0.0` is exposed through the preload boundary and Settings runtime panel.
+- Plugin-ready extension points are defined for launch adapters, server enrichment, diagnostics, and profile sections.
+- Third-party plugin code is **not executed in v2.0.0**; the extension boundary is ready without weakening the stable Electron security model.
+- Roblox installation status reads use a short-lived main-process cache to reduce repeated filesystem scans.
+- Heavy feature centers now lazy-load when opened instead of all loading during startup.
 
-## Stable-scope boundaries
+## Current centers
 
-DragonStrap v1.0.0 does **not** directly download or replace Roblox deployment packages when changing channels. The Channel & Version Manager validates and tracks public channels and compares installed/available builds; package installation will be implemented only with a dedicated installer/update engine.
+- Roblox Launch Center
+- Roblox Installation & Update Engine
+- Channel & Version Manager
+- Update Center 2.0
+- Performance Center 2.0
+- FastFlag Manager 3.0
+- Server Intelligence 2.0
+- Studio Center 2.0
+- Profiles & Configuration Center
+- Reliability & Recovery 2.0
 
-Performance+ and FastFlag Manager are intentionally scoped to Roblox Player. DragonStrap does not write Roblox Studio FastFlags in v1.0.0.
+## Safety model
+
+DragonStrap keeps privileged process/filesystem work in the main process. The renderer remains sandboxed with `contextIsolation` enabled and `nodeIntegration` disabled. Renderer calls are restricted to typed preload methods; arbitrary executable paths, shell commands, configuration paths, and third-party plugin code are not accepted.
+
+Installation/update/recovery operations use one coordinated destructive-operation lock. Roblox package installation remains staged and validated before commit, self-updates remain SHA-256 verified, and recovery continues to use allowlisted locations and transactional restore behavior.
 
 ## Run from source
 
-Requirements: Windows 10/11, Node.js, and npm.
+Requirements: Windows 10/11, Node.js, npm, and the Windows `tar.exe` utility used by the Roblox package engine.
 
 ```powershell
 npm install
+npm start
 ```
 
-For normal use, launch `scripts\Start-DragonStrap.vbs` or `scripts\Start-DragonStrap.bat`. Both avoid leaving an attached command window open. `npm start` is the development/debugging path and stays attached to its terminal.
+Source/dev mode intentionally disables binary self-application. Build a packaged release to exercise Portable or Setup update paths.
 
 ## Validation
 
@@ -50,20 +60,16 @@ npm run release:verify
 .\scripts\Build-Windows-Release.ps1
 ```
 
-The release script validates the source, runs the full test suite, builds x64 Portable and NSIS artifacts, and generates SHA-256 hashes. If no Windows code-signing identity is configured, electron-builder will produce unsigned artifacts and the build script will state that explicitly.
-
-## Official releases
-
-Official DragonStrap releases are published through this repository's GitHub Releases page. Verify downloaded artifacts against the accompanying `SHA256SUMS.txt` when provided. See `docs/RELEASE-POLICY.md`.
+Official releases should upload both Windows executables and the generated `dist\SHA256SUMS.txt` file.
 
 ## Version
 
-`1.0.0`
+`2.0.4`
 
 ## Official repository
 
 https://github.com/bubblegump30/DragonStrap
 
-## Third-party notices
+## Architecture and notices
 
-See `THIRD_PARTY_NOTICES.md`.
+See `docs/ARCHITECTURE.md`, `docs/CORE-API-v2.md`, and `THIRD_PARTY_NOTICES.md`.

@@ -43,16 +43,36 @@ class StudioService {
     };
   }
 
+  getProjectInfo(filePath) {
+    const validation=this.validateProjectPath(filePath);
+    if (!validation.ok) return { ...validation, exists:false };
+    try {
+      const stat=this.fs.statSync(validation.path);
+      return {
+        ...validation,
+        exists:true,
+        size:stat.size,
+        modifiedAt:stat.mtime.toISOString(),
+        directory:this.path.dirname(validation.path)
+      };
+    } catch(error) {
+      return { ok:false, exists:false, code:'PROJECT_UNAVAILABLE', message:error.message, path:validation.path, name:validation.name };
+    }
+  }
+
   getLocations(status) {
     const studioPath = status?.studioPath || null;
     const robloxRoot = status?.robloxRoot || null;
     const installDir = studioPath ? this.path.dirname(studioPath) : null;
+    const clientSettingsDir = installDir ? this.path.join(installDir, 'ClientSettings') : null;
     const logsDir = robloxRoot ? this.path.join(robloxRoot, 'logs') : null;
     return {
       studioPath,
       installDir,
+      clientSettingsDir,
       logsDir,
       installDirExists: Boolean(installDir && this.fs.existsSync(installDir)),
+      clientSettingsDirExists: Boolean(clientSettingsDir && this.fs.existsSync(clientSettingsDir)),
       logsDirExists: Boolean(logsDir && this.fs.existsSync(logsDir))
     };
   }

@@ -257,9 +257,13 @@ input[type="checkbox"]{accent-color:#a447f4}
 .performance-layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .performance-layout>.card{min-height:230px}
 .performance-hero{grid-column:1/-1;min-height:250px!important}
-.perf-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:22px}
-.perf-presets button{min-height:82px;border-radius:14px;border:1px solid rgba(190,127,255,.22);background:linear-gradient(145deg,rgba(38,27,51,.88),rgba(14,10,21,.86));color:#dac9ec;display:grid;grid-template-columns:38px 1fr;align-items:center;text-align:left;padding:14px;box-shadow:inset 0 1px rgba(255,255,255,.05),0 7px 14px rgba(0,0,0,.24);cursor:pointer}
-.perf-presets button>b{font-size:22px;color:#c98cff}.perf-presets button span{display:flex;flex-direction:column;font-weight:700}.perf-presets button small{margin-top:5px;color:#9787a9;font-weight:400;font-size:10px}.perf-presets button:hover{border-color:rgba(199,126,255,.55);box-shadow:0 0 18px rgba(155,65,255,.18),inset 0 1px rgba(255,255,255,.07)}
+.perf-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:20px}
+.perf-presets button{min-width:0;min-height:92px;border-radius:14px;border:1px solid rgba(190,127,255,.22);background:linear-gradient(145deg,rgba(38,27,51,.88),rgba(14,10,21,.86));color:#dac9ec;display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;gap:7px;text-align:left;padding:12px 10px;overflow:hidden;box-shadow:inset 0 1px rgba(255,255,255,.05),0 7px 14px rgba(0,0,0,.24);cursor:pointer}
+.perf-presets .perf-preset-icon{width:22px;font-size:18px;line-height:1;color:#c98cff;text-align:center;align-self:center}
+.perf-presets .perf-preset-copy{min-width:0;display:grid;align-content:center;gap:5px}
+.perf-presets .perf-preset-copy strong{min-width:0;font-size:11px;line-height:1.15;font-weight:750;color:#eadcf5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.perf-presets .perf-preset-copy small{margin:0;color:#9787a9;font-weight:400;font-size:9px;line-height:1.35;white-space:normal;overflow-wrap:anywhere}
+.perf-presets button:hover{border-color:rgba(199,126,255,.55);box-shadow:0 0 18px rgba(155,65,255,.18),inset 0 1px rgba(255,255,255,.07)}
 .perf-presets button.active{border-color:#c66cff;background:linear-gradient(145deg,rgba(107,42,154,.86),rgba(34,14,51,.92));box-shadow:inset 0 0 20px rgba(213,142,255,.13),0 0 18px rgba(166,68,255,.26)}
 .perf-toggle{margin-top:18px;padding:13px 15px;border-radius:12px;border:1px solid rgba(192,138,239,.14);background:rgba(11,8,17,.32);display:flex;align-items:center;justify-content:space-between;gap:20px}.perf-toggle span{display:flex;flex-direction:column}.perf-toggle strong{font-size:12px}.perf-toggle small{margin-top:4px;color:#9585a6}.perf-toggle input{width:20px;height:20px;accent-color:#a64cff}
 .perf-control-card .horizontal-slider{margin-top:34px}.perf-value{font-size:26px;color:#dca8ff;text-shadow:0 0 16px rgba(173,72,255,.28)}

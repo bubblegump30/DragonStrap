@@ -1,3 +1,200 @@
+## v2.0.4 — Roblox Overview Status Polish
+
+- Replaced raw unlabeled Roblox version GUID fragments on the Home overview with clearly labeled installed build IDs.
+- Preserved the full `version-...` folder identifier so the values read as real deployment/build IDs rather than arbitrary numbers.
+- Replaced arbitrary 100/85/70 gauge percentages with non-quantitative READY/OFFLINE status dials.
+- Added explicit Player Build, Selected Channel, and Studio Build metadata labels.
+- The LIVE channel is described as the official production channel; custom selected channels are labeled explicitly.
+- No Roblox detection, channel selection, or launch behavior changed.
+
+## v2.0.3 — Performance Center Layout Hotfix
+
+- Removed the unused desktop grid column beside Applied State and Managed Boundary.
+- Applied State now spans two columns on wide layouts while Managed Boundary fills the remaining column.
+- On medium two-column layouts, Applied State and Managed Boundary share the row instead of leaving an empty cell.
+- On compact layouts, both cards collapse cleanly to one column.
+- No Performance Center settings, hardware detection, FastFlag behavior, or profile logic changed.
+
+## v2.0.2 — Product Menu / Help & About Hotfix
+
+- Converted the DragonStrap avatar/name/version identity block into a functional dropdown menu.
+- Added Help with direct navigation to Launch, Performance Center, FastFlag Manager, and Reliability & Recovery.
+- Added About navigation that opens Settings and focuses the existing About card.
+- Synchronized the menu and About version labels with runtime application metadata instead of relying on stale hard-coded text.
+- Added click-outside and Escape handling plus keyboard-focus treatment for the dropdown and Help dialog.
+- No DragonStrap 2.0 Core API or service contracts changed.
+
+## v2.0.1 — Home Performance Controls Hotfix
+
+- Replaced the decorative Home Performance Center 2.0 controls with functional shortcuts and state.
+- FPS opens and focuses the real FPS controls.
+- Render opens and focuses the real renderer controls.
+- Network opens Server Intelligence.
+- Auto loads the hardware-aware recommendation and enables pre-launch auto-apply.
+- Custom switches to manual mode and opens the real tuning controls.
+- The chart now opens Performance Center instead of acting as a dead surface.
+- Home status now reports the configured profile, FPS target, renderer, and auto/manual state.
+- No Performance Center backend or DragonStrap 2.0 Core API contracts were changed.
+
+## v2.0.0 — DragonStrap 2.0
+
+- Consolidated main-process dependency construction behind a new AppKernel and sealed ServiceRegistry.
+- Added explicit service capability and contract metadata for long-term API stability.
+- Added a shared OperationCoordinator so destructive install, self-update, rollback, and recovery workflows cannot overlap.
+- Added a BootstrapPipeline that coordinates Player installation/rollback, DragonStrap self-update, and launch-readiness checks.
+- Added short-lived cached Roblox installation status to reduce duplicate filesystem scans across center refreshes.
+- Added Core API v2 runtime metadata through the secure preload bridge.
+- Added plugin-ready extension contracts for launch adapters, server enrichment, diagnostics contributors, and profile sections while keeping external plugin loading disabled.
+- Changed renderer initialization to lazy-load heavy feature centers on navigation rather than querying every subsystem on startup.
+- Added a DragonStrap 2.0 Core status panel in Settings and a final dragon-2.css UI consolidation layer.
+- Added Core API/service/operation metadata to privacy-conscious diagnostics.
+- Preserved v1.x configuration, profile, FastFlag, Studio, server-history, updater, and recovery data formats.
+- Expanded architecture/bootstrap/UI regression coverage.
+
+## v1.9.0 — Reliability & Recovery 2.0
+
+- Added Roblox Player structural integrity checks for expected version location, executable PE header/size, AppSettings, core content, and ClientSettings JSON validity.
+- Added trusted Player rollback using only DragonStrap-recorded previous installations or pre-replacement backups.
+- Added configuration restore points for allowlisted DragonStrap settings and current Player/Studio ClientSettings.
+- Restore points are SHA-256 verified and create a safety restore point before transactional restore.
+- Added interrupted self-update recovery for malformed state, missing/tampered staged files, partial downloads, and stale portable-update helpers.
+- Added abandoned Roblox staging cleanup when no install operation is active.
+- Added one-click Safe Repair with automatic restore point creation before repairs.
+- Safe Repair can repair malformed ClientSettings, clear abandoned staging/update leftovers, and roll back a corrupted Player only when a trusted rollback candidate exists.
+- Upgraded Maintenance to Reliability & Recovery 2.0 with Player integrity, restore points, update recovery, rollback status, and recovery folder access.
+- Upgraded diagnostic exports to schema v2 with integrity, rollback, restore-point, update-recovery, and reliability session metadata while excluding credentials and file contents.
+- Expanded automated recovery, rollback, updater-recovery, and UI regression coverage.
+
+## v1.8.0 — Profiles & Configuration Center
+
+- Replaced the placeholder Profiles page with a complete Profiles & Configuration Center.
+- Added named complete Player configuration profiles spanning Performance+, editable Player FastFlags, Player channel, minimize-after-launch behavior, and Server Intelligence sort/filter preferences.
+- Added validated before/apply previews with setting changes, FastFlag additions/changes/removals, warning counts, and explicit destructive-removal disclosure.
+- Added exact editable FastFlag-set application while preserving Performance Center-owned keys and existing FastFlag backup/snapshot protections.
+- Added profile cloning and active-profile tracking.
+- Added portable import/export using the versioned `dragonstrap.configuration-profile.v1` schema.
+- Imported profile IDs are never trusted; DragonStrap generates fresh local IDs and resolves name collisions safely.
+- Profile files exclude Roblox credentials, local paths, project history, diagnostics, updater state, and machine-specific runtime data.
+- Added persistent Server Intelligence preferences for sort, occupancy, favorites-only, and hide-full filtering so those choices participate in profiles.
+- Added transactional rollback behavior when complete profile application fails after partial changes.
+- Expanded profile-store, apply-service, UI, and persistence regression coverage.
+
+## v1.7.0 — Studio Center 2.0
+
+- Added Studio-specific settings and independent Studio deployment channel tracking.
+- Added Standard, Protected, and Fast Start Studio launch profiles.
+- Added recent-project intelligence: open counts, last-known size/modified time, change detection, launch-profile history, and backup coverage.
+- Added bounded per-project backups and native restore-as-copy workflow.
+- Added optional isolated Studio FastFlag management with explicit enablement, separate backup/snapshot storage, scalar validation, and Player-path collision protection.
+- Preserved the Player Performance Center/FastFlag boundary and existing Studio executable/project-path validation.
+
+## v1.6.0 — Server Intelligence 2.0
+
+- Upgraded Server Intelligence with normalized region, country, datacenter and occupancy metadata.
+- Added persistent seven-day latency history with average/min/max and trend summaries.
+- Added local favorite servers and recent successful joins with quick JOIN/REJOIN actions.
+- Added occupancy-band filtering, favorites-only filtering, open-slot statistics and new sort modes.
+- Added up-to-three-server comparison for ping/history, occupancy, uptime and datacenter.
+- Added separate Roblox, RoValra details and RoValra counts provider-health diagnostics with response timing and consecutive-failure tracking.
+- Added partial-provider degradation so one RoValra endpoint can fail without hiding successful data from the other provider paths.
+- Preserved the no-cookie privacy boundary for RoValra enrichment.
+- Expanded Server Intelligence persistence, service and UI regression coverage.
+
+## v1.5.2 — Safe FastFlag Classification Hotfix
+
+- Added a conservative five-flag Safe Core database to FastFlag Manager 3.0.
+- Added SAFE / LEGACY / EXPERIMENTAL / UNKNOWN trust classification with visible UI badges and descriptions.
+- Added a Safe Core panel and a review-only action that queues the four editable Safe Core values while leaving MSAA locked to Performance Center.
+- Reclassified the legacy FPS target and forced Direct3D 11/Vulkan overrides as compatibility-sensitive instead of implying current Roblox support.
+- Added compatibility disclosures to Performance Center FPS and render-engine controls.
+- Preserved default behavior as key removal rather than writing guessed Roblox defaults.
+- Expanded regression coverage for classification, Safe Core catalog contents, and trust metadata in before/after previews.
+
+## v1.5.1 — Performance Profile Layout Hotfix
+
+- Corrected built-in Performance Profile preset text alignment in Performance Center 2.0.
+- Prevented the `Performance` title and configuration text from spilling toward the adjacent `Quality` card.
+- Added explicit icon/copy regions, bounded text width, normalized baselines, and safe description wrapping.
+- Kept all v1.5.0 Performance Center behavior unchanged.
+
+## v1.5.0 — Performance Center 2.0
+
+- Upgraded Performance+ into Performance Center 2.0 with local hardware-aware recommendations.
+- Added CPU, GPU, memory, display-refresh, and Windows power-plan intelligence.
+- Added hardware-aware Efficiency, Recommended, High Refresh, and Visual Quality presets.
+- Added reusable custom FPS/render/MSAA configuration profiles.
+- Added per-experience performance profiles keyed by validated Roblox Place ID.
+- Launch Center now resolves a per-experience profile in the main process before auto-applying Player settings.
+- Added live Roblox Player PID, memory, cumulative CPU time, uptime, responding state, and thread count.
+- Added startup optimization checks for Player availability, ClientSettings readability, memory headroom, power plan, auto-apply state, and active Player processes.
+- Added conservative configuration recommendations with explanations instead of automatic OS changes.
+- Live process telemetry intentionally excludes command-line arguments.
+- Preserved the existing four-key Performance+ write boundary and Player-only scope.
+- Added Performance Center service/profile/UI regression coverage.
+
+## v1.4.0 — FastFlag Manager 3.0
+
+- Added inferred FastFlag categories and conservative descriptions.
+- Added compatibility warnings for experimental/debug-oriented flags.
+- Added Performance+ conflict detection for related FPS, MSAA, and renderer manual flags while keeping exact Performance+ keys locked.
+- Added main-process normalized before/after previews before ClientAppSettings writes.
+- Added filtered multi-selection and bulk Boolean True/False/remove operations.
+- Added portable preset sharing with the versioned `dragonstrap.fastflag-preset.v1` schema.
+- Added automatic pre-change snapshots with a 20-snapshot retention limit.
+- Added snapshot restoration that preserves current Performance+ managed values.
+- Added FastFlag category filtering, warning/conflict counters, selected-flag intelligence, and richer pending-diff UI.
+- Preserved the existing one-time `.dragonstrap.bak` backup and atomic write behavior.
+- Preserved Update Center 2.0 and the transactional Roblox Player installation/update engine.
+
+## v1.3.0 — Update Center 2.0
+
+- Added real DragonStrap self-update downloads from the official GitHub Releases feed.
+- Added Portable vs installed Setup build detection and build-specific artifact selection.
+- Added mandatory SHA-256 verification against `SHA256SUMS.txt` before an update can be applied.
+- Added GitHub asset-digest cross-checking when the API exposes a SHA-256 digest.
+- Added download progress, byte counts, cancellation, and persistent verified staging metadata.
+- Added in-app release notes.
+- Added stable and pre-release update-channel support.
+- Added version-specific update deferral for 1 hour, 1 day, or 7 days.
+- Added safe Portable post-exit replacement with backup/restore protection and relaunch.
+- Added verified NSIS Setup handoff for installed builds.
+- Source/dev sessions remain read-only for application updates.
+- Preserved the v1.1.x Roblox Player transactional installation/update engine.
+
+## v1.1.2 — Installer Current-State UI Polish Hotfix
+
+- Corrected the Roblox Player Installation Engine UI when the selected build is already installed.
+- CURRENT plans now show `No download required` instead of a misleading remaining-download amount.
+- The analyzed Roblox package size remains visible separately for transparency.
+- CURRENT plans now display a completed progress state instead of `0%`.
+- Free-space copy now states that no staging space is required when no install/update will run.
+- The safety/status copy now distinguishes a verified current build from an install-ready plan.
+- Preserved the v1.1.1 `RobloxPlayerInstaller.exe` manifest compatibility fix and all transactional installer safeguards.
+
+## v1.1.1 — Roblox Package Manifest Compatibility Hotfix
+
+- Fixed live Roblox manifest analysis failing on the legitimate `RobloxPlayerInstaller.exe` entry.
+- The exact installer entry is metadata-validated and then excluded from DragonStrap's package download/extraction pipeline.
+- DragonStrap does not execute the Roblox installer executable.
+- Arbitrary `.exe` entries remain rejected by the package-manifest parser.
+- Added a regression test for the current Roblox manifest shape.
+
+## v1.1.0 — Roblox Installation & Update Engine
+
+- Added a real Roblox Player package installation/update pipeline.
+- Added `rbxPkgManifest.txt` v0 parsing with strict package-name, size, and MD5-signature validation.
+- Added an explicit package-to-install-directory allowlist and fail-closed handling for unknown Roblox packages.
+- Added resumable HTTP byte-range downloads under `Roblox\Downloads\DragonStrap`.
+- Added cached package validation and automatic re-download of corrupt packages.
+- Added staged package extraction with archive path-traversal checks.
+- Added free-disk-space preflight using remaining download bytes, unpacked size, and a 512 MB safety reserve.
+- Added transactional version-folder commit and preservation of the previously working Roblox version.
+- Added cancellation that keeps partial downloads for the next resume attempt.
+- Added live installation progress UI for planning, downloading, extraction, commit, package name, speed, and disk usage.
+- Added post-install validation of `RobloxPlayerBeta.exe` and `AppSettings.xml` generation.
+- Kept Roblox Studio installation and WebView2 runtime execution outside the v1.1.0 scope.
+- Added automated tests for manifest validation, unsafe archive paths, staged commit, disk-space refusal, unknown packages, and interrupted-download resume.
+
 ## v1.0.0 — Stable Release
 
 - Declared the current DragonStrap feature set stable for normal Windows use.

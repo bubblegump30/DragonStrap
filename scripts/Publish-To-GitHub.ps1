@@ -1,6 +1,6 @@
 param(
     [string]$RepoUrl = "https://github.com/bubblegump30/DragonStrap.git",
-    [string]$CommitMessage = "DragonStrap v1.0.0 - Stable Release"
+    [string]$CommitMessage = "DragonStrap v2.0.4 - DragonStrap 2.0 Release + Hotfix Rollup"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,6 +32,15 @@ if ($remoteNames -contains 'origin') {
 if ($wasNewRepository) {
     git fetch origin main
     git reset --mixed origin/main
+
+    # Preserve the repository funding configuration if a future source bundle
+    # does not contain it. This prevents source publication from silently
+    # removing GitHub Sponsors/PayPal metadata that lives on main.
+    $fundingPath = '.github/FUNDING.yml'
+    $fundingOnRemote = git ls-tree -r --name-only origin/main -- $fundingPath
+    if ($fundingOnRemote -and -not (Test-Path $fundingPath)) {
+        git checkout origin/main -- $fundingPath
+    }
 }
 
 git branch -M main

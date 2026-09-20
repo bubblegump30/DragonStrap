@@ -1,0 +1,39 @@
+/* DragonStrap v1.5.2 — Performance Center 2.0 + FastFlag compatibility disclosure */
+.performance-center-layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.performance-center-layout>.card{min-width:0}
+.perf2-span-2{grid-column:span 2}
+.perf2-hardware-card{min-height:300px}
+.perf2-hardware-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.perf2-hardware-grid>div,.perf2-process-grid>div{padding:13px 14px;border:1px solid rgba(190,127,255,.14);border-radius:12px;background:rgba(10,7,16,.34);display:flex;flex-direction:column;gap:6px;min-width:0}
+.perf2-hardware-grid span,.perf2-process-grid span{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#857792}
+.perf2-hardware-grid strong,.perf2-process-grid strong{font-size:12px;color:#efe5f8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.perf2-recommendation-box{margin-top:12px;border:1px solid rgba(196,112,255,.25);border-radius:14px;background:linear-gradient(145deg,rgba(83,34,118,.23),rgba(15,10,22,.44));padding:15px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.perf2-recommendation-box>div{min-width:0}.perf2-recommendation-box span{display:block;color:#9b89aa;font-size:9px;letter-spacing:.11em;text-transform:uppercase}.perf2-recommendation-box strong{display:block;margin-top:5px;font-size:15px;color:#e7c6ff}.perf2-recommendation-box p{margin:5px 0 0!important;font-size:10px!important;color:#a697b4!important;line-height:1.5}
+.perf2-recommendation-box .primary-action{flex:0 0 auto;min-width:190px}
+.perf2-process-card{min-height:300px}.perf2-process-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.perf2-check-card{min-height:300px}.perf2-check-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;max-height:260px;overflow:auto;padding-right:3px}
+.perf2-check-item{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;padding:11px 12px;border:1px solid rgba(187,129,234,.13);border-radius:11px;background:rgba(10,7,16,.28)}
+.perf2-check-item>i{width:9px;height:9px;border-radius:50%;margin-top:4px;background:#7a6d84;box-shadow:0 0 8px rgba(130,110,145,.2)}
+.perf2-check-item.pass>i,.perf2-check-item.ok>i{background:#7ee2af;box-shadow:0 0 10px rgba(74,222,143,.35)}
+.perf2-check-item.warn>i,.perf2-check-item.warning>i{background:#e6b268;box-shadow:0 0 10px rgba(230,178,104,.28)}
+.perf2-check-item.info>i,.perf2-check-item.suggestion>i{background:#bd79f4;box-shadow:0 0 10px rgba(189,121,244,.28)}
+.perf2-check-item strong{display:block;font-size:11px;color:#e4d7ee}.perf2-check-item p{margin:4px 0 0!important;color:#9586a5!important;font-size:9px!important;line-height:1.45}
+.perf2-empty{padding:18px;border:1px dashed rgba(188,128,234,.15);border-radius:11px;color:#857890;text-align:center;font-size:10px}
+.perf2-profile-card{min-height:310px}.perf2-field{display:flex;flex-direction:column;gap:7px;margin-top:13px}.perf2-field>span{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#857792}
+.perf2-field input,.perf2-field select{width:100%;height:42px;border-radius:10px;border:1px solid rgba(190,127,255,.2);background:rgba(13,9,19,.86);color:#e8dcec;padding:0 12px;outline:none}.perf2-field input:focus,.perf2-field select:focus{border-color:#b55bff;box-shadow:0 0 0 2px rgba(174,74,255,.12)}
+.perf2-inline-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.perf2-profile-card>.primary-action{width:100%;margin-top:10px}
+.perf2-experience-form{display:grid;grid-template-columns:minmax(160px,.8fr) minmax(220px,1.2fr) auto auto;gap:9px;align-items:end;margin-top:10px}.perf2-experience-form .perf2-field{margin-top:0}.perf2-experience-form button{height:42px;white-space:nowrap}
+.perf2-experience-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px;max-height:180px;overflow:auto}.perf2-experience-row{padding:11px 12px;border-radius:11px;border:1px solid rgba(190,127,255,.14);background:rgba(10,7,16,.3);display:flex;align-items:center;justify-content:space-between;gap:12px}.perf2-experience-row span{font-size:10px;color:#9586a5}.perf2-experience-row strong{font-size:11px;color:#eadff2}
+.performance-center-layout .performance-hero{grid-column:auto}.performance-center-layout .performance-state-card{grid-column:span 2}.performance-center-layout .performance-safety-card{grid-column:auto;min-height:250px}
+@media(max-width:1400px){.performance-center-layout{grid-template-columns:repeat(2,minmax(0,1fr))}.perf2-span-2{grid-column:1/-1}.perf2-hardware-card{grid-column:1/-1}.performance-center-layout .performance-state-card{grid-column:1}.performance-center-layout .performance-safety-card{grid-column:2}.perf2-experience-form{grid-template-columns:1fr 1fr}.perf2-experience-form button{width:100%}}
+@media(max-width:900px){.performance-center-layout{grid-template-columns:1fr}.performance-center-layout>.card,.perf2-span-2,.performance-center-layout .performance-state-card,.performance-center-layout .performance-safety-card{grid-column:1}.perf2-hardware-grid{grid-template-columns:1fr 1fr}.perf2-recommendation-box{flex-direction:column;align-items:stretch}.perf2-recommendation-box .primary-action{width:100%}.perf2-experience-list{grid-template-columns:1fr}}
+@media(max-width:620px){.perf2-hardware-grid,.perf2-process-grid,.perf2-experience-form,.perf2-inline-actions{grid-template-columns:1fr}}
+.perf2-hardware-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.perf2-hardware-preset{padding:11px 12px;border-radius:11px;border:1px solid rgba(190,127,255,.16);background:linear-gradient(145deg,rgba(31,23,42,.72),rgba(12,8,18,.82));color:#d8c9e3;text-align:left;cursor:pointer}.perf2-hardware-preset:hover{border-color:rgba(198,112,255,.48);box-shadow:0 0 14px rgba(165,66,255,.15)}.perf2-hardware-preset.recommended{border-color:rgba(198,108,255,.48);background:linear-gradient(145deg,rgba(91,36,129,.48),rgba(24,11,34,.82))}.perf2-hardware-preset strong{display:block;font-size:10px}.perf2-hardware-preset span{display:block;margin-top:4px;font-size:8px;color:#9383a2;line-height:1.35}.perf2-hardware-preset em{display:block;margin-top:6px;font-size:8px;color:#c590ed;font-style:normal}
+@media(max-width:900px){.perf2-hardware-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.perf2-hardware-presets{grid-template-columns:1fr}}
+
+/* v1.5.2 — current Roblox FastFlag compatibility disclosure */
+.perf-compat-warning{padding:9px 10px;border-radius:10px;border:1px solid rgba(230,178,104,.18);background:rgba(126,78,27,.08)}
+.perf-compat-warning b{display:block;margin-bottom:4px;color:#e8b76f;font-size:8px;letter-spacing:.08em}
+
+/* v2.0.3 — fill the Performance Center bottom row without an unused desktop grid column. */

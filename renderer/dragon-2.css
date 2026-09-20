@@ -1,0 +1,195 @@
+/* DragonStrap 2.0 — final architecture/UI consolidation layer. */
+:root {
+  --ds2-focus: rgba(185, 119, 255, .88);
+  --ds2-surface: rgba(20, 13, 30, .72);
+  --ds2-border: rgba(184, 114, 255, .18);
+}
+
+html { text-rendering: optimizeLegibility; }
+button, input, select { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--ds2-focus);
+  outline-offset: 2px;
+}
+
+.architecture-card {
+  background: linear-gradient(145deg, rgba(28, 16, 42, .9), rgba(12, 9, 20, .92));
+  border-color: rgba(184, 114, 255, .3);
+}
+.core-runtime-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.core-runtime-grid > div {
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid var(--ds2-border);
+  border-radius: 12px;
+  background: var(--ds2-surface);
+}
+.core-runtime-grid span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted, #a497b3);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.core-runtime-grid strong {
+  display: block;
+  overflow: hidden;
+  color: #f3eaff;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.core-capability-row {
+  padding: 10px 12px;
+  border: 1px solid rgba(147, 82, 214, .2);
+  border-radius: 10px;
+  color: #d8c1ef;
+  background: rgba(12, 8, 18, .48);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* Keep dense dashboard cards readable without costly oversized glow layers. */
+.card, .feature-card { contain: layout style; }
+.view:not(.active) { content-visibility: hidden; }
+.view.active { content-visibility: visible; }
+
+@media (max-width: 1320px) {
+  .core-runtime-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .core-runtime-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card, .feature-card, button { transition: none !important; }
+}
+
+
+/* v2.0.2 — product identity dropdown, Help, and About navigation. */
+.product-menu { position: relative; flex: 0 0 auto; }
+.product-menu-trigger {
+  min-width: 168px;
+  min-height: 54px;
+  padding: 5px 10px 5px 6px;
+  display: grid;
+  grid-template-columns: 42px minmax(76px, 1fr) 18px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.product-menu-trigger:hover,
+.product-menu.open .product-menu-trigger {
+  border-color: rgba(190, 115, 255, .24);
+  background: linear-gradient(145deg, rgba(45, 27, 61, .78), rgba(19, 13, 28, .84));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 0 18px rgba(150, 66, 236, .12);
+}
+.product-menu-trigger .operator { min-width: 0; }
+.product-menu-trigger .operator strong,
+.product-menu-trigger .operator span { display: block; }
+.product-menu-chevron {
+  justify-self: end;
+  color: #bca7cb;
+  font-size: 16px;
+  transform: translateY(-1px);
+  transition: transform .16s ease, color .16s ease;
+}
+.product-menu.open .product-menu-chevron { color: #e2bdff; transform: rotate(180deg) translateY(1px); }
+.product-menu-popup {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 244px;
+  padding: 8px;
+  border: 1px solid rgba(191, 119, 255, .28);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(31, 20, 43, .98), rgba(13, 9, 20, .99));
+  box-shadow: 0 18px 46px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.05), 0 0 26px rgba(142, 54, 226, .14);
+}
+.product-menu-item {
+  width: 100%;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #eee4f8;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.product-menu-item:hover,
+.product-menu-item:focus-visible { border-color: rgba(184, 112, 255, .28); background: rgba(114, 55, 160, .15); }
+.product-menu-item > span:first-child {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(190, 120, 255, .28);
+  border-radius: 10px;
+  color: #cf92ff;
+  background: rgba(106, 43, 152, .16);
+}
+.product-menu-item strong { display: block; font-size: 13px; }
+.product-menu-item small { display: block; margin-top: 3px; color: #9588a6; font-size: 10px; line-height: 1.35; }
+
+.dragon-help-dialog {
+  width: min(700px, calc(100vw - 40px));
+  padding: 0;
+  border: 1px solid rgba(190, 117, 255, .34);
+  border-radius: 22px;
+  color: #f3eaff;
+  background: linear-gradient(150deg, #21162e, #0f0b16 76%);
+  box-shadow: 0 30px 90px rgba(0,0,0,.68), 0 0 46px rgba(152, 62, 239, .18), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.dragon-help-dialog::backdrop { background: rgba(5, 3, 9, .72); backdrop-filter: blur(7px); }
+.dragon-help-shell { padding: 24px; }
+.dragon-help-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.dragon-help-kicker { color: #c37eff; font-size: 10px; font-weight: 800; letter-spacing: .2em; }
+.dragon-help-head h2 { margin: 6px 0 5px; font-size: 22px; }
+.dragon-help-head p { margin: 0; color: #9d8eaa; font-size: 12px; }
+.dragon-help-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 20px; }
+.dragon-help-grid button {
+  min-height: 88px;
+  padding: 14px;
+  border: 1px solid rgba(174, 101, 236, .2);
+  border-radius: 14px;
+  color: #f2e9fb;
+  background: rgba(17, 11, 25, .72);
+  text-align: left;
+  cursor: pointer;
+}
+.dragon-help-grid button:hover { border-color: rgba(190, 114, 255, .48); background: rgba(90, 40, 132, .18); }
+.dragon-help-grid strong { display: block; margin-bottom: 6px; font-size: 13px; }
+.dragon-help-grid span { display: block; color: #9f91ad; font-size: 11px; line-height: 1.45; }
+.dragon-help-note { margin-top: 16px; padding: 11px 13px; border-radius: 12px; color: #b6a5c6; background: rgba(111, 50, 158, .11); font-size: 11px; }
+.dragon-help-note kbd { padding: 2px 6px; border: 1px solid rgba(190, 120, 255, .28); border-radius: 5px; color: #ddafff; background: #140d1e; }
+#aboutCard:focus-visible { outline: 2px solid var(--ds2-focus); outline-offset: 4px; }
+
+@media (max-width:1250px) {
+  .product-menu-trigger { min-width: 122px; grid-template-columns: 42px minmax(56px, 1fr) 16px; }
+}
+@media (max-width:980px) {
+  .product-menu-trigger { min-width: 52px; grid-template-columns: 42px; padding-right: 5px; }
+  .product-menu-trigger .operator, .product-menu-chevron { display: none; }
+  .product-menu-popup { right: 0; }
+}
+@media (max-width:620px) { .dragon-help-grid { grid-template-columns: 1fr; } }
+
+/* Keep the product identity readable at the intermediate header breakpoint. */
+.product-menu-trigger .operator { display:flex; flex-direction:column; }
+@media (max-width:980px) { .product-menu-trigger .operator { display:none !important; } }

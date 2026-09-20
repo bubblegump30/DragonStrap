@@ -9,11 +9,15 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="purple-dragon.css" />
   <link rel="stylesheet" href="fastflags.css" />
+  <link rel="stylesheet" href="performance-center.css" />
   <link rel="stylesheet" href="servers.css" />
   <link rel="stylesheet" href="studio.css" />
+  <link rel="stylesheet" href="profiles.css" />
   <link rel="stylesheet" href="channels.css" />
   <link rel="stylesheet" href="maintenance.css" />
   <link rel="stylesheet" href="reliability.css" />
+  <link rel="stylesheet" href="update-center.css" />
+  <link rel="stylesheet" href="dragon-2.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -33,8 +37,17 @@
           <span class="search-shortcut" aria-hidden="true">Ctrl K</span>
         </label>
         <button class="icon-button" id="refreshStatus" aria-label="Refresh Roblox status" title="Refresh status">↻</button>
-        <div class="avatar dragon-avatar"><img src="assets/dragon-app-icon.png" alt="" /></div>
-        <div class="operator"><strong>DragonStrap</strong><span id="topVersion">v1.0.0</span></div>
+        <div class="product-menu" id="productMenu">
+          <button class="product-menu-trigger" id="productMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="productMenuPopup">
+            <span class="avatar dragon-avatar" aria-hidden="true"><img src="assets/dragon-app-icon.png" alt="" /></span>
+            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.0.4</span></span>
+            <span class="product-menu-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div class="product-menu-popup" id="productMenuPopup" role="menu" aria-label="DragonStrap menu" hidden>
+            <button class="product-menu-item" id="productHelpBtn" type="button" role="menuitem"><span aria-hidden="true">?</span><span><strong>Help</strong><small>Quick help and navigation</small></span></button>
+            <button class="product-menu-item" id="productAboutBtn" type="button" role="menuitem"><span aria-hidden="true">ⓘ</span><span><strong>About</strong><small>Version, build and Core API</small></span></button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -44,13 +57,13 @@
           <button class="nav-item active" data-tab="home">⌂ <span>Home</span></button>
           <button class="nav-item" data-tab="launch">▷ <span>Launch</span></button>
           <button class="nav-item" data-tab="instances">▣ <span>Instances</span></button>
-          <button class="nav-item" data-tab="performance">◴ <span>Performance+</span></button>
+          <button class="nav-item" data-tab="performance">◴ <span>Performance Center</span></button>
           <button class="nav-item" data-tab="fastflags">⚑ <span>FastFlags</span></button>
           <button class="nav-item" data-tab="servers">◎ <span>Servers</span></button>
           <button class="nav-item" data-tab="studio">◇ <span>Studio</span></button>
           <button class="nav-item" data-tab="channels">⇄ <span>Channels</span></button>
           <button class="nav-item" data-tab="profiles">♙ <span>Profiles</span></button>
-          <button class="nav-item" data-tab="maintenance">✦ <span>Maintenance</span></button>
+          <button class="nav-item" data-tab="maintenance">✦ <span>Recovery</span></button>
           <button class="nav-item" data-tab="settings">⚙ <span>Settings</span></button>
         </nav>
       </aside>
@@ -79,9 +92,18 @@
             <section class="card overview-card">
               <div class="card-head"><div><h2>ROBLOX OVERVIEW</h2><p>Installation intelligence</p></div><button class="round-btn" data-tab-jump="instances">◌</button></div>
               <div class="gauges">
-                <div class="gauge" style="--value:100"><div class="gauge-ring"><div><b id="installGauge">—</b><span>CLIENT</span></div></div><small id="installDetail">Scanning…</small></div>
-                <div class="gauge" style="--value:85"><div class="gauge-ring"><div><b id="channelGauge">LIVE</b><span>CHANNEL</span></div></div><small>Release track</small></div>
-                <div class="gauge" style="--value:70"><div class="gauge-ring"><div><b id="studioGauge">—</b><span>STUDIO</span></div></div><small id="studioDetail">Scanning…</small></div>
+                <div class="gauge status-dial" id="playerOverviewDial">
+                  <div class="gauge-ring"><div><b id="installGauge">—</b><span>PLAYER</span></div></div>
+                  <small class="overview-build"><span>Installed Player Build</span><code id="installDetail" title="">Scanning…</code></small>
+                </div>
+                <div class="gauge status-dial channel-dial" id="channelOverviewDial">
+                  <div class="gauge-ring"><div><b id="channelGauge">LIVE</b><span>CHANNEL</span></div></div>
+                  <small class="overview-build"><span>Selected Channel</span><code id="channelDetail">Official production</code></small>
+                </div>
+                <div class="gauge status-dial" id="studioOverviewDial">
+                  <div class="gauge-ring"><div><b id="studioGauge">—</b><span>STUDIO</span></div></div>
+                  <small class="overview-build"><span>Installed Studio Build</span><code id="studioDetail" title="">Scanning…</code></small>
+                </div>
               </div>
             </section>
 
@@ -121,23 +143,25 @@
               </div>
             </section>
 
-            <section class="card fan-card">
-              <div class="card-head"><div><h2>PERFORMANCE+</h2><p>Performance controls at a glance</p></div><button class="round-btn" data-tab-jump="performance">◉</button></div>
+            <section class="card fan-card" id="homePerformanceCard">
+              <div class="card-head"><div><h2>PERFORMANCE CENTER 2.0</h2><p>Live shortcuts to the real tuning controls</p></div><button class="round-btn" type="button" data-tab-jump="performance" aria-label="Open Performance Center">◉</button></div>
               <div class="fan-row">
-                <div><button class="fan-knob">ϟ</button><span>FPS</span></div>
-                <div><button class="fan-knob">◴</button><span>Render</span></div>
-                <div><button class="fan-knob">◎</button><span>Network</span></div>
+                <div><button class="fan-knob" id="homePerfFpsBtn" type="button" aria-label="Open FPS controls">ϟ</button><span>FPS</span><small id="homePerfFpsValue">—</small></div>
+                <div><button class="fan-knob" id="homePerfRenderBtn" type="button" aria-label="Open render controls">◴</button><span>Render</span><small id="homePerfRenderValue">—</small></div>
+                <div><button class="fan-knob" id="homePerfNetworkBtn" type="button" aria-label="Open Server Intelligence">◎</button><span>Network</span><small>Servers</small></div>
               </div>
-              <div class="segmented"><button class="active">Auto</button><button>Custom</button></div>
-              <div class="fan-chart"><svg viewBox="0 0 360 80" preserveAspectRatio="none"><path d="M0 66 C55 61 90 60 130 58 S190 48 225 36 280 22 360 14"/><g><circle cx="55" cy="61" r="4"/><circle cx="126" cy="58" r="4"/><circle cx="190" cy="49" r="4"/><circle cx="247" cy="31" r="4"/><circle cx="309" cy="19" r="4"/></g></svg></div>
-              <div class="status-line"><i></i> Performance profile active</div>
+              <div class="segmented" id="homePerfMode" aria-label="Performance Center mode"><button id="homePerfAutoBtn" type="button">Auto</button><button id="homePerfCustomBtn" type="button">Custom</button></div>
+              <button class="fan-chart fan-chart-button" id="homePerfChartBtn" type="button" aria-label="Open Performance Center">
+                <svg viewBox="0 0 360 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 66 C55 61 90 60 130 58 S190 48 225 36 280 22 360 14"/><g><circle cx="55" cy="61" r="4"/><circle cx="126" cy="58" r="4"/><circle cx="190" cy="49" r="4"/><circle cx="247" cy="31" r="4"/><circle cx="309" cy="19" r="4"/></g></svg>
+              </button>
+              <div class="status-line"><i id="homePerfStatusDot"></i><span id="homePerfStatus">Loading performance configuration…</span></div>
             </section>
 
             <section class="card power-card">
               <div class="card-head"><div><h2>DRAGONSTRAP</h2><p>Stable Roblox bootstrapper</p></div></div>
               <label class="power-switch"><input id="systemToggle" type="checkbox" checked><span></span><strong id="systemState">Services Active</strong></label>
               <div class="power-stats">
-                <div><span>Version</span><strong id="appVersion">1.0.0</strong></div>
+                <div><span>Version</span><strong id="appVersion">2.0.4</strong></div>
                 <div><span>Roblox</span><strong id="robloxSummary">Checking</strong></div>
                 <div><span>Status</span><strong class="green">Stable Ready</strong></div>
               </div>
@@ -173,7 +197,7 @@
                 <label>Profile<select id="launchProfile"><option value="default">Default</option><option value="balanced">Balanced</option><option value="performance" selected>Performance</option><option value="custom">Custom</option><option value="quality">Quality</option><option value="studio">Studio</option></select></label>
                 <label class="toggle-row">Minimize DragonStrap after a successful launch<input id="minimizeOnLaunch" type="checkbox"></label>
               </div>
-              <div class="launch-profile-note"><b>PROFILE LINKED</b><span>The selected profile is recorded with each launch. Performance/FastFlag application remains isolated until those services are implemented.</span></div>
+              <div class="launch-profile-note"><b>PROFILE LINKED</b><span>The selected profile is recorded with each launch. Performance+ can auto-apply its managed settings before Player launch; FastFlag Manager writes remain explicit and reviewable.</span></div>
             </section>
 
             <section class="card launch-status-card">
@@ -200,34 +224,64 @@
         </section>
 
         <section class="view" data-view="performance">
-          <div class="page-heading"><div><h1>PERFORMANCE+</h1><p>Safe, profile-aware Roblox Player tuning.</p></div><span class="phase-badge">LIVE PLAYER TUNING</span></div>
-          <div class="performance-layout">
-            <section class="card performance-hero">
-              <div class="card-head"><div><h2>PERFORMANCE PROFILE</h2><p>Choose a preset or fine-tune the managed controls.</p></div><span class="status-dot" id="performanceStateDot"></span></div>
-              <div class="perf-presets" id="performancePresets">
-                <button data-perf-profile="default"><b>▱</b><span>Default<small>Use Roblox-managed defaults</small></span></button>
-                <button data-perf-profile="balanced"><b>◉</b><span>Balanced<small>120 FPS · 2× MSAA</small></span></button>
-                <button class="active" data-perf-profile="performance"><b>ϟ</b><span>Performance<small>240 FPS · 1× MSAA</small></span></button>
-                <button data-perf-profile="quality"><b>✎</b><span>Quality<small>120 FPS · 4× MSAA</small></span></button>
+          <div class="page-heading"><div><h1>PERFORMANCE CENTER 2.0</h1><p>Hardware-aware Roblox Player tuning, reusable profiles and live runtime intelligence.</p></div><span class="phase-badge">HARDWARE AWARE</span></div>
+          <div class="performance-center-layout">
+            <section class="card perf2-hardware-card perf2-span-2">
+              <div class="card-head"><div><h2>HARDWARE & RECOMMENDED PROFILE</h2><p>Local hardware signals only. Recommendations never apply automatically.</p></div><button class="round-btn" id="refreshPerformanceCenter" title="Refresh hardware and runtime state">↻</button></div>
+              <div class="perf2-hardware-grid">
+                <div><span>Tier</span><strong id="perfHardwareTier">—</strong></div>
+                <div><span>CPU</span><strong id="perfCpu">—</strong></div>
+                <div><span>GPU</span><strong id="perfGpu">—</strong></div>
+                <div><span>Memory</span><strong id="perfMemory">—</strong></div>
+                <div><span>Display</span><strong id="perfRefresh">—</strong></div>
+                <div><span>Power plan</span><strong id="perfPowerPlan">—</strong></div>
               </div>
-              <label class="perf-toggle"><span><strong>Auto-apply before launch</strong><small>Apply these Player settings immediately before DragonStrap starts Roblox.</small></span><input id="performanceAutoApply" type="checkbox" checked></label>
+              <div class="perf2-recommendation-box">
+                <div><span>DragonStrap recommendation</span><strong id="perfRecommendationLabel">Analyzing…</strong><p id="perfRecommendationDetail">Hardware recommendations are conservative guidance, not benchmark results.</p></div>
+                <button class="primary-action" id="useHardwareRecommendationBtn">USE RECOMMENDATION</button>
+              </div>
+              <div class="perf2-hardware-presets" id="perfHardwarePresets"><div class="perf2-empty">Hardware-aware presets are loading.</div></div>
+            </section>
+
+            <section class="card perf2-process-card">
+              <div class="card-head"><div><h2>LIVE ROBLOX PROCESS</h2><p>Refreshes while this page is open</p></div><span class="status-dot" id="perfProcessDot"></span></div>
+              <div class="perf2-process-grid">
+                <div><span>Status</span><strong id="perfProcessStatus">Not checked</strong></div>
+                <div><span>PID</span><strong id="perfProcessPid">—</strong></div>
+                <div><span>Memory</span><strong id="perfProcessMemory">—</strong></div>
+                <div><span>CPU time</span><strong id="perfProcessCpu">—</strong></div>
+                <div><span>Uptime</span><strong id="perfProcessUptime">—</strong></div>
+                <div><span>Threads</span><strong id="perfProcessThreads">—</strong></div>
+              </div>
+              <p class="perf-note">CPU time is cumulative process CPU time, not an instantaneous utilization percentage.</p>
+            </section>
+
+            <section class="card performance-hero perf2-span-2">
+              <div class="card-head"><div><h2>PERFORMANCE PROFILE</h2><p>Choose a built-in preset or fine-tune DragonStrap's managed controls.</p></div><span class="status-dot" id="performanceStateDot"></span></div>
+              <div class="perf-presets" id="performancePresets">
+                <button data-perf-profile="default"><b class="perf-preset-icon">▱</b><span class="perf-preset-copy"><strong>Default</strong><small>Use Roblox-managed defaults</small></span></button>
+                <button data-perf-profile="balanced"><b class="perf-preset-icon">◉</b><span class="perf-preset-copy"><strong>Balanced</strong><small>120 FPS · 2× MSAA</small></span></button>
+                <button class="active" data-perf-profile="performance"><b class="perf-preset-icon">ϟ</b><span class="perf-preset-copy"><strong>Performance</strong><small>240 FPS · 1× MSAA</small></span></button>
+                <button data-perf-profile="quality"><b class="perf-preset-icon">✎</b><span class="perf-preset-copy"><strong>Quality</strong><small>120 FPS · 4× MSAA</small></span></button>
+              </div>
+              <label class="perf-toggle"><span><strong>Auto-apply before launch</strong><small>Per-experience profiles take precedence when a Place ID has an assignment.</small></span><input id="performanceAutoApply" type="checkbox" checked></label>
             </section>
 
             <section class="card perf-control-card">
               <div class="card-head"><div><h2>FRAME RATE</h2><p>Roblox Player target</p></div><strong class="perf-value" id="fpsReadout">240</strong></div>
               <input class="horizontal-slider" id="fpsRange" type="range" min="0" max="240" step="30" value="240">
               <div class="perf-scale"><span>DEFAULT</span><span>60</span><span>120</span><span>180</span><span>240</span></div>
-              <p class="perf-note">0 removes DragonStrap's FPS override and lets Roblox use its own configured limit.</p>
+              <p class="perf-note perf-compat-warning"><b>LEGACY / COMPATIBILITY-SENSITIVE</b> Current Roblox builds may ignore this FastFlag override. 0 removes DragonStrap's override; prefer Roblox's built-in FPS control when available.</p>
             </section>
 
             <section class="card perf-control-card">
-              <div class="card-head"><div><h2>RENDER ENGINE</h2><p>Allowlisted graphics preference</p></div></div>
+              <div class="card-head"><div><h2>RENDER ENGINE</h2><p>Legacy compatibility preference</p></div></div>
               <div class="perf-choice" id="renderModeChoice">
                 <button class="active" data-value="default">Default</button>
                 <button data-value="d3d11">Direct3D 11</button>
                 <button data-value="vulkan">Vulkan</button>
               </div>
-              <p class="perf-note">Default removes DragonStrap's renderer preference.</p>
+              <p class="perf-note perf-compat-warning"><b>LEGACY / COMPATIBILITY-SENSITIVE</b> Direct3D 11 and Vulkan FastFlag preferences may be ignored by current Roblox builds. Default remains recommended.</p>
             </section>
 
             <section class="card perf-control-card">
@@ -241,7 +295,36 @@
               <p class="perf-note">Higher MSAA can improve edge quality at additional GPU cost.</p>
             </section>
 
-            <section class="card performance-state-card">
+            <section class="card perf2-check-card">
+              <div class="card-head"><div><h2>STARTUP OPTIMIZATION CHECKS</h2><p>Pre-launch conditions that can affect consistency</p></div></div>
+              <div class="perf2-check-list" id="performanceStartupChecks"><div class="perf2-empty">Run a Performance Center refresh to analyze startup conditions.</div></div>
+            </section>
+
+            <section class="card perf2-check-card">
+              <div class="card-head"><div><h2>CONFIGURATION RECOMMENDATIONS</h2><p>Explanations, not automatic changes</p></div></div>
+              <div class="perf2-check-list" id="performanceRecommendations"><div class="perf2-empty">No recommendations loaded.</div></div>
+            </section>
+
+            <section class="card perf2-profile-card">
+              <div class="card-head"><div><h2>CONFIGURATION PROFILES</h2><p>Save and reuse FPS / renderer / MSAA combinations</p></div></div>
+              <label class="perf2-field"><span>Saved profile</span><select id="performanceProfileSelect"><option value="">Loading…</option></select></label>
+              <div class="perf2-inline-actions"><button class="secondary-action" id="applySavedPerformanceProfile">LOAD PROFILE</button><button class="secondary-action" id="deletePerformanceProfileBtn">DELETE CUSTOM</button></div>
+              <label class="perf2-field"><span>Save current configuration as</span><input id="performanceProfileName" maxlength="48" placeholder="e.g. Competitive 165 Hz" autocomplete="off"></label>
+              <button class="primary-action" id="savePerformanceProfileBtn">SAVE CURRENT PROFILE</button>
+            </section>
+
+            <section class="card perf2-profile-card perf2-span-2">
+              <div class="card-head"><div><h2>PER-EXPERIENCE PROFILES</h2><p>Automatically use a specific performance profile when Launch Center starts this Place ID.</p></div></div>
+              <div class="perf2-experience-form">
+                <label class="perf2-field"><span>Place ID</span><input id="performanceExperiencePlaceId" inputmode="numeric" placeholder="1818" autocomplete="off"></label>
+                <label class="perf2-field"><span>Profile</span><select id="performanceExperienceProfile"><option value="builtin:balanced">Balanced</option></select></label>
+                <button class="primary-action" id="assignPerformanceExperienceBtn">ASSIGN</button>
+                <button class="secondary-action" id="removePerformanceExperienceBtn">REMOVE</button>
+              </div>
+              <div class="perf2-experience-list" id="performanceExperienceList"><div class="perf2-empty">No per-experience profiles configured.</div></div>
+            </section>
+
+            <section class="card performance-state-card perf2-span-2">
               <div class="card-head"><div><h2>APPLIED STATE</h2><p>DragonStrap-managed ClientSettings only</p></div><button class="round-btn" id="refreshPerformanceState" title="Refresh">↻</button></div>
               <div class="performance-state-grid">
                 <div><span>Status</span><strong id="performanceAppliedStatus">Not checked</strong></div>
@@ -259,10 +342,10 @@
             <section class="card performance-safety-card">
               <div class="card-head"><div><h2>MANAGED BOUNDARY</h2><p>Conservative by design</p></div></div>
               <div class="check-list">
+                <span>✓ Hardware recommendations never change Windows settings automatically</span>
                 <span>✓ Preserves unrelated ClientAppSettings entries</span>
-                <span>✓ Writes only four allowlisted graphics/performance keys</span>
-                <span>✓ Atomic file replacement</span>
-                <span>✓ Restore removes only DragonStrap-managed keys</span>
+                <span>✓ Writes only four DragonStrap-owned graphics/performance keys; FPS/render overrides are clearly marked compatibility-sensitive</span>
+                <span>✓ Per-experience profiles are keyed only by numeric Roblox Place ID</span>
                 <span>✓ Player-only: Studio settings are left untouched</span>
               </div>
             </section>
@@ -270,30 +353,49 @@
         </section>
 
         <section class="view" data-view="fastflags">
-          <div class="page-heading"><div><h1>FASTFLAG MANAGER 2.0</h1><p>Search, edit, import, export and snapshot Roblox Player FastFlags.</p></div><span class="phase-badge">EDITOR</span></div>
+          <div class="page-heading"><div><h1>FASTFLAG MANAGER 3.0</h1><p>Understand, classify, compare, bulk-edit and safely snapshot Roblox Player FastFlags.</p></div><span class="phase-badge">INTELLIGENCE</span></div>
           <div class="fastflag-layout">
             <section class="card fastflag-browser-card">
-              <div class="card-head"><div><h2>CLIENT FLAGS</h2><p>ClientAppSettings.json</p></div><span class="fastflag-count" id="fastFlagCount">0 FLAGS</span></div>
+              <div class="card-head"><div><h2>CLIENT FLAGS</h2><p>ClientAppSettings.json with inferred metadata and conflict analysis</p></div><span class="fastflag-count" id="fastFlagCount">0 FLAGS</span></div>
               <div class="fastflag-toolbar">
-                <label class="fastflag-search"><span>⌕</span><input id="fastFlagSearch" type="search" placeholder="Search flag names or values…" autocomplete="off"></label>
+                <label class="fastflag-search"><span>⌕</span><input id="fastFlagSearch" type="search" placeholder="Search names, values, categories or descriptions…" autocomplete="off"></label>
+                <select id="fastFlagCategoryFilter" class="fastflag-category-filter" aria-label="FastFlag category"><option value="">ALL CATEGORIES</option></select>
                 <button class="small-action" id="fastFlagRefresh">REFRESH</button>
                 <button class="small-action" id="fastFlagImport">IMPORT JSON</button>
                 <button class="small-action" id="fastFlagExport">EXPORT JSON</button>
                 <button class="small-action" id="fastFlagOpenFile">OPEN FILE</button>
               </div>
-              <div class="fastflag-meta">
+              <div class="fastflag-meta fastflag-meta-v3">
                 <div><span>File</span><code id="fastFlagPath">Roblox Player not detected</code></div>
                 <div><span>Backup</span><strong id="fastFlagBackupState">Not created</strong></div>
                 <div><span>Editable</span><strong id="fastFlagEditableCount">0</strong></div>
                 <div><span>Performance+</span><strong id="fastFlagProtectedCount">0 locked</strong></div>
+                <div><span>Safe Core</span><strong id="fastFlagSafeCoreCount">0</strong></div>
+                <div><span>Legacy</span><strong id="fastFlagLegacyCount">0</strong></div>
+                <div><span>Warnings</span><strong id="fastFlagWarningCount">0</strong></div>
+                <div><span>Conflicts</span><strong id="fastFlagConflictCount">0</strong></div>
               </div>
-              <div class="fastflag-list-head"><span>FLAG</span><span>VALUE</span><span>TYPE</span><span>STATE</span></div>
+              <div class="fastflag-bulkbar">
+                <strong id="fastFlagSelectionCount">0 SELECTED</strong>
+                <button class="small-action" id="fastFlagSelectFiltered">SELECT FILTERED</button>
+                <button class="small-action" id="fastFlagClearSelection">CLEAR</button>
+                <button class="small-action" id="fastFlagBulkTrue">SET TRUE</button>
+                <button class="small-action" id="fastFlagBulkFalse">SET FALSE</button>
+                <button class="small-action danger-lite" id="fastFlagBulkRemove">REMOVE</button>
+              </div>
+              <div class="fastflag-list-head fastflag-list-head-v3"><span>✓</span><span>FLAG</span><span>CATEGORY</span><span>VALUE</span><span>TYPE</span><span>STATE</span></div>
               <div class="fastflag-list" id="fastFlagList" role="list"></div>
             </section>
 
             <div class="fastflag-side-column">
               <section class="card fastflag-editor-card">
-                <div class="card-head"><div><h2>FLAG EDITOR</h2><p>Changes are queued until you apply them</p></div><button class="round-btn" id="fastFlagEditorClear" title="Clear editor">×</button></div>
+                <div class="card-head"><div><h2>FLAG INTELLIGENCE</h2><p>Edit with category, description and compatibility context</p></div><button class="round-btn" id="fastFlagEditorClear" title="Clear editor">×</button></div>
+                <div class="fastflag-intel">
+                  <div><span>Category</span><strong id="fastFlagSelectedCategory">—</strong></div>
+                  <div><span>Safety</span><strong id="fastFlagSafety" class="fastflag-trust-badge neutral">—</strong></div>
+                  <div><span>Description</span><p id="fastFlagDescription">Select a flag to inspect its inferred purpose.</p></div>
+                  <div><span>Compatibility</span><div id="fastFlagCompatibility" class="fastflag-compatibility"><span class="fastflag-safe">No selected flag.</span></div></div>
+                </div>
                 <div class="fastflag-form">
                   <label>Flag name<input id="fastFlagKey" type="text" maxlength="160" spellcheck="false" placeholder="FFlagExample"></label>
                   <label>Value<input id="fastFlagValue" type="text" maxlength="2048" spellcheck="false" placeholder="True"></label>
@@ -303,24 +405,39 @@
                 </div>
               </section>
 
+              <section class="card fastflag-safe-core-card">
+                <div class="card-head"><div><h2>SAFE CORE DATABASE</h2><p>Conservative current rendering presets; not an official Roblox guarantee</p></div><span class="fastflag-count">5 FLAGS</span></div>
+                <div class="fastflag-safe-core-list" id="fastFlagSafeCoreList"><div class="fastflag-empty">Safe Core metadata is loading.</div></div>
+                <button class="secondary-action" id="fastFlagQueueSafeCore">QUEUE EDITABLE SAFE CORE</button>
+                <p class="fastflag-safe-core-note">MSAA remains owned by Performance Center. Queueing Safe Core never applies immediately; every editable change still goes through Before / After review.</p>
+              </section>
+
               <section class="card fastflag-pending-card">
-                <div class="card-head"><div><h2>PENDING CHANGES</h2><p>Review before writing to Roblox</p></div><span class="fastflag-count" id="fastFlagPendingCount">0</span></div>
+                <div class="card-head"><div><h2>BEFORE / AFTER</h2><p>Normalized diff before ClientAppSettings.json is written</p></div><span class="fastflag-count" id="fastFlagPendingCount">0</span></div>
+                <div class="fastflag-preview-summary"><span id="fastFlagPreviewWarnings">0 WARNINGS</span><span id="fastFlagPreviewConflicts">0 CONFLICTS</span></div>
                 <div class="fastflag-pending-list" id="fastFlagPendingList"><div class="fastflag-empty">No pending changes.</div></div>
                 <div class="fastflag-pending-actions"><button class="primary-action" id="fastFlagApplyPending">APPLY CHANGES</button><button class="secondary-action" id="fastFlagDiscardPending">DISCARD</button><button class="secondary-action" id="fastFlagRestoreBackup">RESTORE BACKUP</button></div>
               </section>
 
               <section class="card fastflag-presets-card">
-                <div class="card-head"><div><h2>PRESETS</h2><p>Save local snapshots of editable flags</p></div></div>
+                <div class="card-head"><div><h2>PRESET SHARING</h2><p>Local presets plus portable DragonStrap preset files</p></div></div>
                 <div class="fastflag-preset-form"><input id="fastFlagPresetName" type="text" maxlength="60" placeholder="Preset name"><button class="small-action" id="fastFlagPresetSave">SAVE CURRENT</button></div>
                 <select id="fastFlagPresetSelect"><option value="">No saved presets</option></select>
-                <div class="fastflag-preset-actions"><button class="secondary-action" id="fastFlagPresetLoad">LOAD TO PENDING</button><button class="secondary-action danger-lite" id="fastFlagPresetDelete">DELETE</button></div>
+                <div class="fastflag-preset-actions fastflag-preset-actions-v3"><button class="secondary-action" id="fastFlagPresetLoad">LOAD TO PENDING</button><button class="secondary-action" id="fastFlagPresetShare">EXPORT SHARE</button><button class="secondary-action" id="fastFlagPresetImportShare">IMPORT SHARE</button><button class="secondary-action danger-lite" id="fastFlagPresetDelete">DELETE</button></div>
+              </section>
+
+              <section class="card fastflag-snapshots-card">
+                <div class="card-head"><div><h2>AUTOMATIC SNAPSHOTS</h2><p>Created before FastFlag writes and restore operations</p></div><span class="fastflag-count" id="fastFlagSnapshotCount">0</span></div>
+                <select id="fastFlagSnapshotSelect"><option value="">No automatic snapshots</option></select>
+                <div class="fastflag-snapshot-meta" id="fastFlagSnapshotMeta">Snapshots preserve the full pre-change file. Restoring one keeps current Performance+ owned values intact.</div>
+                <button class="secondary-action" id="fastFlagSnapshotRestore">RESTORE SELECTED SNAPSHOT</button>
               </section>
             </div>
           </div>
         </section>
 
         <section class="view" data-view="servers">
-          <div class="page-heading"><div><h1>SERVER INTELLIGENCE</h1><p>Roblox public-server telemetry enriched with RoValra region data.</p></div><span class="phase-badge">ROVALRA</span></div>
+          <div class="page-heading"><div><h1>SERVER INTELLIGENCE 2.0</h1><p>Region intelligence, latency history, favorites, recent servers, comparison, and provider diagnostics.</p></div><span class="phase-badge">v1.6 SERVER CENTER</span></div>
           <div class="server-intelligence-shell">
             <section class="card server-lookup-card">
               <div class="card-head"><div><h2>SERVER LOOKUP</h2><p>Place ID or Roblox game URL</p></div><span class="server-provider-pill" id="serverProviderPill">READY</span></div>
@@ -329,59 +446,104 @@
                 <button class="primary-action" id="serverLookupBtn">LOOK UP SERVERS</button>
                 <button class="secondary-action" id="serverRefreshBtn" disabled>REFRESH</button>
               </div>
-              <div class="server-privacy-note"><b>ROVALRA DATA</b><span>Lookup sends the Place ID and public server IDs to RoValra for region/uptime enrichment. DragonStrap does not send your Roblox cookie.</span></div>
+              <div class="server-privacy-note"><b>ROVALRA DATA</b><span>Lookup sends the Place ID and public server IDs to RoValra for region/uptime enrichment. DragonStrap does not send your Roblox cookie. Favorites, recent joins, and latency samples stay local.</span></div>
             </section>
 
             <section class="server-stat-grid" aria-label="Server statistics">
               <div class="card server-stat-card"><span>TOTAL SERVERS</span><strong id="serverTotalCount">—</strong><small>RoValra count when available</small></div>
               <div class="card server-stat-card"><span>LOADED</span><strong id="serverLoadedCount">—</strong><small>Current public sample</small></div>
-              <div class="card server-stat-card"><span>REGIONS</span><strong id="serverRegionCount">—</strong><small>Detected locations</small></div>
-              <div class="card server-stat-card"><span>PROVIDER</span><strong id="serverProviderState">READY</strong><small id="serverProviderDetail">Manual lookup</small></div>
+              <div class="card server-stat-card"><span>AVERAGE PING</span><strong id="serverAveragePing">—</strong><small>Current sample</small></div>
+              <div class="card server-stat-card"><span>OPEN SLOTS</span><strong id="serverOpenSlots">—</strong><small>Across loaded servers</small></div>
+            </section>
+
+            <section class="server-side-grid">
+              <section class="card server-saved-card">
+                <div class="card-head"><div><h2>SAVED & RECENT</h2><p>Persistent local server shortcuts</p></div><button class="small-action" id="serverClearRecentBtn">CLEAR RECENT</button></div>
+                <div class="server-saved-columns">
+                  <div><h3>FAVORITES</h3><div id="serverFavoritesList" class="server-mini-list"><div class="server-mini-empty">No favorite servers yet.</div></div></div>
+                  <div><h3>RECENT JOINS</h3><div id="serverRecentList" class="server-mini-list"><div class="server-mini-empty">No recent server joins yet.</div></div></div>
+                </div>
+              </section>
+              <section class="card server-health-card">
+                <div class="card-head"><div><h2>PROVIDER HEALTH</h2><p>Last request state and response timing</p></div><strong id="serverProviderState">READY</strong></div>
+                <div id="serverProviderDiagnostics" class="server-health-list"><div class="server-mini-empty">Run a lookup to populate diagnostics.</div></div>
+              </section>
+            </section>
+
+            <section class="card server-compare-card" id="serverCompareCard">
+              <div class="card-head"><div><h2>SERVER COMPARISON</h2><p>Select up to 3 public servers to compare latency, occupancy, uptime, and region.</p></div><button class="small-action" id="serverCompareClearBtn">CLEAR</button></div>
+              <div id="serverCompareList" class="server-compare-list"><div class="server-mini-empty">No servers selected for comparison.</div></div>
             </section>
 
             <section class="card server-browser-card" id="serverBrowserCard">
               <div class="server-browser-head">
                 <div><h2>PUBLIC SERVERS</h2><p id="serverLookupSummary">Enter a Place ID to load public servers.</p></div>
                 <div class="server-filters">
-                  <input id="serverFilterInput" type="search" placeholder="Filter region or server ID" autocomplete="off">
-                  <select id="serverSortSelect" aria-label="Sort servers"><option value="ping">Lowest ping</option><option value="players">Most players</option><option value="space">Most space</option><option value="uptime">Longest uptime</option><option value="region">Region</option></select>
+                  <input id="serverFilterInput" type="search" placeholder="Filter region, country, datacenter, or server ID" autocomplete="off">
+                  <select id="serverOccupancySelect" aria-label="Filter by occupancy"><option value="any">Any occupancy</option><option value="empty">Empty</option><option value="low">Low (&lt;25%)</option><option value="medium">Medium (25–59%)</option><option value="busy">Busy (60–84%)</option><option value="almost-full">Almost full (85–99%)</option><option value="full">Full</option></select>
+                  <select id="serverSortSelect" aria-label="Sort servers"><option value="ping">Lowest ping</option><option value="history">Best historical ping</option><option value="players">Most players</option><option value="space">Most space</option><option value="occupancy">Lowest occupancy</option><option value="uptime">Longest uptime</option><option value="region">Region</option></select>
+                  <label class="server-full-toggle"><input id="serverFavoritesOnly" type="checkbox"> Favorites only</label>
                   <label class="server-full-toggle"><input id="serverHideFull" type="checkbox"> Hide full</label>
                 </div>
               </div>
               <div class="server-region-strip" id="serverRegionStrip"><span>No region data loaded.</span></div>
-              <div class="server-list-head" aria-hidden="true"><span>REGION</span><span>PLAYERS</span><span>PING</span><span>FPS</span><span>UPTIME</span><span>VERSION</span><span>SERVER</span><span></span></div>
-              <div class="server-list" id="serverList"><div class="server-empty-state">Server Intelligence is ready. Run a lookup to begin.</div></div>
+              <div class="server-list-head" aria-hidden="true"><span></span><span>REGION</span><span>PLAYERS</span><span>PING / HISTORY</span><span>UPTIME</span><span>VERSION</span><span>SERVER</span><span>ACTIONS</span></div>
+              <div class="server-list" id="serverList"><div class="server-empty-state">Server Intelligence 2.0 is ready. Run a lookup to begin.</div></div>
             </section>
           </div>
         </section>
 
         <section class="view" data-view="studio">
-          <div class="page-heading studio-heading"><div><h1>ROBLOX STUDIO CENTER</h1><p>Launch Studio, open trusted local projects, and manage your recent creator workflow.</p></div><div class="studio-heading-actions"><span class="phase-badge">v0.7 CREATOR CENTER</span><button class="small-action" id="studioRefreshBtn">REFRESH</button></div></div>
-          <div class="studio-center-layout">
-            <section class="card studio-hero-card">
-              <div class="card-head"><div><h2>STUDIO INSTALLATION</h2><p>Detected local creator environment</p></div><span class="status-dot" id="studioCenterDot"></span></div>
+          <div class="page-heading studio-heading"><div><h1>STUDIO CENTER 2.0</h1><p>Studio-specific launch profiles, project intelligence, backups, deployment tracking, and isolated creator FastFlags.</p></div><div class="studio-heading-actions"><span class="phase-badge">v1.7 CREATOR CENTER</span><button class="small-action" id="studioRefreshBtn">REFRESH</button></div></div>
+          <div class="studio-center-layout studio-v2-layout">
+            <section class="card studio-hero-card studio-v2-hero">
+              <div class="card-head"><div><h2>STUDIO INSTALLATION</h2><p>Detected creator environment and selected deployment channel</p></div><span class="status-dot" id="studioCenterDot"></span></div>
               <div class="studio-status-orb"><strong id="studioPageState">—</strong><span id="studioPageVersion">Scanning…</span></div>
               <div class="studio-path-block"><span>Executable</span><code id="studioCenterPath">Scanning…</code></div>
+              <div class="studio-deploy-mini">
+                <div><span>SELECTED CHANNEL</span><strong id="studioSelectedChannel">LIVE</strong></div>
+                <div><span>AVAILABLE BUILD</span><strong id="studioRemoteVersion">Checking…</strong></div>
+                <div><span>STATE</span><strong id="studioChannelState">CHECKING</strong></div>
+              </div>
               <div class="studio-primary-actions"><button class="primary-action" id="studioLaunchTop">LAUNCH BLANK STUDIO</button><button class="secondary-action" id="studioOpenProjectBtn">OPEN PROJECT…</button></div>
             </section>
 
-            <section class="card studio-workflow-card">
-              <div class="card-head"><div><h2>CREATOR WORKFLOW</h2><p>Local, explicit, and project-safe</p></div><span class="target-badge">.RBXL / .RBXLX</span></div>
-              <div class="studio-workflow-grid">
-                <div><b>1</b><span><strong>Choose a project</strong><small>Windows file picker only</small></span></div>
-                <div><b>2</b><span><strong>Validate locally</strong><small>Only supported Studio files</small></span></div>
-                <div><b>3</b><span><strong>Launch Studio</strong><small>Detected executable only</small></span></div>
-              </div>
-              <p class="studio-note">DragonStrap never accepts an arbitrary Studio executable path from the renderer.</p>
+            <section class="card studio-channel-card">
+              <div class="card-head"><div><h2>STUDIO VERSION & CHANNEL</h2><p>Tracks WindowsStudio64 independently from the Player channel.</p></div><span class="target-badge">WindowsStudio64</span></div>
+              <label class="studio-field"><span>Studio channel</span><input id="studioChannelInput" type="text" maxlength="64" autocomplete="off" spellcheck="false" placeholder="production"></label>
+              <div class="studio-channel-actions"><button class="secondary-action" id="studioChannelCheckBtn">CHECK</button><button class="primary-action" id="studioChannelSelectBtn">SELECT CHANNEL</button></div>
+              <p class="studio-note">Studio channel selection is tracking-only. DragonStrap does not replace Studio deployment packages from this page.</p>
             </section>
 
-            <section class="card studio-recent-card">
-              <div class="card-head"><div><h2>RECENT STUDIO PROJECTS</h2><p>Projects explicitly opened through DragonStrap</p></div><button class="small-action" id="studioClearHistoryBtn">CLEAR</button></div>
+            <section class="card studio-profile-card">
+              <div class="card-head"><div><h2>STUDIO LAUNCH PROFILE</h2><p>Choose the pre-launch project protection workflow.</p></div><span class="status-dot ok-dot"></span></div>
+              <label class="studio-field"><span>Default launch profile</span><select id="studioLaunchProfileSelect"></select></label>
+              <div class="studio-setting-row"><div><strong>Auto Backup</strong><small>Back up project files before Standard-profile launches.</small></div><label class="switch"><input id="studioAutoBackup" type="checkbox"><span></span></label></div>
+              <label class="studio-field compact"><span>Backups kept per project</span><select id="studioBackupRetention"><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></label>
+              <p class="studio-note" id="studioProfileDescription">Profile details will appear here.</p>
+            </section>
+
+            <section class="card studio-recent-card studio-intelligence-card">
+              <div class="card-head"><div><h2>RECENT PROJECT INTELLIGENCE</h2><p>Open count, file changes, backup coverage, and trusted relaunch actions.</p></div><button class="small-action" id="studioClearHistoryBtn">CLEAR</button></div>
               <div class="studio-recent-list" id="studioRecentProjects"><div class="studio-empty">No Studio projects opened through DragonStrap yet.</div></div>
             </section>
 
+            <section class="card studio-fastflag-card">
+              <div class="card-head"><div><h2>ISOLATED STUDIO FASTFLAGS</h2><p>Optional Studio-only ClientSettings with its own backup/snapshot boundary.</p></div><label class="switch"><input id="studioFastFlagsToggle" type="checkbox"><span></span></label></div>
+              <div class="studio-fastflag-status"><span id="studioFastFlagsState">DISABLED</span><code id="studioFastFlagsPath">Studio ClientSettings unavailable.</code></div>
+              <div class="studio-fastflag-editor">
+                <label class="studio-field"><span>Flag key</span><input id="studioFlagKey" type="text" maxlength="160" autocomplete="off" spellcheck="false" placeholder="FFlagExample"></label>
+                <label class="studio-field"><span>Value</span><input id="studioFlagValue" type="text" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="True"></label>
+                <label class="studio-field compact"><span>Type</span><select id="studioFlagType"><option value="auto">Auto</option><option value="boolean">Boolean</option><option value="integer">Integer</option><option value="float">Float</option><option value="string">String</option></select></label>
+                <button class="primary-action" id="studioFlagSetBtn">SET / UPDATE</button>
+                <button class="secondary-action" id="studioFlagRestoreBtn">RESTORE BACKUP</button>
+              </div>
+              <div class="studio-fastflag-list" id="studioFastFlagList"><div class="studio-empty compact-empty">No Studio FastFlags configured.</div></div>
+              <p class="studio-note">DragonStrap refuses Studio FastFlag writes if Player and Studio resolve to the same ClientSettings path. Only scalar values are supported; unknown flags remain your responsibility.</p>
+            </section>
+
             <section class="card studio-paths-card">
-              <div class="card-head"><div><h2>CREATOR PATHS</h2><p>Quick access to your local Studio environment</p></div></div>
+              <div class="card-head"><div><h2>CREATOR PATHS</h2><p>Quick access to trusted local Studio locations.</p></div></div>
               <div class="studio-path-actions">
                 <button class="secondary-action" id="studioOpenInstallBtn"><b>◇</b><span>Studio Install Folder<small id="studioInstallFolder">Unavailable</small></span></button>
                 <button class="secondary-action" id="studioOpenLogsBtn"><b>≡</b><span>Roblox Logs Folder<small id="studioLogsFolder">Unavailable</small></span></button>
@@ -389,20 +551,21 @@
             </section>
 
             <section class="card studio-safety-card">
-              <div class="card-head"><div><h2>STUDIO BOUNDARY</h2><p>Creator configuration remains untouched</p></div></div>
+              <div class="card-head"><div><h2>STUDIO SAFETY BOUNDARY</h2><p>Creator data stays explicit, local, and separate from Player configuration.</p></div></div>
               <div class="check-list">
-                <span>✓ Studio is detected from the installed Roblox Versions directory</span>
-                <span>✓ Project files are selected through the native Windows picker</span>
-                <span>✓ Recent-project launches resolve a trusted local history ID</span>
-                <span>✓ Performance+ and FastFlag Manager remain Player-only</span>
-                <span>✓ DragonStrap does not write Studio FastFlags in v1.0.0</span>
+                <span>✓ Studio executable is resolved from the installed Roblox Versions directory.</span>
+                <span>✓ Project paths enter through the native picker or a trusted recent-project ID.</span>
+                <span>✓ Backups are local copies with bounded per-project retention.</span>
+                <span>✓ Restore creates a new project copy instead of overwriting the original file.</span>
+                <span>✓ Studio channel tracking is independent from Player channel selection.</span>
+                <span>✓ Studio FastFlags are disabled by default and blocked unless the config path is isolated.</span>
               </div>
             </section>
           </div>
         </section>
 
         <section class="view" data-view="channels">
-          <div class="page-heading"><div><h1>CHANNEL & VERSION MANAGER</h1><p>Track Roblox Player and Studio deployments without hiding what will change.</p></div><span class="phase-badge" id="channelPhaseBadge">LIVE</span></div>
+          <div class="page-heading"><div><h1>CHANNEL & INSTALLATION CENTER</h1><p>Track deployments and install Roblox Player through DragonStrap's staged update engine.</p></div><span class="phase-badge" id="channelPhaseBadge">LIVE</span></div>
           <div class="channel-manager-grid">
             <section class="card channel-selector-card">
               <div class="card-head"><div><h2>CHANNEL SELECTION</h2><p>LIVE maps to Roblox's production deployment channel</p></div><button class="round-btn" id="channelRefreshBtn" title="Refresh deployment metadata">↻</button></div>
@@ -412,7 +575,30 @@
                 <button class="secondary-action" id="channelUseLiveBtn">USE LIVE</button>
                 <button class="primary-action" id="channelSelectBtn">SELECT CHANNEL</button>
               </div>
-              <div class="channel-notice"><b>VERSION TRACKING</b><span>v1.0.0 validates and remembers the selected public channel and compares installed builds with Roblox deployment metadata. Direct package replacement is intentionally outside the v1.0.0 stable scope.</span></div>
+              <div class="channel-notice"><b>TRANSACTIONAL INSTALL</b><span>DragonStrap downloads Roblox Player packages into a resumable cache, verifies manifest sizes and MD5 signatures, extracts into staging, verifies RobloxPlayerBeta.exe, then commits the completed version. Existing working versions are not deleted during the transaction.</span></div>
+            </section>
+
+            <section class="card channel-install-card" id="channelInstallCard">
+              <div class="card-head"><div><h2>ROBLOX PLAYER INSTALLATION ENGINE</h2><p>Staged download, verification, resume, and commit pipeline</p></div><span class="channel-state-pill" id="playerInstallPhase">READY</span></div>
+              <div class="install-progress-wrap">
+                <div class="install-progress-copy"><strong id="playerInstallMessage">Analyze the selected channel before installing.</strong><span id="playerInstallDetail">No installation is running.</span></div>
+                <div class="install-progress-track"><i id="playerInstallProgressBar" style="width:0%"></i></div>
+                <div class="install-progress-meta"><span id="playerInstallPercent">0%</span><span id="playerInstallSpeed">—</span></div>
+              </div>
+              <div class="install-plan-grid">
+                <div><span>Target build</span><strong id="playerInstallTarget">—</strong></div>
+                <div><span>Packages</span><strong id="playerInstallPackages">—</strong></div>
+                <div><span id="playerInstallDownloadLabel">Download</span><strong id="playerInstallDownload">—</strong></div>
+                <div><span>Installed size</span><strong id="playerInstallUnpacked">—</strong></div>
+                <div><span>Free space</span><strong id="playerInstallFreeSpace">—</strong></div>
+                <div><span>Resume cache</span><strong id="playerInstallResume">—</strong></div>
+              </div>
+              <div class="install-actions">
+                <button class="secondary-action" id="playerInstallPlanBtn">ANALYZE INSTALL</button>
+                <button class="primary-action" id="playerInstallStartBtn" disabled>INSTALL / UPDATE PLAYER</button>
+                <button class="danger-action" id="playerInstallCancelBtn" disabled>CANCEL</button>
+              </div>
+              <div class="install-safety-note" id="playerInstallSafety">Downloads are cached under Roblox\Downloads\DragonStrap. Canceling keeps partial package downloads so the next run can resume.</div>
             </section>
 
             <section class="card channel-version-card" id="channelPlayerCard">
@@ -437,17 +623,87 @@
         </section>
 
         <section class="view" data-view="profiles">
-          <div class="page-heading"><div><h1>PROFILES</h1><p>Persistent DragonStrap launch presets.</p></div><span class="phase-badge">LOCAL</span></div>
-          <div class="profile-page-grid"><button class="profile-tile" data-profile="default"><b>▱</b><strong>Default</strong><span>Roblox defaults</span></button><button class="profile-tile active" data-profile="performance"><b>⌘</b><strong>Performance</strong><span>High FPS target</span></button><button class="profile-tile" data-profile="quality"><b>✎</b><strong>Quality</strong><span>Visual-first profile</span></button><button class="profile-tile" data-profile="studio"><b>◉</b><strong>Studio</strong><span>Creator workflow</span></button></div>
+          <div class="page-heading profiles-heading"><div><h1>PROFILES & CONFIGURATION CENTER</h1><p>Capture, clone, share, and atomically apply complete DragonStrap Player configurations.</p></div><span class="phase-badge">v1.8 CONFIGURATION</span></div>
+          <div class="configuration-profile-layout">
+            <section class="card configuration-profile-library">
+              <div class="card-head"><div><h2>PROFILE LIBRARY</h2><p>Named local configurations stored in DragonStrap user data</p></div><span class="profile-count" id="configurationProfileCount">0 profiles</span></div>
+              <label class="configuration-field"><span>Selected profile</span><select id="configurationProfileSelect"><option value="">No profiles yet</option></select></label>
+              <div class="configuration-actions configuration-actions-main"><button class="primary-action" id="configurationApplyBtn" disabled>APPLY PROFILE</button><button class="secondary-action" id="configurationExportBtn" disabled>EXPORT</button><button class="danger-action" id="configurationDeleteBtn" disabled>DELETE</button></div>
+              <div class="configuration-active-row"><span>ACTIVE PROFILE</span><strong id="configurationActiveProfile">None</strong></div>
+            </section>
+
+            <section class="card configuration-profile-create">
+              <div class="card-head"><div><h2>CAPTURE CURRENT CONFIGURATION</h2><p>Saves Performance+, editable Player FastFlags, Player channel, launch behavior, and server preferences.</p></div><span class="status-dot online"></span></div>
+              <label class="configuration-field"><span>Profile name</span><input id="configurationProfileName" maxlength="64" placeholder="My DragonStrap Profile" autocomplete="off"></label>
+              <button class="primary-action" id="configurationSaveBtn">SAVE CURRENT</button>
+              <div class="configuration-note">Complete capture requires a detected Roblox Player and readable ClientAppSettings.json. Performance Center-owned flags are stored through the Performance+ settings layer instead of duplicated in the editable FastFlag payload.</div>
+            </section>
+
+            <section class="card configuration-profile-clone">
+              <div class="card-head"><div><h2>CLONE & SHARE</h2><p>Duplicate a profile before experimenting, or exchange a portable profile file.</p></div></div>
+              <label class="configuration-field"><span>Clone name</span><input id="configurationCloneName" maxlength="64" placeholder="Profile Copy" autocomplete="off"></label>
+              <div class="configuration-actions"><button class="secondary-action" id="configurationCloneBtn" disabled>CLONE SELECTED</button><button class="secondary-action" id="configurationImportBtn">IMPORT PROFILE</button></div>
+              <div class="configuration-note">Imports accept only <code>dragonstrap.configuration-profile.v1</code>. File paths, Roblox cookies, project history, diagnostics, update state, and machine-specific runtime data are never part of a profile.</div>
+            </section>
+
+            <section class="card configuration-profile-summary">
+              <div class="card-head"><div><h2>PROFILE CONTENTS</h2><p id="configurationProfileSummaryTitle">Select a profile to inspect it.</p></div><span class="status-dot" id="configurationProfileDot"></span></div>
+              <div class="configuration-summary-grid">
+                <div><span>PERFORMANCE+</span><strong id="configurationSummaryPerformance">—</strong></div>
+                <div><span>FASTFLAGS</span><strong id="configurationSummaryFlags">—</strong></div>
+                <div><span>PLAYER CHANNEL</span><strong id="configurationSummaryChannel">—</strong></div>
+                <div><span>LAUNCH</span><strong id="configurationSummaryLaunch">—</strong></div>
+                <div><span>SERVER SORT</span><strong id="configurationSummaryServerSort">—</strong></div>
+                <div><span>SERVER FILTER</span><strong id="configurationSummaryServerFilter">—</strong></div>
+              </div>
+            </section>
+
+            <section class="card configuration-profile-preview">
+              <div class="card-head"><div><h2>APPLY PREVIEW</h2><p>DragonStrap validates the complete change set before applying anything.</p></div><button class="secondary-action" id="configurationPreviewBtn" disabled>REFRESH PREVIEW</button></div>
+              <div class="configuration-preview-stats"><div><span>Settings</span><strong id="configurationPreviewSettings">0</strong></div><div><span>Flag sets</span><strong id="configurationPreviewSets">0</strong></div><div><span>Flag removals</span><strong id="configurationPreviewRemovals">0</strong></div><div><span>Warnings</span><strong id="configurationPreviewWarnings">0</strong></div></div>
+              <div id="configurationPreviewList" class="configuration-preview-list"><div class="configuration-empty">Select a profile to build an apply preview.</div></div>
+              <div class="configuration-warning">Applying a complete profile intentionally replaces the current editable Player FastFlag set with the profile's editable flag set. DragonStrap creates the normal FastFlag snapshot/backup protections first and leaves Performance Center-owned flags under Performance+ control.</div>
+            </section>
+          </div>
         </section>
 
         <section class="view" data-view="maintenance">
-          <div class="page-heading"><div><h1>REPAIR, CACHE & DIAGNOSTICS</h1><p>Verify the local Roblox environment, clean known caches, repair malformed client settings, and export a privacy-conscious diagnostic report.</p></div><span class="phase-badge" id="maintenanceHealthBadge">SCANNING</span></div>
-          <div class="maintenance-grid">
+          <div class="page-heading"><div><h1>RELIABILITY & RECOVERY 2.0</h1><p>Detect damaged installs, roll back DragonStrap-managed Roblox updates, create configuration restore points, recover interrupted updates, and run bounded one-click repairs.</p></div><span class="phase-badge" id="maintenanceHealthBadge">SCANNING</span></div>
+          <div class="maintenance-grid recovery-grid">
             <section class="card maintenance-overview">
-              <div class="card-head"><div><h2>SYSTEM HEALTH</h2><p>Current DragonStrap / Roblox checks</p></div><button class="round-btn" id="maintenanceRefreshBtn" title="Run diagnostics">↻</button></div>
+              <div class="card-head"><div><h2>SYSTEM HEALTH</h2><p>DragonStrap, Roblox, configuration, and recovery checks</p></div><button class="round-btn" id="maintenanceRefreshBtn" title="Run diagnostics">↻</button></div>
               <div class="maintenance-health-hero"><div class="maintenance-orb" id="maintenanceHealthOrb">◌</div><div><strong id="maintenanceHealthText">Scanning…</strong><span id="maintenanceHealthSub">Checking installation and configuration</span></div></div>
               <div class="maintenance-check-list" id="maintenanceChecks"><div class="maintenance-empty">Running diagnostics…</div></div>
+            </section>
+
+            <section class="card recovery-integrity-card">
+              <div class="card-head"><div><h2>PLAYER INSTALLATION INTEGRITY</h2><p>Structural corruption detection and rollback readiness</p></div><span class="phase-badge" id="recoveryIntegrityBadge">SCANNING</span></div>
+              <div class="recovery-state-line"><strong id="recoveryIntegrityState">Scanning Roblox Player…</strong><span id="recoveryIntegrityVersion">—</span></div>
+              <div class="maintenance-check-list compact" id="recoveryIntegrityChecks"></div>
+              <div class="recovery-rollback-box"><span>Rollback</span><strong id="recoveryRollbackDetail">Checking…</strong></div>
+              <button class="primary-action" id="maintenanceRollbackBtn" disabled>ROLL BACK PLAYER</button>
+              <div class="maintenance-note">Rollback is available only when DragonStrap can identify a preserved previous installation or verified pre-replacement backup. It never downloads an arbitrary executable.</div>
+            </section>
+
+            <section class="card recovery-restore-card">
+              <div class="card-head"><div><h2>CONFIGURATION RESTORE POINTS</h2><p>Transactional snapshots of DragonStrap settings and ClientSettings</p></div><span class="maintenance-value" id="recoveryRestoreCount">0</span></div>
+              <div class="recovery-create-row"><input id="recoveryRestoreLabel" maxlength="80" placeholder="Restore point label (optional)" /><button class="primary-action" id="maintenanceCreateRestoreBtn">CREATE</button></div>
+              <div class="recovery-restore-list" id="recoveryRestoreList"><div class="maintenance-empty">No restore points yet.</div></div>
+              <div class="maintenance-note">Restore points include only allowlisted DragonStrap configuration files plus current Player/Studio ClientSettings. Project files, credentials, logs, and server history are excluded.</div>
+            </section>
+
+            <section class="card recovery-update-card">
+              <div class="card-head"><div><h2>UPDATE RECOVERY</h2><p>Interrupted self-update and staging recovery</p></div><span class="status-dot" id="recoveryUpdateDot"></span></div>
+              <div class="recovery-state-line"><strong id="recoveryUpdateState">Scanning…</strong><span id="recoveryUpdateDetail">—</span></div>
+              <div class="recovery-issue-list" id="recoveryUpdateIssues"></div>
+              <button class="secondary-action" id="maintenanceRepairUpdateBtn">REPAIR UPDATE STATE</button>
+            </section>
+
+            <section class="card recovery-safe-card">
+              <div class="card-head"><div><h2>ONE-CLICK SAFE REPAIR</h2><p>Restore point first, then repair only known recoverable faults</p></div><span class="status-dot online"></span></div>
+              <div class="maintenance-report-copy">Safe Repair creates a configuration restore point first, repairs malformed Player ClientSettings, removes abandoned DragonStrap staging directories, cleans invalid self-update state, and uses Player rollback only when corruption is detected and a trusted rollback candidate exists.</div>
+              <button class="primary-action" id="maintenanceSafeRepairBtn">RUN SAFE REPAIR</button>
+              <div class="recovery-last-result" id="recoverySafeRepairResult">No repair has been run in this session.</div>
             </section>
 
             <section class="card maintenance-cache-card">
@@ -470,21 +726,21 @@
               <div class="maintenance-actions"><button class="secondary-action" id="maintenanceOpenLogsBtn">OPEN LOGS</button><button class="secondary-action" id="maintenanceClearLogsBtn">CLEAR OLD LOGS</button></div>
             </section>
 
-            <section class="card maintenance-locations-card">
-              <div class="card-head"><div><h2>LOCATIONS</h2><p>Quick access to trusted local folders</p></div></div>
-              <div class="maintenance-location-grid"><button class="secondary-action" data-maint-location="roblox">ROBLOX ROOT</button><button class="secondary-action" data-maint-location="versions">VERSIONS</button><button class="secondary-action" data-maint-location="player">PLAYER INSTALL</button><button class="secondary-action" data-maint-location="studio">STUDIO INSTALL</button><button class="secondary-action" data-maint-location="data">DRAGONSTRAP DATA</button></div>
+            <section class="card maintenance-report-card">
+              <div class="card-head"><div><h2>DIAGNOSTIC REPORT 2.0</h2><p>Export stronger troubleshooting metadata</p></div><span class="status-dot online"></span></div>
+              <div class="maintenance-report-copy">The report now includes integrity checks, rollback availability, restore-point counts, staging/update-recovery state, and reliability session metadata. It still excludes Roblox cookies, FastFlag values, project contents, and file contents.</div>
+              <button class="primary-action" id="maintenanceExportBtn">EXPORT DIAGNOSTICS</button>
             </section>
 
-            <section class="card maintenance-report-card">
-              <div class="card-head"><div><h2>DIAGNOSTIC REPORT</h2><p>Export troubleshooting metadata</p></div><span class="status-dot online"></span></div>
-              <div class="maintenance-report-copy">The report contains app/platform information, detected versions, health results, cache/log sizes, and local paths. Local paths can include your Windows profile-folder name. It does not include Roblox cookies, FastFlag values, project contents, or file contents.</div>
-              <button class="primary-action" id="maintenanceExportBtn">EXPORT DIAGNOSTICS</button>
+            <section class="card maintenance-locations-card">
+              <div class="card-head"><div><h2>TRUSTED LOCATIONS</h2><p>Quick access to allowlisted local folders</p></div></div>
+              <div class="maintenance-location-grid"><button class="secondary-action" data-maint-location="roblox">ROBLOX ROOT</button><button class="secondary-action" data-maint-location="versions">VERSIONS</button><button class="secondary-action" data-maint-location="player">PLAYER INSTALL</button><button class="secondary-action" data-maint-location="studio">STUDIO INSTALL</button><button class="secondary-action" data-maint-location="recovery">RECOVERY DATA</button><button class="secondary-action" data-maint-location="data">DRAGONSTRAP DATA</button></div>
             </section>
           </div>
         </section>
 
         <section class="view" data-view="settings">
-          <div class="page-heading"><div><h1>SETTINGS</h1><p>DragonStrap application preferences.</p></div><span class="phase-badge">PURPLE DRAGON</span></div>
+          <div class="page-heading"><div><h1>SETTINGS</h1><p>DragonStrap 2.0 application preferences, release controls, and core runtime state.</p></div><span class="phase-badge">CORE API 2.0</span></div>
           <div class="feature-grid two-col settings-release-grid">
             <section class="card feature-card">
               <div class="card-head"><div><h2>GENERAL</h2><p>Persistent local preferences</p></div></div>
@@ -495,19 +751,45 @@
             </section>
 
             <section class="card feature-card update-center-card">
-              <div class="card-head"><div><h2>UPDATE CENTER</h2><p>Official release intelligence</p></div><span class="status-dot" id="updateStatusDot"></span></div>
-              <div class="update-state-grid">
-                <div><span>Current</span><strong id="updateCurrentVersion">1.0.0</strong></div>
+              <div class="card-head"><div><h2>UPDATE CENTER 2.0</h2><p>Download, verify, defer, and apply official DragonStrap releases</p></div><span class="status-dot" id="updateStatusDot"></span></div>
+              <div class="update-state-grid update-state-grid-wide">
+                <div><span>Current</span><strong id="updateCurrentVersion">2.0.4</strong></div>
                 <div><span>Latest</span><strong id="updateLatestVersion">—</strong></div>
+                <div><span>Build</span><strong id="updateBuildMode">Detecting…</strong></div>
                 <div><span>Feed</span><strong id="updateFeedStatus">Checking…</strong></div>
                 <div><span>Last check</span><strong id="updateLastChecked">Never</strong></div>
+                <div><span>Verification</span><strong id="updateVerificationState">—</strong></div>
               </div>
-              <div class="control-list update-controls">
+              <div class="control-list update-controls update-controls-grid">
                 <label class="toggle-row">Check for updates on startup<input id="checkForUpdatesSetting" type="checkbox" checked></label>
                 <label>Release channel<select id="updateChannelSetting"><option value="stable">Stable</option><option value="prerelease">Pre-release</option></select></label>
               </div>
-              <div class="release-actions"><button class="primary-action" id="checkUpdatesBtn">CHECK NOW</button><button class="secondary-action" id="openReleaseBtn" disabled>OPEN RELEASE</button></div>
-              <div class="release-note" id="updateMessage">DragonStrap checks GitHub Releases from the main process. Automatic binary installation is disabled until official signing/checksum policy is finalized.</div>
+              <div class="update-package-row"><span>Selected package</span><code id="updateSelectedAsset">No release selected</code></div>
+              <div class="update-progress-panel">
+                <div class="update-progress-copy"><strong id="updateDownloadStatus">Idle</strong><span id="updateDownloadPercent">0%</span></div>
+                <div class="update-progress-track"><div id="updateDownloadProgressBar"></div></div>
+              </div>
+              <div class="release-actions release-actions-four">
+                <button class="primary-action" id="checkUpdatesBtn">CHECK NOW</button>
+                <button class="primary-action" id="downloadUpdateBtn" disabled>DOWNLOAD UPDATE</button>
+                <button class="primary-action" id="applyUpdateBtn" disabled>INSTALL UPDATE</button>
+                <button class="secondary-action" id="openReleaseBtn" disabled>OPEN RELEASE</button>
+              </div>
+              <div class="release-actions release-actions-three">
+                <button class="secondary-action" id="cancelUpdateDownloadBtn" disabled>CANCEL DOWNLOAD</button>
+                <button class="secondary-action" id="openUpdateFolderBtn">OPEN UPDATE FOLDER</button>
+                <button class="secondary-action" id="clearUpdateDeferralBtn" disabled>CLEAR DEFERRAL</button>
+              </div>
+              <div class="update-defer-row">
+                <label>Remind me later<select id="updateDeferralHours"><option value="1">In 1 hour</option><option value="24" selected>Tomorrow</option><option value="168">In 7 days</option></select></label>
+                <button class="secondary-action" id="deferUpdateBtn" disabled>DEFER UPDATE</button>
+                <span id="updateDeferredStatus">No update deferred</span>
+              </div>
+              <div class="release-note" id="updateMessage">DragonStrap checks the official GitHub release feed from the main process. Update binaries are not runnable until their SHA-256 matches the published checksum file.</div>
+              <div class="update-release-notes">
+                <div class="update-release-notes-head"><strong>RELEASE NOTES</strong><span id="updateReleaseName">No release selected</span></div>
+                <pre id="updateReleaseNotes">Release notes will appear after a successful update check.</pre>
+              </div>
             </section>
 
             <section class="card feature-card reliability-card">
@@ -522,9 +804,23 @@
               <div class="release-note">Renderer crashes, unresponsive-window events, load failures, and process errors are recorded locally. Sensitive credential-like fields are excluded from structured log metadata.</div>
             </section>
 
-            <section class="card feature-card">
-              <div class="card-head"><div><h2>ABOUT</h2><p>Stable release build</p></div></div>
-              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong>1.0.0</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+            <section class="card feature-card architecture-card">
+              <div class="card-head"><div><h2>DRAGONSTRAP 2.0 CORE</h2><p>Stable service contracts and extension-ready boundaries</p></div><span class="status-dot online" id="coreStatusDot"></span></div>
+              <div class="core-runtime-grid">
+                <div><span>Core API</span><strong id="coreApiVersion">2.0.0</strong></div>
+                <div><span>Registered services</span><strong id="coreServiceCount">—</strong></div>
+                <div><span>Pipeline</span><strong id="corePipelineState">—</strong></div>
+                <div><span>Operation</span><strong id="coreOperationState">—</strong></div>
+                <div><span>Extension points</span><strong id="coreExtensionCount">—</strong></div>
+                <div><span>External plugins</span><strong id="corePluginState">DISABLED</strong></div>
+              </div>
+              <div class="core-capability-row" id="coreExtensionPoints">Launch • Server enrichment • Diagnostics • Profiles</div>
+              <div class="release-note">DragonStrap 2.0 defines versioned plugin/service boundaries, but third-party plugin code is not executed yet. This keeps the v2.0.0 security boundary equivalent to the stable v1.x application while future extensions target documented contracts.</div>
+            </section>
+
+            <section class="card feature-card" id="aboutCard" tabindex="-1">
+              <div class="card-head"><div><h2>ABOUT</h2><p>DragonStrap 2.0 stable architecture release</p></div></div>
+              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.0.4</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
             </section>
           </div>
         </section>
@@ -532,6 +828,23 @@
     </div>
 
     <footer class="footer panel-edge"><span>DRAGONSTRAP</span><span>•</span><span>PURPLE DRAGON UI/UX</span><span class="footer-right" id="footerStatus">INITIALIZING</span></footer>
+
+    <dialog class="dragon-help-dialog" id="helpDialog" aria-labelledby="helpDialogTitle">
+      <div class="dragon-help-shell">
+        <div class="dragon-help-head">
+          <div><span class="dragon-help-kicker">DRAGONSTRAP HELP</span><h2 id="helpDialogTitle">Where do you want to go?</h2><p>Jump directly to the center that handles the task you need.</p></div>
+          <button class="round-btn" id="helpDialogClose" type="button" aria-label="Close Help">×</button>
+        </div>
+        <div class="dragon-help-grid">
+          <button type="button" data-help-tab="launch"><strong>Launch Roblox</strong><span>Player, experiences and recent launches</span></button>
+          <button type="button" data-help-tab="performance"><strong>Performance</strong><span>FPS, renderer, profiles and hardware guidance</span></button>
+          <button type="button" data-help-tab="fastflags"><strong>FastFlags</strong><span>Safe Core, diffs, snapshots and presets</span></button>
+          <button type="button" data-help-tab="maintenance"><strong>Repair & Recovery</strong><span>Diagnostics, restore points and Safe Repair</span></button>
+        </div>
+        <div class="dragon-help-note">Tip: press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search DragonStrap navigation at any time.</div>
+      </div>
+    </dialog>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
   <script src="app.js"></script>

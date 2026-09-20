@@ -46,3 +46,31 @@ test('SettingsStore normalizes LIVE and accepts validated public channel names',
   assert.equal(store.update({ channel: '../bad' }).channel, 'ZCanary');
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test('SettingsStore persists validated update deferral metadata', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dragonstrap-settings-update-deferral-'));
+  const store = new SettingsStore(dir);
+  const until = 1893456000000;
+  const updated = store.update({ updateDeferredUntil:until, updateDeferredVersion:'1.3.0' });
+  assert.equal(updated.updateDeferredUntil, until);
+  assert.equal(updated.updateDeferredVersion, '1.3.0');
+  const invalid = store.update({ updateDeferredUntil:-1, updateDeferredVersion:'../../bad' });
+  assert.equal(invalid.updateDeferredUntil, until);
+  assert.equal(invalid.updateDeferredVersion, '1.3.0');
+  fs.rmSync(dir, { recursive:true, force:true });
+});
+
+test('SettingsStore persists validated Server Intelligence profile preferences', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dragonstrap-settings-server-pref-'));
+  const store = new SettingsStore(dir);
+  const updated = store.update({ serverSort:'history', serverOccupancy:'busy', serverFavoritesOnly:true, serverHideFull:true });
+  assert.equal(updated.serverSort,'history');
+  assert.equal(updated.serverOccupancy,'busy');
+  assert.equal(updated.serverFavoritesOnly,true);
+  assert.equal(updated.serverHideFull,true);
+  const after = store.update({ serverSort:'invalid', serverOccupancy:'invalid', serverHideFull:'yes' });
+  assert.equal(after.serverSort,'history');
+  assert.equal(after.serverOccupancy,'busy');
+  assert.equal(after.serverHideFull,true);
+  fs.rmSync(dir, { recursive:true, force:true });
+});

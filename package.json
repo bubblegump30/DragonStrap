@@ -1,9 +1,9 @@
 {
   "name": "dragonstrap",
   "productName": "DragonStrap",
-  "version": "1.0.0",
+  "version": "2.0.4",
   "private": true,
-  "description": "DragonStrap stable Windows Roblox bootstrapper and launcher with Purple Dragon UI, Launch Center, Performance+, FastFlag management, Server Intelligence, Studio tools, channel tracking, repair, diagnostics, and release update checking",
+  "description": "DragonStrap 2.0 Windows Roblox bootstrapper with consolidated service architecture, coordinated bootstrap/update pipeline, plugin-ready contracts, lazy-loaded UI centers, recovery, profiles, and verified updates",
   "main": "main.js",
   "author": "DragonStrap Project",
   "scripts": {

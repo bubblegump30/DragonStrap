@@ -88,3 +88,60 @@ test('ServerIntelligenceService uses its short cache unless force refresh is req
   assert.ok(calls > afterFirst);
   assert.equal(first.ok, true);
 });
+
+test('ServerIntelligenceService adds normalized region and occupancy intelligence', async () => {
+  const fetchImpl = async (url) => {
+    if (String(url).includes('games.roblox.com')) return response({ data:[{ id:'server-a', playing:9, maxPlayers:10, ping:50, fps:60 }] });
+    if (String(url).includes('/details')) return response({ status:'success', servers:[{ server_id:'server-a', city:'Toronto', region:'Ontario', country:'Canada', datacenter_id:42 }] });
+    return response({ status:'success', counts:{ total_servers:1, regions:{} } });
+  };
+  const service = new ServerIntelligenceService({ fetchImpl });
+  const result = await service.lookup('1818');
+  assert.equal(result.servers[0].region, 'Toronto, Ontario, Canada');
+  assert.equal(result.servers[0].regionGroup, 'Canada • Ontario');
+  assert.equal(result.servers[0].locationQuality, 'metro');
+  assert.equal(result.servers[0].occupancyBand, 'almost-full');
+  assert.equal(result.servers[0].availableSlots, 1);
+  assert.equal(result.servers[0].occupancyPercent, 90);
+});
+
+test('ServerIntelligenceService integrates latency history and favorites from its local store', async () => {
+  const calls = [];
+  const store = {
+    addLatencySamples(placeId, servers) { calls.push(['latency', placeId, servers.length]); },
+    getLatencySummary() { return { samples:3, average:61, min:50, max:75, last:55, trend:'improving' }; },
+    isFavorite() { return true; },
+    getState() { return { favorites:[{ placeId:'1818', serverId:'server-a' }], recent:[], providerHealth:{} }; },
+    recordProviderHealth() {}, getProviderHealth() { return {}; }
+  };
+  const fetchImpl = async (url) => {
+    if (String(url).includes('games.roblox.com')) return response({ data:[{ id:'server-a', playing:2, maxPlayers:10, ping:55, fps:60 }] });
+    if (String(url).includes('/details')) return response({ status:'success', servers:[] });
+    return response({ status:'success', counts:{ total_servers:1, regions:{} } });
+  };
+  const service = new ServerIntelligenceService({ fetchImpl, store });
+  const result = await service.lookup('1818');
+  assert.deepEqual(calls[0], ['latency','1818',1]);
+  assert.equal(result.servers[0].favorite, true);
+  assert.equal(result.servers[0].latencyHistory.average, 61);
+  assert.equal(result.saved.favorites.length, 1);
+});
+
+test('ServerIntelligenceService records separate provider health states for partial RoValra degradation', async () => {
+  const health = [];
+  const store = {
+    recordProviderHealth(name, result) { health.push([name, result.ok]); },
+    getProviderHealth() { return {}; }, addLatencySamples() {}, getLatencySummary() { return { samples:0, average:null, min:null, max:null, last:null, trend:'none' }; }, isFavorite() { return false; }, getState() { return { favorites:[], recent:[], providerHealth:{} }; }
+  };
+  const fetchImpl = async (url) => {
+    if (String(url).includes('games.roblox.com')) return response({ data:[{ id:'server-a', playing:1, maxPlayers:10, ping:70, fps:60 }] });
+    if (String(url).includes('/details')) throw new Error('details offline');
+    return response({ status:'success', counts:{ total_servers:0, regions:{} } });
+  };
+  const service = new ServerIntelligenceService({ fetchImpl, store });
+  const result = await service.lookup('1818');
+  assert.equal(result.ok, true);
+  assert.equal(result.providers.rovalra.ok, false);
+  assert.equal(result.providers.rovalra.partial, true);
+  assert.deepEqual(health.map(item => item[0]).sort(), ['roblox','rovalraCounts','rovalraDetails'].sort());
+});

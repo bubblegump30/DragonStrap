@@ -1,0 +1,23 @@
+/* DragonStrap v1.3.0 — Update Center 2.0 */
+.update-center-card{grid-column:1/-1;min-height:0!important}
+.update-state-grid-wide{grid-template-columns:repeat(3,minmax(0,1fr))}
+.update-controls-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}
+.update-package-row{margin-top:14px;padding:11px 13px;border:1px solid rgba(202,162,241,.12);border-radius:10px;background:rgba(8,6,13,.24);display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.update-package-row span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9f8daf}
+.update-package-row code{font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;color:#cdb9de;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+.update-progress-panel{margin-top:14px;padding:12px 14px;border:1px solid rgba(202,162,241,.12);border-radius:10px;background:rgba(8,6,13,.24)}
+.update-progress-copy{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.update-progress-copy strong{font-size:11px;color:#d8c4e8}.update-progress-copy span{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#aa8ebc}
+.update-progress-track{height:7px;border-radius:999px;background:rgba(255,255,255,.055);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(202,162,241,.08)}
+#updateDownloadProgressBar{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#7040a8,#b15cff);box-shadow:0 0 14px rgba(177,92,255,.4);transition:width .18s ease}
+.release-actions-four{grid-template-columns:repeat(4,minmax(0,1fr))}.release-actions-three{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:9px}
+.update-defer-row{margin-top:14px;display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(180px,1fr);gap:10px;align-items:end}
+.update-defer-row label{display:flex;flex-direction:column;gap:6px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#9f8daf}
+.update-defer-row select{min-height:37px}.update-defer-row>span{align-self:center;font-size:10px;color:#9d8bac;text-align:right}
+.update-release-notes{margin-top:15px;border:1px solid rgba(202,162,241,.12);border-radius:11px;background:rgba(8,6,13,.24);overflow:hidden}
+.update-release-notes-head{padding:11px 13px;border-bottom:1px solid rgba(202,162,241,.09);display:flex;justify-content:space-between;gap:14px;align-items:center}
+.update-release-notes-head strong{font-size:9px;letter-spacing:.16em;color:#d8c4e8}.update-release-notes-head span{font-size:10px;color:#9d8bac;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#updateReleaseNotes{margin:0;padding:13px;max-height:260px;overflow:auto;white-space:pre-wrap;word-break:break-word;font:10px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#ad9bb9;background:transparent}
+#updateVerificationState.verified{color:#63e6ae}#updateVerificationState.required{color:#ffd08a}
+@media(max-width:1180px){.release-actions-four{grid-template-columns:repeat(2,minmax(0,1fr))}.update-state-grid-wide{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.update-state-grid-wide,.update-controls-grid,.release-actions-four,.release-actions-three,.update-defer-row{grid-template-columns:1fr}.update-defer-row>span{text-align:left}.update-package-row{grid-template-columns:1fr}.update-package-row code{text-align:left}}

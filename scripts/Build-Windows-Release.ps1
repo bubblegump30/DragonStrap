@@ -18,6 +18,13 @@ if ($env:CSC_LINK) {
 
 npm run dist:win
 
+$version = (Get-Content '.\VERSION' -Raw).Trim()
+$portable = Join-Path $PWD "dist\DragonStrap-Portable-$version-x64.exe"
+$setup = Join-Path $PWD "dist\DragonStrap-Setup-$version-x64.exe"
+foreach ($artifact in @($portable, $setup)) {
+    if (-not (Test-Path $artifact)) { throw "Required Update Center artifact was not produced: $artifact" }
+}
+
 $hashFile = Join-Path $PWD 'dist\SHA256SUMS.txt'
 Get-ChildItem 'dist' -File | Where-Object { $_.Extension -in '.exe','.zip','.blockmap','.yml' } | ForEach-Object {
     $hash=(Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()

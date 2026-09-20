@@ -88,7 +88,9 @@ class UpdateService {
       let payload=await response.json();
       if (state.channel === 'prerelease') {
         if (!Array.isArray(payload)) payload=[];
-        payload=payload.find(item=>item && item.draft !== true) || null;
+        payload=payload
+          .filter(item=>item && item.draft !== true && normalizeVersion(item.tag_name))
+          .sort((a,b)=>compareVersions(b.tag_name,a.tag_name) || 0)[0] || null;
       }
       if (!payload || payload.draft === true || !payload.tag_name) {
         const result={...state,ok:false,code:'NO_RELEASE',message:'No published DragonStrap release was found.',checkedAt:new Date().toISOString()};
@@ -102,14 +104,15 @@ class UpdateService {
         this.lastResult=result;
         return result;
       }
-      const assets=Array.isArray(payload.assets) ? payload.assets.map(a=>({name:String(a.name||''),url:String(a.browser_download_url||''),size:Number(a.size||0)})) : [];
+      const assets=Array.isArray(payload.assets) ? payload.assets.map(a=>({name:String(a.name||''),url:String(a.browser_download_url||''),size:Number(a.size||0),digest:String(a.digest||'')})) : [];
       const windowsAsset=assets.find(a=>/DragonStrap/i.test(a.name) && /\.(exe|zip)$/i.test(a.name)) || null;
-      const checksumAsset=assets.find(a=>/sha256|checksums?/i.test(a.name)) || null;
+      const checksumAsset=assets.find(a=>/^SHA256SUMS\.txt$/i.test(a.name)) || assets.find(a=>/sha256|checksums?/i.test(a.name)) || null;
+      const releaseNotes=String(payload.body || '').slice(0, 50000);
       const releaseUrl=typeof payload.html_url === 'string' && /^https:\/\/github\.com\//i.test(payload.html_url) ? payload.html_url : `https://github.com/${state.repository}/releases`;
       const result={
         ...state,ok:true,checkedAt:new Date().toISOString(),latestVersion,updateAvailable:comparison>0,
         prerelease:Boolean(payload.prerelease),releaseName:String(payload.name||payload.tag_name),publishedAt:payload.published_at || null,
-        releaseUrl,windowsAsset,checksumAsset
+        releaseUrl,windowsAsset,checksumAsset,assets,releaseNotes
       };
       this.lastResult=result;
       return result;
