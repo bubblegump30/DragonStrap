@@ -21,7 +21,7 @@ const html=fs.readFileSync(path.join(root,'renderer/index.html'),'utf8');
 if (!html.includes(version)) failures.push('renderer version text is not synchronized');
 if (!html.includes(`id=\"appVersion\">${version}<`)) failures.push('home version fallback is not synchronized');
 if (!html.includes(`id=\"updateCurrentVersion\">${version}<`)) failures.push('Update Center version fallback is not synchronized');
-const readme=fs.readFileSync(path.join(root,'README.md'),'utf8');
+const readme=fs.readFileSync(path.join(root,'README.md'),'utf8').replace(/\r\n/g,'\n');
 if (!readme.includes(`## Version\n\n\`${version}\``)) failures.push('README version is not synchronized');
 if (/Foundation Ready|Bootstrapper foundation|Release-ready foundation/.test(html)) failures.push('prototype foundation wording remains in renderer');
 if (!html.includes('UPDATE CENTER 2.0')) failures.push('Update Center 2.0 UI is missing');
