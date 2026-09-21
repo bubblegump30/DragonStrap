@@ -70,6 +70,8 @@ Official releases should upload both Windows executables and the generated `dist
 
 https://github.com/bubblegump30/DragonStrap
 
+Documentation cleanup for repository maintenance.
+
 ## Architecture and notices
 
 See `docs/ARCHITECTURE.md`, `docs/CORE-API-v2.md`, and `THIRD_PARTY_NOTICES.md`.
