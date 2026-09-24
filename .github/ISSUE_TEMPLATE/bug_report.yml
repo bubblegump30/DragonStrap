@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a reproducible DragonStrap problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve DragonStrap. Please remove sensitive information before submitting logs or screenshots.
+
+  - type: input
+    id: version
+    attributes:
+      label: DragonStrap version
+      description: Example: 2.0.4
+      placeholder: 2.0.4
+    validations:
+      required: true
+
+  - type: dropdown
+    id: build
+    attributes:
+      label: Build type
+      options:
+        - Setup / Installed
+        - Portable
+        - Running from source
+        - Development mode
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Include edition/build if known.
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reliable sequence that reproduces the issue.
+      placeholder: |
+        1. Open DragonStrap
+        2. Go to ...
+        3. Click ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs or screenshots
+      description: Do not include passwords, Roblox cookies, tokens, private keys, or personal information.
+      render: shell
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      multiple: true
+      options:
+        - Roblox Launch Center
+        - Installation & Update Engine
+        - Channel & Version Manager
+        - Update Center
+        - Performance Center
+        - FastFlag Manager
+        - Server Intelligence
+        - Studio Center
+        - Profiles & Configuration
+        - Reliability & Recovery
+        - UI / UX
+        - Packaging / Installer
+        - Other
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues for duplicates.
+          required: true
+        - label: I removed secrets and sensitive information from logs/screenshots.
+          required: true
+        - label: I can reproduce this issue on the version listed above.
+          required: true
