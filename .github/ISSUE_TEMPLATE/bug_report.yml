@@ -13,8 +13,8 @@ body:
     id: version
     attributes:
       label: DragonStrap version
-      description: Example: 2.0.4
-      placeholder: 2.0.4
+      description: "Example: 2.0.4"
+      placeholder: "2.0.4"
     validations:
       required: true
 
