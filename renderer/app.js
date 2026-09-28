@@ -31,6 +31,7 @@ const PERFORMANCE_PRESETS = Object.freeze({
 });
 
 function showToast(message, error = false) {
+  if (!error && state.settings?.notifications === false) return;
   const toast = q('#toast');
   toast.textContent = message;
   toast.classList.toggle('error', error);
@@ -64,6 +65,17 @@ function openDragonAbout() {
     card?.scrollIntoView({ behavior:'smooth', block:'center' });
     card?.focus({ preventScroll:true });
   });
+}
+
+async function openDragonWebsite() {
+  setProductMenuOpen(false);
+  try {
+    const result = await window.dragonStrap.openProjectWebsite();
+    if (!result?.ok) showToast(result?.message || 'Could not open the website.', true);
+  } catch (error) {
+    console.error(error);
+    showToast('Could not open the website.', true);
+  }
 }
 
 function switchView(name, options = {}) {
@@ -104,12 +116,13 @@ function switchView(name, options = {}) {
   }
 
   if (options.focusHeading) {
-    q(`.view[data-view="${name}"] .page-heading h1`)?.focus?.();
+    const heading = q(`.view[data-view="${name}"] .page-heading h1`);
+    if (heading) { heading.tabIndex = -1; heading.focus(); }
   }
 }
 
 qsa('.nav-item').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.tab)));
-qsa('[data-tab-jump]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.tabJump)));
+qsa('[data-tab-jump]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.tabJump, { focusHeading: true })));
 
 qsa('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => setProfile(btn.dataset.profile));
@@ -1518,17 +1531,18 @@ function setStatusDot(selector, online) {
 
 function renderRobloxStatus(status) {
   state.roblox = status;
+  renderDashboardScan('ready');
   const installed = Boolean(status.installed);
   const studioInstalled = Boolean(status.studioInstalled);
 
   q('#installGauge').textContent = installed ? 'READY' : 'MISSING';
-  q('#installDetail').textContent = installed ? status.version : 'Not detected';
+  q('#installDetail').textContent = installed ? (status.version || 'Build unavailable') : 'Not detected';
   q('#installDetail').title = installed ? status.version : '';
   q('#playerOverviewDial')?.classList.toggle('ready', installed);
   q('#playerOverviewDial')?.classList.toggle('offline', !installed);
 
   q('#studioGauge').textContent = studioInstalled ? 'READY' : 'MISSING';
-  q('#studioDetail').textContent = studioInstalled ? status.studioVersion : 'Not detected';
+  q('#studioDetail').textContent = studioInstalled ? (status.studioVersion || 'Build unavailable') : 'Not detected';
   q('#studioDetail').title = studioInstalled ? status.studioVersion : '';
   q('#studioOverviewDial')?.classList.toggle('ready', studioInstalled);
   q('#studioOverviewDial')?.classList.toggle('offline', !studioInstalled);
@@ -1538,21 +1552,23 @@ function renderRobloxStatus(status) {
   q('#channelDetail').textContent = selectedChannel === 'LIVE' ? 'Official production' : `Selected: ${selectedChannel}`;
   q('#channelOverviewDial')?.classList.add('ready');
   q('#channelStatus').textContent = selectedChannel;
+  q('#channelGauge').title = 'Selected deployment channel: ' + selectedChannel;
 
   q('#playerStatus').textContent = installed ? 'Detected' : 'Not Detected';
   q('#studioStatus').textContent = studioInstalled ? 'Detected' : 'Not Detected';
-  q('#playerMeter').style.width = installed ? '92%' : '12%';
-  q('#studioMeter').style.width = studioInstalled ? '92%' : '12%';
+  q('#playerMeter').textContent = installed ? 'Local executable found' : 'Install from Channels';
+  q('#studioMeter').textContent = studioInstalled ? 'Local executable found' : 'Studio is optional';
   q('#robloxSummary').textContent = installed ? 'Detected' : 'Not Found';
   q('#footerStatus').textContent = installed ? 'ROBLOX READY' : 'ROBLOX NOT DETECTED';
 
-  q('#launchPlayerVersion').textContent = installed ? status.version : 'Not detected';
+  q('#launchPlayerVersion').textContent = installed ? (status.version || 'Build unavailable') : 'Not detected';
   q('#launchPlayerPath').textContent = status.playerPath || 'RobloxPlayerBeta.exe was not found.';
-  q('#launchStudioVersion').textContent = studioInstalled ? status.studioVersion : 'Not detected';
+  q('#launchStudioVersion').textContent = studioInstalled ? (status.studioVersion || 'Build unavailable') : 'Not detected';
   q('#launchStudioPath').textContent = status.studioPath || 'RobloxStudioBeta.exe was not found.';
   q('#launchPlayerBtn').disabled = !installed || state.launchPending;
   q('#launchStudioBtn').disabled = !studioInstalled || state.launchPending;
-  if (q('#launchExperienceBtn')) q('#launchExperienceBtn').disabled = !installed || state.launchPending;
+  updateLaunchExperienceAction();
+  if (!state.launchAttempted) renderLaunchReadiness();
   setStatusDot('#launchPlayerDot', installed);
   setStatusDot('#launchStudioDot', studioInstalled);
   if (q('#launchHealth')) {
@@ -1577,19 +1593,54 @@ function renderRobloxStatus(status) {
 
   q('#launchState').textContent = installed ? 'ROBLOX PLAYER READY' : 'ROBLOX NOT DETECTED';
   q('#launchHint').textContent = installed ? 'Press PLAY to launch Roblox.' : 'Install Roblox or refresh detection.';
+  renderFirstRunStatus();
 }
 
-async function refreshRobloxStatus(announce = false) {
-  try {
-    q('#footerStatus').textContent = 'SCANNING ROBLOX';
-    const status = await window.dragonStrap.getRobloxStatus();
-    renderRobloxStatus(status);
-    if (announce) showToast(status.installed ? 'Roblox installation refreshed.' : 'Roblox Player was not detected.', !status.installed);
-  } catch (error) {
-    console.error(error);
-    q('#footerStatus').textContent = 'STATUS ERROR';
-    showToast('Unable to scan the Roblox installation.', true);
+function renderDashboardScan(phase) {
+  const busy = phase === 'scanning';
+  const failed = phase === 'error';
+  q('#dashboardScanStatus').textContent = busy ? 'Checking local installations…' : failed ? 'Scan failed — refresh to retry' : 'Local installation scan complete';
+  q('#dashboardScanStatus').dataset.state = phase;
+  for (const id of ['homeRefresh', 'refreshStatus', 'instanceRefresh', 'launchCenterRefresh']) {
+    const button = q('#' + id);
+    if (button) { button.disabled = busy; button.setAttribute('aria-busy', String(busy)); }
   }
+  if (phase === 'ready') {
+    const now = new Date();
+    q('#dashboardCheckedAt').textContent = 'Checked ' + now.toLocaleTimeString();
+    q('#dashboardCheckedAt').title = now.toLocaleString();
+  }
+  if (busy || failed) {
+    for (const id of ['installGauge', 'studioGauge']) q('#' + id).textContent = busy ? 'CHECK' : 'UNKNOWN';
+    for (const id of ['playerStatus', 'studioStatus', 'robloxSummary']) q('#' + id).textContent = busy ? 'Checking…' : 'Unknown';
+    for (const id of ['playerOverviewDial', 'studioOverviewDial']) q('#' + id)?.classList.remove('ready', 'offline');
+    for (const id of ['playerMeter', 'studioMeter']) q('#' + id).textContent = busy ? 'Scan in progress' : 'Unable to verify installation';
+    q('#launchState').textContent = busy ? 'CHECKING INSTALLATION' : 'INSTALLATION STATUS UNKNOWN';
+    q('#launchHint').textContent = busy ? 'Waiting for detection…' : 'Refresh detection to verify Player availability.';
+  }
+}
+
+let robloxRefreshPending = null;
+function refreshRobloxStatus(announce = false) {
+  if (robloxRefreshPending) return robloxRefreshPending;
+  robloxRefreshPending = (async () => {
+    renderDashboardScan('scanning');
+    try {
+      q('#footerStatus').textContent = 'SCANNING ROBLOX';
+      const status = await window.dragonStrap.getRobloxStatus();
+      renderRobloxStatus(status);
+      if (announce) showToast(status.installed ? 'Roblox installation refreshed.' : 'Roblox Player was not detected.', !status.installed);
+    } catch (error) {
+      console.error(error);
+      state.roblox = null;
+      setLaunchBusy(false);
+      renderDashboardScan('error');
+      if (!state.launchAttempted) renderLaunchReadiness();
+      q('#footerStatus').textContent = 'STATUS ERROR';
+      showToast('Unable to scan the Roblox installation.', true);
+    }
+  })().finally(() => { robloxRefreshPending = null; });
+  return robloxRefreshPending;
 }
 
 
@@ -1660,8 +1711,11 @@ function renderConfigurationProfiles(result) {
   q('#configurationProfileCount').textContent = `${profiles.length} profile${profiles.length === 1 ? '' : 's'}`;
   const active = profiles.find(item => item.id === result?.activeProfileId);
   q('#configurationActiveProfile').textContent = active?.name || 'None';
+  q('#launchConfigurationProfile').textContent = active ? `${active.name} was last applied. Later changes to individual controls are not reflected in that saved profile.` : 'None. Open Profiles to preview and apply a saved configuration.';
   const has = Boolean(selectedConfigurationProfile());
+  q('#configurationSelectionHint').textContent = has ? (selectedConfigurationProfile()?.id === result?.activeProfileId ? 'Last applied profile selected. Preview checks the current settings for differences.' : 'Saved profile selected. Review the preview before applying it.') : 'Select a saved profile to review its changes before applying.';
   ['configurationApplyBtn','configurationExportBtn','configurationDeleteBtn','configurationCloneBtn','configurationPreviewBtn'].forEach(id => q(`#${id}`).disabled = !has);
+  q('#configurationApplyBtn').disabled = true; // A fresh validation preview is required.
   renderConfigurationProfileSummary(selectedConfigurationProfile());
 }
 
@@ -1676,13 +1730,31 @@ async function refreshConfigurationProfiles(announce=false) {
   } catch(error) { console.error(error); if(announce) showToast('Configuration profiles could not be loaded.',true); return null; }
 }
 
+let configurationPreviewRequest = 0;
 async function previewSelectedConfigurationProfile(announce=false) {
   const profile=selectedConfigurationProfile();
+  const token=++configurationPreviewRequest;
+  q('#configurationApplyBtn').disabled=true;
   if(!profile){renderConfigurationPreview(null);return null;}
-  const result=await window.dragonStrap.previewConfigurationProfile(profile.id);
-  renderConfigurationPreview(result);
-  if(announce) showToast(result.ok ? 'Profile apply preview refreshed.' : (result.message || 'Profile preview failed.'), !result.ok);
-  return result;
+  q('#configurationSelectionHint').textContent=`Checking ${profile.name} against the current configuration…`;
+  try {
+    const result=await window.dragonStrap.previewConfigurationProfile(profile.id);
+    if(token!==configurationPreviewRequest || selectedConfigurationProfile()?.id!==profile.id) return null;
+    renderConfigurationPreview(result);
+    q('#configurationApplyBtn').disabled=!result?.ok;
+    q('#configurationSelectionHint').textContent=result?.ok
+      ? `${profile.name}: ${result.settingsChanges?.length || 0} setting changes, ${result.fastFlags?.setCount || 0} flag sets, ${result.fastFlags?.removeCount || 0} flag removals. Review below before applying.`
+      : (result?.message || 'Profile validation failed.');
+    if(announce) showToast(result.ok ? 'Profile apply preview refreshed.' : (result.message || 'Profile preview failed.'), !result.ok);
+    return result;
+  } catch(error) {
+    if(token!==configurationPreviewRequest) return null;
+    console.error(error);
+    renderConfigurationPreview({ok:false,message:'Could not preview this profile. Retry before applying.'});
+    q('#configurationSelectionHint').textContent='Preview unavailable. Retry before applying.';
+    if(announce) showToast('Profile preview failed.',true);
+    return null;
+  }
 }
 
 async function saveCurrentConfigurationProfile() {
@@ -1703,15 +1775,21 @@ async function applySelectedConfigurationProfile() {
   const preview=await previewSelectedConfigurationProfile(false); if(!preview?.ok){showToast(preview?.message || 'Profile validation failed.',true);return;}
   if((preview.destructiveFlagRemovals || 0) > 0 && !window.confirm(`Apply ${profile.name}? This will remove ${preview.destructiveFlagRemovals} editable FastFlag override(s) that are not stored in the profile.`)) return;
   const button=q('#configurationApplyBtn'); button.disabled=true;
+  q('#configurationProfileSelect').disabled=true;
+  q('#configurationSelectionHint').textContent=`Applying ${profile.name}…`;
   try {
     const result=await window.dragonStrap.applyConfigurationProfile(profile.id);
-    if(!result.ok){showToast(result.message || 'Configuration profile apply failed.',true);return;}
+    if(!result.ok){q('#configurationSelectionHint').textContent=result.message || 'Profile apply failed. Refresh the preview before retrying.';showToast(result.message || 'Configuration profile apply failed.',true);return;}
     await loadSettings();
     await Promise.all([refreshPerformanceState(false),refreshPerformanceCenter(false),refreshFastFlags(false),refreshChannelVersion(false)]);
     renderServerList();
     await refreshConfigurationProfiles(false);
     showToast(`${profile.name} applied.`);
-  } finally { button.disabled=false; }
+  } catch(error) {
+    console.error(error);
+    q('#configurationSelectionHint').textContent='Profile apply failed. Refresh the preview before retrying.';
+    showToast('Configuration profile could not be applied.',true);
+  } finally { q('#configurationProfileSelect').disabled=false; button.disabled=true; }
 }
 
 async function cloneSelectedConfigurationProfile() {
@@ -1752,6 +1830,45 @@ async function saveSettings(patch) {
   }
 }
 
+function renderPreferenceControls() {
+  const settings = state.settings || {};
+  q('#notificationsSetting').checked = settings.notifications !== false;
+  q('#autoRefreshSetting').checked = settings.autoRefresh !== false;
+  q('#refreshSeconds').value = String(settings.refreshSeconds || 60);
+  q('#refreshSeconds').disabled = settings.autoRefresh === false;
+  q('#checkForUpdatesSetting').checked = settings.checkForUpdates !== false;
+  q('#updateChannelSetting').value = settings.updateChannel || 'stable';
+}
+
+let preferenceSavePending = false;
+async function savePreferenceChange(patch, resetScope = null) {
+  if (preferenceSavePending) return;
+  preferenceSavePending = true;
+  const controls = ['notificationsSetting', 'autoRefreshSetting', 'refreshSeconds', 'checkForUpdatesSetting', 'updateChannelSetting', 'resetGeneralPreferences', 'resetUpdatePreferences'];
+  controls.forEach(id => { q('#' + id).disabled = true; });
+  q('#preferencesSaveStatus').textContent = 'Saving preferences…';
+  let saved = false;
+  try {
+    state.settings = resetScope
+      ? await window.dragonStrap.resetPreferences(resetScope)
+      : await window.dragonStrap.updateSettings(patch);
+    installRefreshTimer();
+    saved = true;
+    q('#preferencesSaveStatus').textContent = resetScope ? 'Defaults restored and saved.' : 'Preferences saved.';
+  } catch (error) {
+    console.error(error);
+    q('#preferencesSaveStatus').textContent = 'Save failed. Previous preferences restored; try again.';
+    showToast('Could not save preferences. Please try again.', true);
+  } finally {
+    preferenceSavePending = false;
+    controls.forEach(id => { q('#' + id).disabled = false; });
+    renderPreferenceControls();
+  }
+  if (saved && (resetScope === 'updates' || Object.hasOwn(patch, 'updateChannel'))) {
+    await refreshUpdateState(true, false);
+  }
+}
+
 function installRefreshTimer() {
   clearInterval(state.refreshTimer);
   const seconds = Number(state.settings?.refreshSeconds || 60);
@@ -1771,8 +1888,10 @@ async function loadSettings() {
     q('#refreshSeconds').value = String(state.settings.refreshSeconds || 60);
     if (q('#checkForUpdatesSetting')) q('#checkForUpdatesSetting').checked = state.settings.checkForUpdates !== false;
     if (q('#updateChannelSetting')) q('#updateChannelSetting').value = state.settings.updateChannel || 'stable';
+    renderPreferenceControls();
     renderPerformanceSettings();
     if (q('#launchTargetInput')) q('#launchTargetInput').value = state.settings.lastLaunchTarget || '';
+    previewLaunchTarget();
     if (q('#serverPlaceInput')) q('#serverPlaceInput').value = localStorage.getItem('dragonstrap.serverPlace') || state.settings.lastLaunchTarget || '';
     if (q('#serverSortSelect')) q('#serverSortSelect').value = state.settings.serverSort || 'ping';
     if (q('#serverOccupancySelect')) q('#serverOccupancySelect').value = state.settings.serverOccupancy || 'any';
@@ -1786,6 +1905,56 @@ async function loadSettings() {
   }
 }
 
+let launchPreviewToken = 0;
+let launchPreviewTimer = null;
+let launchTargetValid = false;
+function renderLaunchReadiness() {
+  const orb = q('#launchResultOrb');
+  orb.classList.remove('ok', 'error');
+  if (!state.roblox) {
+    q('#launchResultCode').textContent = 'UNKNOWN';
+    q('#launchResultMessage').textContent = 'Installation status is unavailable. Refresh detection to retry.';
+  } else if (state.roblox.installed) {
+    q('#launchResultCode').textContent = 'READY';
+    q('#launchResultMessage').textContent = 'Player detected. Choose a launch action when ready.';
+  } else {
+    orb.classList.add('error');
+    q('#launchResultCode').textContent = 'OFFLINE';
+    q('#launchResultMessage').textContent = 'Player not detected. Open Channels to install or update it.';
+  }
+}
+function updateLaunchExperienceAction() {
+  q('#launchExperienceBtn').disabled = state.launchPending || !state.roblox?.installed || !launchTargetValid;
+}
+function renderLaunchTargetPreview(result) {
+  const node = q('#launchTargetPreview');
+  launchTargetValid = Boolean(result?.ok && result.kind !== 'app');
+  node.classList.toggle('invalid', Boolean(result && !result.ok));
+  node.classList.toggle('valid', launchTargetValid);
+  node.textContent = !result ? 'Enter a Place ID or Roblox game URL to preview the destination.'
+    : result.ok ? (launchTargetValid ? `Ready: ${result.label}` : 'Enter a Place ID or Roblox game URL to join.')
+    : result.message;
+  updateLaunchExperienceAction();
+}
+async function previewLaunchTarget() {
+  const token = ++launchPreviewToken;
+  const options = { target:q('#launchTargetInput').value.trim(), gameInstanceId:q('#launchInstanceInput').value.trim() };
+  if (!options.target && !options.gameInstanceId) { renderLaunchTargetPreview(null); return; }
+  try {
+    const result = await window.dragonStrap.previewLaunchTarget(options);
+    if (token === launchPreviewToken) renderLaunchTargetPreview(result);
+  } catch (error) {
+    if (token === launchPreviewToken) renderLaunchTargetPreview({ ok:false, message:'Target preview unavailable. Try again.' });
+  }
+}
+function scheduleLaunchTargetPreview() {
+  ++launchPreviewToken;
+  launchTargetValid = false;
+  updateLaunchExperienceAction();
+  clearTimeout(launchPreviewTimer);
+  launchPreviewTimer = setTimeout(previewLaunchTarget, 180);
+}
+
 function setLaunchBusy(busy) {
   state.launchPending = busy;
   if (state.servers.result?.ok) queueMicrotask(renderServerList);
@@ -1793,6 +1962,7 @@ function setLaunchBusy(busy) {
     const button = q(selector);
     if (!button) return;
     if (selector === '#launchStudioBtn') button.disabled = busy || !state.roblox?.studioInstalled;
+    else if (selector === '#launchExperienceBtn') updateLaunchExperienceAction();
     else button.disabled = busy || !state.roblox?.installed;
   });
 }
@@ -1800,9 +1970,10 @@ function setLaunchBusy(busy) {
 function setLaunchResult(result, actionLabel) {
   const orb = q('#launchResultOrb');
   if (!orb) return;
+  state.launchAttempted = true;
   orb.classList.remove('ok', 'error');
   orb.classList.add(result.ok ? 'ok' : 'error');
-  q('#launchResultCode').textContent = result.ok ? 'STARTED' : (result.code || 'FAILED');
+  q('#launchResultCode').textContent = result.ok ? 'REQUESTED' : (result.code || 'FAILED');
   q('#launchResultMessage').textContent = result.ok
     ? `${actionLabel} launch request was sent successfully.`
     : (result.message || `${actionLabel} could not be launched.`);
@@ -1893,6 +2064,13 @@ async function launchExperience() {
     showToast('Enter a Place ID or Roblox game URL first.', true);
     q('#launchTargetInput').focus();
     return;
+  }
+  const preview = await window.dragonStrap.previewLaunchTarget({ target, gameInstanceId });
+  if (!preview.ok) {
+    renderLaunchTargetPreview(preview);
+    setLaunchResult(preview, 'Experience');
+    q(preview.code === 'INVALID_INSTANCE_ID' ? '#launchInstanceInput' : '#launchTargetInput').focus();
+    return preview;
   }
   await saveSettings({ lastLaunchTarget: target });
   return launchPlayer({ target, gameInstanceId });
@@ -2558,6 +2736,7 @@ q('#clearLaunchTargetBtn').addEventListener('click', async () => {
   q('#launchTargetInput').value = '';
   q('#launchInstanceInput').value = '';
   await saveSettings({ lastLaunchTarget: '' });
+  previewLaunchTarget();
   q('#launchTargetInput').focus();
 });
 q('#clearLaunchHistoryBtn').addEventListener('click', async () => {
@@ -2565,6 +2744,8 @@ q('#clearLaunchHistoryBtn').addEventListener('click', async () => {
   showToast('Launch history cleared.');
 });
 q('#launchTargetInput').addEventListener('change', event => saveSettings({ lastLaunchTarget: event.target.value.trim() }));
+q('#launchTargetInput').addEventListener('input', scheduleLaunchTargetPreview);
+q('#launchInstanceInput').addEventListener('input', scheduleLaunchTargetPreview);
 q('#launchTargetInput').addEventListener('keydown', event => { if (event.key === 'Enter') launchExperience(); });
 q('#launchInstanceInput').addEventListener('keydown', event => { if (event.key === 'Enter') launchExperience(); });
 q('#refreshStatus').addEventListener('click', () => refreshRobloxStatus(true));
@@ -2613,11 +2794,7 @@ q('#maintenanceExportBtn').addEventListener('click', async () => {
   showToast(result.ok ? 'Diagnostic report exported.' : (result.message || 'Diagnostic export failed.'), !result.ok);
 });
 
-q('#systemToggle').addEventListener('change', event => {
-  const enabled = event.target.checked;
-  q('#systemState').textContent = enabled ? 'Services Active' : 'Services Standby';
-  q('#systemState').style.color = enabled ? '#c8a4e4' : '#8a7d96';
-});
+
 
 q('#fpsRange').addEventListener('input', event => {
   q('#fpsReadout').textContent = fpsLabel(event.target.value);
@@ -2648,16 +2825,13 @@ q('#performanceProfileName').addEventListener('keydown', event => { if (event.ke
 q('#performanceExperiencePlaceId').addEventListener('keydown', event => { if (event.key === 'Enter') assignExperiencePerformanceProfile(); });
 q('#launchProfile').addEventListener('change', event => setProfile(event.target.value));
 q('#minimizeOnLaunch').addEventListener('change', event => saveSettings({ minimizeOnLaunch: event.target.checked }));
-q('#notificationsSetting').addEventListener('change', event => saveSettings({ notifications: event.target.checked }));
-q('#refreshSeconds').addEventListener('change', async event => {
-  await saveSettings({ refreshSeconds: Number(event.target.value) });
-  installRefreshTimer();
-});
-q('#checkForUpdatesSetting').addEventListener('change', event => saveSettings({ checkForUpdates:event.target.checked }));
-q('#updateChannelSetting').addEventListener('change', async event => {
-  await saveSettings({ updateChannel:event.target.value });
-  await refreshUpdateState(true,false);
-});
+q('#notificationsSetting').addEventListener('change', event => savePreferenceChange({ notifications: event.target.checked }));
+q('#autoRefreshSetting').addEventListener('change', event => savePreferenceChange({ autoRefresh: event.target.checked }));
+q('#refreshSeconds').addEventListener('change', event => savePreferenceChange({ refreshSeconds: Number(event.target.value) }));
+q('#checkForUpdatesSetting').addEventListener('change', event => savePreferenceChange({ checkForUpdates: event.target.checked }));
+q('#updateChannelSetting').addEventListener('change', event => savePreferenceChange({ updateChannel: event.target.value }));
+q('#resetGeneralPreferences').addEventListener('click', () => savePreferenceChange({}, 'general'));
+q('#resetUpdatePreferences').addEventListener('click', () => savePreferenceChange({}, 'updates'));
 q('#checkUpdatesBtn').addEventListener('click', () => refreshUpdateState(true,true));
 q('#downloadUpdateBtn').addEventListener('click', downloadDragonStrapUpdate);
 q('#applyUpdateBtn').addEventListener('click', applyDragonStrapUpdate);
@@ -2685,7 +2859,7 @@ q('#openReliabilityLogsBtn').addEventListener('click', async () => {
 });
 
 
-q('#configurationProfileSelect').addEventListener('change', async () => { renderConfigurationProfileSummary(selectedConfigurationProfile()); await previewSelectedConfigurationProfile(false); });
+q('#configurationProfileSelect').addEventListener('change', async () => { ++configurationPreviewRequest; renderConfigurationPreview(null); q('#configurationApplyBtn').disabled=true; renderConfigurationProfileSummary(selectedConfigurationProfile()); await previewSelectedConfigurationProfile(false); });
 q('#configurationSaveBtn').addEventListener('click', saveCurrentConfigurationProfile);
 q('#configurationApplyBtn').addEventListener('click', applySelectedConfigurationProfile);
 q('#configurationCloneBtn').addEventListener('click', cloneSelectedConfigurationProfile);
@@ -2757,6 +2931,56 @@ q('#productMenuButton').addEventListener('click', event => {
 });
 q('#productHelpBtn').addEventListener('click', openDragonHelp);
 q('#productAboutBtn').addEventListener('click', openDragonAbout);
+q('#productWebsiteBtn').addEventListener('click', openDragonWebsite);
+q('#aboutWebsiteBtn').addEventListener('click', openDragonWebsite);
+let firstRunStep = 0;
+function renderFirstRunStatus() {
+  const status = state.roblox;
+  q('#firstRunPlayer').textContent = status ? (status.installed ? 'Detected' : 'Not detected') : 'Status unavailable — check again';
+  q('#firstRunStudio').textContent = status ? (status.studioInstalled ? 'Detected' : 'Not detected (optional)') : 'Status unavailable';
+  q('#firstRunChannel').textContent = status?.channel || 'Status unavailable';
+  q('#firstRunReady').textContent = status ? (status.installed ? 'Ready to launch' : 'Install Player in Channels') : 'Status unavailable';
+}
+function showFirstRunStep(step) {
+  firstRunStep = Math.max(0, Math.min(3, step));
+  qsa('[data-first-run-step]').forEach(panel => { panel.hidden = Number(panel.dataset.firstRunStep) !== firstRunStep; });
+  q('#firstRunProgress').replaceChildren(...Array.from({length:4}, (_, index) => {
+    const segment = document.createElement('span');
+    segment.classList.toggle('active', index <= firstRunStep);
+    return segment;
+  }));
+  q('#firstRunProgress').setAttribute('aria-label', `Step ${firstRunStep + 1} of 4`);
+  q('#firstRunBack').disabled = firstRunStep === 0;
+  q('#firstRunNext').textContent = firstRunStep === 3 ? 'FINISH' : 'NEXT';
+}
+function openFirstRunGuide() {
+  showFirstRunStep(0);
+  renderFirstRunStatus();
+  const dialog = q('#firstRunDialog');
+  if (!dialog.open) dialog.showModal();
+}
+q('#openFirstRunGuide').addEventListener('click', openFirstRunGuide);
+q('#firstRunClose').addEventListener('click', () => q('#firstRunDialog').close());
+q('#firstRunLater').addEventListener('click', () => q('#firstRunDialog').close());
+q('#firstRunBack').addEventListener('click', () => showFirstRunStep(firstRunStep - 1));
+q('#firstRunNext').addEventListener('click', async () => {
+  if (firstRunStep < 3) { showFirstRunStep(firstRunStep + 1); return; }
+  const button = q('#firstRunNext');
+  button.disabled = true;
+  try {
+    state.settings = await window.dragonStrap.updateSettings({ firstRunComplete: true });
+    q('#firstRunDialog').close();
+    showToast('Setup guide completed. Reopen it from Settings anytime.');
+  } catch (error) {
+    console.error(error);
+    showToast('Could not save setup progress. Please retry.', true);
+  } finally { button.disabled = false; }
+});
+q('#firstRunRefresh').addEventListener('click', async () => { await refreshRobloxStatus(false); renderFirstRunStatus(); });
+qsa('[data-first-run-view]').forEach(button => button.addEventListener('click', () => {
+  q('#firstRunDialog').close();
+  switchView(button.dataset.firstRunView);
+}));
 q('#helpDialogClose').addEventListener('click', () => q('#helpDialog')?.close());
 q('#helpDialog').addEventListener('click', event => { if (event.target === q('#helpDialog')) q('#helpDialog').close(); });
 qsa('[data-help-tab]').forEach(button => button.addEventListener('click', () => {
@@ -2819,6 +3043,7 @@ window.dragonStrap.onUpdateDownloadProgress(progress => {
   // DragonStrap 2.0 keeps startup lean: load only shell/home state, then lazy-load feature centers on navigation.
   await Promise.all([getAppInfo(), loadSettings(), loadLaunchHistory(), refreshConfigurationProfiles(false)]);
   await refreshRobloxStatus(false);
+  if (state.settings?.firstRunComplete === false) openFirstRunGuide();
   await Promise.all([refreshCoreState(false), refreshUpdateState(false,false), refreshReliabilityState(), restorePlayerInstallState()]);
   if (state.settings?.checkForUpdates !== false) {
     setTimeout(() => refreshUpdateState(true,false), 2200);

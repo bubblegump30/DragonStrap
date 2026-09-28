@@ -208,6 +208,15 @@ function registerIpc() {
     return status;
   });
   ipcMain.handle('dragonstrap:settings-get', () => settingsStore.getAll());
+  ipcMain.handle('dragonstrap:open-project-website', async () => {
+    try {
+      await shell.openExternal('https://www.purpledragonfoundationltd.xyz/');
+      return { ok:true };
+    } catch {
+      return { ok:false, message:'Could not open the Purple Dragon Foundation website.' };
+    }
+  });
+  ipcMain.handle('dragonstrap:settings-reset-preferences', (_event, scope) => settingsStore.resetPreferences(scope));
   ipcMain.handle('dragonstrap:settings-update', (_event, patch) => { const result=settingsStore.update(patch); invalidateConfigurationProfileForPatch(patch); return result; });
   ipcMain.handle('dragonstrap:configuration-profiles-state', () => configurationProfileService.getState());
   ipcMain.handle('dragonstrap:configuration-profile-save-current', async (_event, name) => configurationProfileService.saveCurrent(await getRobloxStatus(), name));
@@ -647,6 +656,9 @@ function registerIpc() {
     const error = await shell.openPath(target);
     return error ? { ok:false, code:'OPEN_FAILED', message:error } : { ok:true, path:target };
   });
+
+  ipcMain.handle('dragonstrap:launch-target-preview', (_event, options = {}) =>
+    launchTargetService.normalize(options?.target, options?.gameInstanceId));
 
   ipcMain.handle('dragonstrap:launch-player', async (event, options = {}) => {
     const normalized = launchTargetService.normalize(options.target, options.gameInstanceId);

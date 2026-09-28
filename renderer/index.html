@@ -33,19 +33,20 @@
       <div class="topbar-actions">
         <label class="search-box">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.2-4.2m1.2-5.3A6.5 6.5 0 1 1 5 11.5a6.5 6.5 0 0 1 13 0Z"/></svg>
-          <input id="globalSearch" placeholder="Search DragonStrap…" autocomplete="off" />
+          <input id="globalSearch" aria-label="Search DragonStrap" placeholder="Search DragonStrap…" autocomplete="off" />
           <span class="search-shortcut" aria-hidden="true">Ctrl K</span>
         </label>
         <button class="icon-button" id="refreshStatus" aria-label="Refresh Roblox status" title="Refresh status">↻</button>
         <div class="product-menu" id="productMenu">
           <button class="product-menu-trigger" id="productMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="productMenuPopup">
             <span class="avatar dragon-avatar" aria-hidden="true"><img src="assets/dragon-app-icon.png" alt="" /></span>
-            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.0.4</span></span>
+            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.3.3</span></span>
             <span class="product-menu-chevron" aria-hidden="true">⌄</span>
           </button>
           <div class="product-menu-popup" id="productMenuPopup" role="menu" aria-label="DragonStrap menu" hidden>
             <button class="product-menu-item" id="productHelpBtn" type="button" role="menuitem"><span aria-hidden="true">?</span><span><strong>Help</strong><small>Quick help and navigation</small></span></button>
             <button class="product-menu-item" id="productAboutBtn" type="button" role="menuitem"><span aria-hidden="true">ⓘ</span><span><strong>About</strong><small>Version, build and Core API</small></span></button>
+            <button class="product-menu-item" id="productWebsiteBtn" type="button" role="menuitem"><span aria-hidden="true">↗</span><span><strong>Website</strong><small>Purple Dragon Foundation</small></span></button>
           </div>
         </div>
       </div>
@@ -54,29 +55,30 @@
     <div class="workspace">
       <aside class="sidebar panel-edge">
         <nav>
-          <button class="nav-item active" data-tab="home">⌂ <span>Home</span></button>
-          <button class="nav-item" data-tab="launch">▷ <span>Launch</span></button>
-          <button class="nav-item" data-tab="instances">▣ <span>Instances</span></button>
-          <button class="nav-item" data-tab="performance">◴ <span>Performance Center</span></button>
-          <button class="nav-item" data-tab="fastflags">⚑ <span>FastFlags</span></button>
-          <button class="nav-item" data-tab="servers">◎ <span>Servers</span></button>
-          <button class="nav-item" data-tab="studio">◇ <span>Studio</span></button>
-          <button class="nav-item" data-tab="channels">⇄ <span>Channels</span></button>
-          <button class="nav-item" data-tab="profiles">♙ <span>Profiles</span></button>
-          <button class="nav-item" data-tab="maintenance">✦ <span>Recovery</span></button>
-          <button class="nav-item" data-tab="settings">⚙ <span>Settings</span></button>
+          <button class="nav-item active" data-tab="home" aria-label="Home" title="Home">⌂ <span>Home</span></button>
+          <button class="nav-item" data-tab="launch" aria-label="Launch" title="Launch">▷ <span>Launch</span></button>
+          <button class="nav-item" data-tab="instances" aria-label="Instances" title="Instances">▣ <span>Instances</span></button>
+          <button class="nav-item" data-tab="performance" aria-label="Performance Center" title="Performance Center">◴ <span>Performance Center</span></button>
+          <button class="nav-item" data-tab="fastflags" aria-label="FastFlags" title="FastFlags">⚑ <span>FastFlags</span></button>
+          <button class="nav-item" data-tab="servers" aria-label="Servers" title="Servers">◎ <span>Servers</span></button>
+          <button class="nav-item" data-tab="studio" aria-label="Studio" title="Studio">◇ <span>Studio</span></button>
+          <button class="nav-item" data-tab="channels" aria-label="Channels" title="Channels">⇄ <span>Channels</span></button>
+          <button class="nav-item" data-tab="profiles" aria-label="Profiles" title="Profiles">♙ <span>Profiles</span></button>
+          <button class="nav-item" data-tab="maintenance" aria-label="Recovery" title="Recovery">✦ <span>Recovery</span></button>
+          <button class="nav-item" data-tab="settings" aria-label="Settings" title="Settings">⚙ <span>Settings</span></button>
         </nav>
       </aside>
 
       <main class="content-area">
         <section class="view active" data-view="home">
+          <div class="dashboard-status-bar"><div class="dashboard-status-copy" role="status" aria-live="polite"><span id="dashboardScanStatus">Waiting for installation scan…</span><span id="dashboardCheckedAt">Not checked yet</span></div><button class="small-action" data-tab-jump="channels" title="Open installation planning and Roblox update controls">INSTALL &amp; UPDATE</button></div>
           <div class="dashboard">
             <section class="card master-card">
-              <div class="card-head"><div><h2>ROBLOX CONTROL</h2><p>Launch at your command</p></div><button class="round-btn" id="homeRefresh">↻</button></div>
+              <div class="card-head"><div><h2>ROBLOX CONTROL</h2><p>Launch at your command</p></div><button class="round-btn" aria-label="Refresh Roblox status" title="Refresh Roblox status" id="homeRefresh">↻</button></div>
               <div class="master-grid">
                 <div class="mega-knob-wrap">
-                  <button class="mega-knob launch-knob" id="launchKnob" aria-label="Launch Roblox"><span></span><b>PLAY</b></button>
-                  <div class="knob-scale"><span>READY</span><span>LIVE</span></div>
+                  <button class="mega-knob launch-knob" id="launchKnob" title="Launch the detected Roblox Player." aria-label="Launch Roblox"><span></span><b>PLAY</b></button>
+                  <div class="knob-scale"><span>LAUNCH</span><span>PLAYER</span></div>
                   <div class="mode-label" id="launchState">ROBLOX PLAYER</div>
                   <small id="launchHint">Press PLAY to launch Roblox.</small>
                 </div>
@@ -90,7 +92,7 @@
             </section>
 
             <section class="card overview-card">
-              <div class="card-head"><div><h2>ROBLOX OVERVIEW</h2><p>Installation intelligence</p></div><button class="round-btn" data-tab-jump="instances">◌</button></div>
+              <div class="card-head"><div><h2>ROBLOX OVERVIEW</h2><p>Installation intelligence</p></div><button class="round-btn" aria-label="Open Roblox installations" title="Open Roblox installations" data-tab-jump="instances">◌</button></div>
               <div class="gauges">
                 <div class="gauge status-dial" id="playerOverviewDial">
                   <div class="gauge-ring"><div><b id="installGauge">—</b><span>PLAYER</span></div></div>
@@ -110,31 +112,27 @@
             <section class="card temp-card">
               <div class="card-head"><div><h2>INSTALLATION STATUS</h2><p>Local Roblox environment</p></div></div>
               <div class="temperature-list">
-                <div class="temp-row"><div class="temp-icon">◉</div><div><span>Player</span><strong id="playerStatus">Scanning…</strong><div class="meter"><i id="playerMeter" style="width:20%"></i></div></div></div>
-                <div class="temp-row"><div class="temp-icon">◇</div><div><span>Studio</span><strong id="studioStatus">Scanning…</strong><div class="meter"><i id="studioMeter" style="width:20%"></i></div></div></div>
-                <div class="temp-row"><div class="temp-icon">⇄</div><div><span>Channel</span><strong id="channelStatus">LIVE</strong><div class="meter"><i style="width:72%"></i></div></div></div>
+                <div class="temp-row"><div class="temp-icon">◉</div><div><span>Player</span><strong id="playerStatus">Scanning…</strong><small id="playerMeter">Awaiting scan</small></div></div>
+                <div class="temp-row"><div class="temp-icon">◇</div><div><span>Studio</span><strong id="studioStatus">Scanning…</strong><small id="studioMeter">Awaiting scan</small></div></div>
+                <div class="temp-row"><div class="temp-icon">⇄</div><div><span>Channel</span><strong id="channelStatus">LIVE</strong><small>Selected deployment channel</small></div></div>
               </div>
             </section>
 
             <section class="card audio-card">
-              <div class="card-head"><div><h2>LAUNCH OPTIONS</h2><p>Session preferences</p></div><button class="round-btn" data-tab-jump="launch">⇆</button></div>
-              <div class="audio-layout">
-                <div class="sliders">
-                  <label><input class="vslider" id="fpsSlider" type="range" min="0" max="240" step="30" value="240"><span>FPS</span></label>
-                  <label><input class="vslider" type="range" min="0" max="100" value="68"><span>Render</span></label>
-                  <label><input class="vslider" type="range" min="0" max="100" value="75"><span>Network</span></label>
-                  <label><input class="vslider" type="range" min="0" max="100" value="55"><span>Effects</span></label>
-                </div>
-                <div class="mini-knobs">
-                  <div><button class="small-knob">ϟ</button><span>Fast</span></div>
-                  <div><button class="small-knob">◎</button><span>Stable</span></div>
-                  <div><button class="small-knob">◈</button><span>Custom</span></div>
+              <div class="card-head"><div><h2>LAUNCH OPTIONS</h2><p>Session preferences</p></div><button class="round-btn" aria-label="Open Launch Center" title="Open Launch Center" data-tab-jump="launch">⇆</button></div>
+              <div class="home-launch-controls">
+                <label class="home-fps-control" for="fpsSlider"><span>Configured FPS target</span><input id="fpsSlider" type="range" min="0" max="240" step="30" value="240" title="Legacy FPS override; current Roblox builds may ignore it. Zero restores Roblox defaults."><small>Legacy override; Roblox may ignore this setting.</small></label>
+                <div class="home-shortcuts">
+                  <button class="secondary-action" data-tab-jump="performance" title="Open renderer, MSAA, and performance profile controls">PERFORMANCE</button>
+                  <button class="secondary-action" data-tab-jump="servers" title="Look up public servers and available latency information">FIND SERVERS</button>
+                  <button class="secondary-action" data-tab-jump="profiles" title="Manage saved Player configuration profiles">SAVED PROFILES</button>
+                  <button class="secondary-action" data-tab-jump="studio" title="Open Studio projects, launch profiles, and backups">STUDIO CENTER</button>
                 </div>
               </div>
             </section>
 
             <section class="card profiles-card">
-              <div class="card-head"><div><h2>PROFILES</h2><p>Save. Switch. Launch.</p></div><button class="dot-menu" data-tab-jump="profiles">⋮</button></div>
+              <div class="card-head"><div><h2>PROFILES</h2><p>Save. Switch. Launch.</p></div><button class="dot-menu" aria-label="Open Profiles" title="Open Profiles" data-tab-jump="profiles">⋮</button></div>
               <div class="profile-list">
                 <button class="profile-btn" data-profile="default"><b>▱</b><span><strong>Default</strong><small>Roblox defaults</small></span></button>
                 <button class="profile-btn active" data-profile="performance"><b>⌘</b><span><strong>Performance</strong><small>High frame-rate focus</small></span><i></i></button>
@@ -146,24 +144,24 @@
             <section class="card fan-card" id="homePerformanceCard">
               <div class="card-head"><div><h2>PERFORMANCE CENTER 2.0</h2><p>Live shortcuts to the real tuning controls</p></div><button class="round-btn" type="button" data-tab-jump="performance" aria-label="Open Performance Center">◉</button></div>
               <div class="fan-row">
-                <div><button class="fan-knob" id="homePerfFpsBtn" type="button" aria-label="Open FPS controls">ϟ</button><span>FPS</span><small id="homePerfFpsValue">—</small></div>
-                <div><button class="fan-knob" id="homePerfRenderBtn" type="button" aria-label="Open render controls">◴</button><span>Render</span><small id="homePerfRenderValue">—</small></div>
-                <div><button class="fan-knob" id="homePerfNetworkBtn" type="button" aria-label="Open Server Intelligence">◎</button><span>Network</span><small>Servers</small></div>
+                <div><button class="fan-knob" id="homePerfFpsBtn" title="Open the configured FPS target; this is not measured in-game FPS." type="button" aria-label="Open FPS controls">ϟ</button><span>FPS</span><small id="homePerfFpsValue">—</small></div>
+                <div><button class="fan-knob" id="homePerfRenderBtn" title="Open the renderer configuration; this does not measure GPU activity." type="button" aria-label="Open render controls">◴</button><span>Render</span><small id="homePerfRenderValue">—</small></div>
+                <div><button class="fan-knob" id="homePerfNetworkBtn" title="Open public server lookup and latency information." type="button" aria-label="Open Server Intelligence">◎</button><span>Network</span><small>Servers</small></div>
               </div>
-              <div class="segmented" id="homePerfMode" aria-label="Performance Center mode"><button id="homePerfAutoBtn" type="button">Auto</button><button id="homePerfCustomBtn" type="button">Custom</button></div>
-              <button class="fan-chart fan-chart-button" id="homePerfChartBtn" type="button" aria-label="Open Performance Center">
-                <svg viewBox="0 0 360 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 66 C55 61 90 60 130 58 S190 48 225 36 280 22 360 14"/><g><circle cx="55" cy="61" r="4"/><circle cx="126" cy="58" r="4"/><circle cx="190" cy="49" r="4"/><circle cx="247" cy="31" r="4"/><circle cx="309" cy="19" r="4"/></g></svg>
+              <div class="segmented" id="homePerfMode" aria-label="Performance Center mode"><button id="homePerfAutoBtn" title="Use the hardware recommendation and enable application before launch." type="button">Auto</button><button id="homePerfCustomBtn" title="Disable automatic application and open manual tuning." type="button">Custom</button></div>
+              <button class="fan-chart fan-chart-button" id="homePerfChartBtn" title="Open Performance Center settings and hardware information." type="button" aria-label="Open Performance Center">
+                <strong>OPEN PERFORMANCE CENTER</strong><span>Review hardware, profiles, and applied settings →</span>
               </button>
               <div class="status-line"><i id="homePerfStatusDot"></i><span id="homePerfStatus">Loading performance configuration…</span></div>
             </section>
 
             <section class="card power-card">
               <div class="card-head"><div><h2>DRAGONSTRAP</h2><p>Stable Roblox bootstrapper</p></div></div>
-              <label class="power-switch"><input id="systemToggle" type="checkbox" checked><span></span><strong id="systemState">Services Active</strong></label>
+              <button class="secondary-action" data-tab-jump="maintenance" title="Open integrity checks, restore points, and repair tools">RELIABILITY &amp; RECOVERY</button>
               <div class="power-stats">
-                <div><span>Version</span><strong id="appVersion">2.0.4</strong></div>
+                <div><span>Version</span><strong id="appVersion">2.3.3</strong></div>
                 <div><span>Roblox</span><strong id="robloxSummary">Checking</strong></div>
-                <div><span>Status</span><strong class="green">Stable Ready</strong></div>
+                <div><span>Release channel</span><strong>Stable</strong></div>
               </div>
               <div class="signature">DragonStrap</div>
             </section>
@@ -171,13 +169,13 @@
         </section>
 
         <section class="view" data-view="launch">
-          <div class="page-heading"><div><h1>ROBLOX LAUNCH CENTER</h1><p>Launch the Roblox app, Studio, an experience, or a specific server from one controlled workspace.</p></div><span class="phase-badge">v0.3 LAUNCH CENTER</span></div>
+          <div class="page-heading"><div><h1>ROBLOX LAUNCH CENTER</h1><p>Launch the Roblox app, Studio, an experience, or a specific server from one controlled workspace.</p></div><span class="phase-badge">v2.2 LAUNCH CENTER</span></div>
           <div class="launch-center-grid">
             <section class="card launch-quick-card hero-card">
               <div class="card-head"><div><h2>QUICK LAUNCH</h2><p>Detected local Roblox installations</p></div><span class="launch-health" id="launchHealth">SCANNING</span></div>
               <div class="quick-launch-list">
-                <div class="quick-launch-row"><span class="status-dot" id="launchPlayerDot"></span><div><strong>Roblox Player</strong><small id="launchPlayerVersion">Scanning…</small><code id="launchPlayerPath">Looking for RobloxPlayerBeta.exe</code></div><button class="primary-action" id="launchPlayerBtn">LAUNCH</button></div>
-                <div class="quick-launch-row"><span class="status-dot" id="launchStudioDot"></span><div><strong>Roblox Studio</strong><small id="launchStudioVersion">Scanning…</small><code id="launchStudioPath">Looking for RobloxStudioBeta.exe</code></div><button class="secondary-action" id="launchStudioBtn">STUDIO</button></div>
+                <div class="quick-launch-row"><span class="status-dot" id="launchPlayerDot"></span><div><strong>Roblox Player</strong><small id="launchPlayerVersion">Scanning…</small><code id="launchPlayerPath">Looking for RobloxPlayerBeta.exe</code></div><button class="primary-action" id="launchPlayerBtn" disabled>LAUNCH PLAYER</button></div>
+                <div class="quick-launch-row"><span class="status-dot" id="launchStudioDot"></span><div><strong>Roblox Studio</strong><small id="launchStudioVersion">Scanning…</small><code id="launchStudioPath">Looking for RobloxStudioBeta.exe</code></div><button class="secondary-action" id="launchStudioBtn" disabled>LAUNCH STUDIO</button></div>
               </div>
             </section>
 
@@ -186,7 +184,8 @@
               <div class="launch-form">
                 <label><span>Place / Roblox URL</span><input id="launchTargetInput" type="text" autocomplete="off" spellcheck="false" placeholder="1818 or https://www.roblox.com/games/1818/..." /></label>
                 <label><span>Game Instance ID <em>optional</em></span><input id="launchInstanceInput" type="text" autocomplete="off" spellcheck="false" placeholder="Specific server / Job ID" /></label>
-                <div class="launch-form-actions"><button class="primary-action" id="launchExperienceBtn">JOIN EXPERIENCE</button><button class="small-action" id="clearLaunchTargetBtn">CLEAR</button></div>
+                <div class="launch-form-actions"><button class="primary-action" id="launchExperienceBtn" disabled>JOIN EXPERIENCE</button><button class="small-action" id="clearLaunchTargetBtn">CLEAR</button></div>
+                <p class="launch-target-preview" id="launchTargetPreview" role="status" aria-live="polite">Enter a Place ID or Roblox game URL to preview the destination.</p>
                 <p class="launch-help">DragonStrap normalizes the target to <code>roblox://experiences/start</code> and rejects unrelated web addresses.</p>
               </div>
             </section>
@@ -197,12 +196,12 @@
                 <label>Profile<select id="launchProfile"><option value="default">Default</option><option value="balanced">Balanced</option><option value="performance" selected>Performance</option><option value="custom">Custom</option><option value="quality">Quality</option><option value="studio">Studio</option></select></label>
                 <label class="toggle-row">Minimize DragonStrap after a successful launch<input id="minimizeOnLaunch" type="checkbox"></label>
               </div>
-              <div class="launch-profile-note"><b>PROFILE LINKED</b><span>The selected profile is recorded with each launch. Performance+ can auto-apply its managed settings before Player launch; FastFlag Manager writes remain explicit and reviewable.</span></div>
+              <div class="launch-profile-note"><b>SESSION PRESET</b><span>This selector changes Performance+ launch settings. Complete saved configurations are applied separately in Profiles; choosing one here does not apply a saved configuration.</span></div><div class="launch-profile-note"><b>LAST APPLIED CONFIGURATION</b><span id="launchConfigurationProfile">None. Open Profiles to preview and apply a saved configuration.</span></div><button class="secondary-action" data-tab-jump="profiles" type="button">OPEN SAVED PROFILES ↗</button>
             </section>
 
             <section class="card launch-status-card">
               <div class="card-head"><div><h2>LAUNCH STATUS</h2><p>Current session result</p></div><button class="round-btn" id="launchCenterRefresh" title="Refresh Roblox detection">↻</button></div>
-              <div class="launch-result-orb" id="launchResultOrb"><span>READY</span><strong id="launchResultCode">IDLE</strong></div>
+              <div class="launch-result-orb" id="launchResultOrb"><span>STATUS</span><strong id="launchResultCode">CHECKING</strong></div>
               <p id="launchResultMessage">Choose a launch action when you are ready.</p>
               <div class="launch-result-meta"><span>Last action</span><strong id="launchResultTime">—</strong></div>
             </section>
@@ -220,6 +219,7 @@
             <section class="card feature-card"><div class="card-head"><div><h2>PLAYER INSTALLATION</h2><p>Newest detected version folder</p></div></div><div class="data-list"><div><span>Installed</span><strong id="instanceInstalled">—</strong></div><div><span>Version</span><strong id="instanceVersion">—</strong></div><div class="wide"><span>Executable</span><code id="instancePlayerPath">—</code></div></div></section>
             <section class="card feature-card"><div class="card-head"><div><h2>STUDIO INSTALLATION</h2><p>Creator environment</p></div></div><div class="data-list"><div><span>Installed</span><strong id="instanceStudioInstalled">—</strong></div><div><span>Version</span><strong id="instanceStudioVersion">—</strong></div><div class="wide"><span>Executable</span><code id="instanceStudioPath">—</code></div></div></section>
             <section class="card feature-card full-span"><div class="card-head"><div><h2>ROBLOX ROOT</h2><p>Local installation root used by DragonStrap</p></div></div><code class="path-box" id="robloxRoot">—</code></section>
+            <section class="card feature-card full-span instance-next-card"><div class="card-head"><div><h2>NEXT STEPS</h2><p>Use the detected installations in the right workspace.</p></div></div><div class="gap-action-grid"><button class="secondary-action" type="button" data-tab-jump="launch">OPEN LAUNCH CENTER ↗</button><button class="secondary-action" type="button" data-tab-jump="channels">MANAGE CHANNEL ↗</button><button class="secondary-action" type="button" data-tab-jump="maintenance">CHECK INSTALLATION HEALTH ↗</button></div></section>
           </div>
         </section>
 
@@ -437,7 +437,7 @@
         </section>
 
         <section class="view" data-view="servers">
-          <div class="page-heading"><div><h1>SERVER INTELLIGENCE 2.0</h1><p>Region intelligence, latency history, favorites, recent servers, comparison, and provider diagnostics.</p></div><span class="phase-badge">v1.6 SERVER CENTER</span></div>
+          <div class="page-heading"><div><h1>SERVER INTELLIGENCE 2.0</h1><p>Region intelligence, latency history, favorites, recent servers, comparison, and provider diagnostics.</p></div><span class="phase-badge">SERVER CENTER</span></div>
           <div class="server-intelligence-shell">
             <section class="card server-lookup-card">
               <div class="card-head"><div><h2>SERVER LOOKUP</h2><p>Place ID or Roblox game URL</p></div><span class="server-provider-pill" id="serverProviderPill">READY</span></div>
@@ -494,7 +494,7 @@
         </section>
 
         <section class="view" data-view="studio">
-          <div class="page-heading studio-heading"><div><h1>STUDIO CENTER 2.0</h1><p>Studio-specific launch profiles, project intelligence, backups, deployment tracking, and isolated creator FastFlags.</p></div><div class="studio-heading-actions"><span class="phase-badge">v1.7 CREATOR CENTER</span><button class="small-action" id="studioRefreshBtn">REFRESH</button></div></div>
+          <div class="page-heading studio-heading"><div><h1>STUDIO CENTER 2.0</h1><p>Studio-specific launch profiles, project intelligence, backups, deployment tracking, and isolated creator FastFlags.</p></div><div class="studio-heading-actions"><span class="phase-badge">CREATOR CENTER</span><button class="small-action" id="studioRefreshBtn">REFRESH</button></div></div>
           <div class="studio-center-layout studio-v2-layout">
             <section class="card studio-hero-card studio-v2-hero">
               <div class="card-head"><div><h2>STUDIO INSTALLATION</h2><p>Detected creator environment and selected deployment channel</p></div><span class="status-dot" id="studioCenterDot"></span></div>
@@ -623,13 +623,13 @@
         </section>
 
         <section class="view" data-view="profiles">
-          <div class="page-heading profiles-heading"><div><h1>PROFILES & CONFIGURATION CENTER</h1><p>Capture, clone, share, and atomically apply complete DragonStrap Player configurations.</p></div><span class="phase-badge">v1.8 CONFIGURATION</span></div>
+          <div class="page-heading profiles-heading"><div><h1>PROFILES & CONFIGURATION CENTER</h1><p>Capture, clone, share, and atomically apply complete DragonStrap Player configurations.</p></div><span class="phase-badge">CONFIGURATION</span></div>
           <div class="configuration-profile-layout">
             <section class="card configuration-profile-library">
               <div class="card-head"><div><h2>PROFILE LIBRARY</h2><p>Named local configurations stored in DragonStrap user data</p></div><span class="profile-count" id="configurationProfileCount">0 profiles</span></div>
               <label class="configuration-field"><span>Selected profile</span><select id="configurationProfileSelect"><option value="">No profiles yet</option></select></label>
               <div class="configuration-actions configuration-actions-main"><button class="primary-action" id="configurationApplyBtn" disabled>APPLY PROFILE</button><button class="secondary-action" id="configurationExportBtn" disabled>EXPORT</button><button class="danger-action" id="configurationDeleteBtn" disabled>DELETE</button></div>
-              <div class="configuration-active-row"><span>ACTIVE PROFILE</span><strong id="configurationActiveProfile">None</strong></div>
+              <div class="configuration-active-row"><span>LAST APPLIED PROFILE</span><strong id="configurationActiveProfile">None</strong></div><p class="configuration-note" id="configurationSelectionHint" role="status">Select a saved profile to review its changes before applying.</p>
             </section>
 
             <section class="card configuration-profile-create">
@@ -736,6 +736,7 @@
               <div class="card-head"><div><h2>TRUSTED LOCATIONS</h2><p>Quick access to allowlisted local folders</p></div></div>
               <div class="maintenance-location-grid"><button class="secondary-action" data-maint-location="roblox">ROBLOX ROOT</button><button class="secondary-action" data-maint-location="versions">VERSIONS</button><button class="secondary-action" data-maint-location="player">PLAYER INSTALL</button><button class="secondary-action" data-maint-location="studio">STUDIO INSTALL</button><button class="secondary-action" data-maint-location="recovery">RECOVERY DATA</button><button class="secondary-action" data-maint-location="data">DRAGONSTRAP DATA</button></div>
             </section>
+            <section class="card maintenance-next-card"><div class="card-head"><div><h2>RECOVERY NEXT STEPS</h2><p>Return to the relevant center after checking health.</p></div></div><div class="gap-action-grid"><button class="secondary-action" type="button" data-tab-jump="instances">RECHECK INSTALLATIONS ↗</button><button class="secondary-action" type="button" data-tab-jump="channels">REVIEW PLAYER CHANNEL ↗</button><button class="secondary-action" type="button" data-tab-jump="launch">RETURN TO LAUNCH ↗</button></div></section>
           </div>
         </section>
 
@@ -745,15 +746,22 @@
             <section class="card feature-card">
               <div class="card-head"><div><h2>GENERAL</h2><p>Persistent local preferences</p></div></div>
               <div class="control-list">
-                <label class="toggle-row">Notifications<input id="notificationsSetting" type="checkbox" checked></label>
-                <label>Refresh interval<select id="refreshSeconds"><option value="60">60 seconds</option><option value="120">2 minutes</option><option value="300">5 minutes</option><option value="600">10 minutes</option></select></label>
+                <label class="toggle-row"><span>Show in-app notifications<small>Show confirmation and information messages. Errors always remain visible.</small></span><input id="notificationsSetting" type="checkbox" checked></label>
+                <label class="toggle-row"><span>Refresh installation status automatically<small>Periodically check local Player and Studio detection. Manual refresh stays available.</small></span><input id="autoRefreshSetting" type="checkbox" checked></label>
+                <label>Installation refresh interval<select id="refreshSeconds" aria-describedby="refreshPreferenceHint"><option value="60">60 seconds</option><option value="120">2 minutes</option><option value="300">5 minutes</option><option value="600">10 minutes</option></select></label>
               </div>
+              <p class="settings-description" id="refreshPreferenceHint">Applies while DragonStrap is open. This does not refresh public server listings.</p>
+              <div class="settings-reset-row"><button class="secondary-action" id="resetGeneralPreferences">RESET GENERAL</button><small>Defaults: notifications on, automatic refresh on, every 60 seconds.</small></div>
+              <div class="settings-reset-row"><button class="secondary-action" id="openFirstRunGuide" type="button">OPEN SETUP GUIDE</button><small>Review installation, channel, launch, and recovery steps anytime.</small></div>
+              <p id="preferencesSaveStatus" class="settings-save-status" role="status" aria-live="polite">Changes save automatically on this device.</p>
             </section>
+
+            <section class="card feature-card settings-guide-card"><div class="card-head"><div><h2>YOUR WORKSPACE</h2><p>Direct paths to the most common tasks</p></div></div><div class="gap-action-grid"><button class="secondary-action" type="button" data-tab-jump="launch">LAUNCH ROBLOX ↗</button><button class="secondary-action" type="button" data-tab-jump="profiles">SAVED PROFILES ↗</button><button class="secondary-action" type="button" data-tab-jump="maintenance">REPAIR & RECOVERY ↗</button></div><p class="gap-card-note">The setup guide in General can walk through these centers again.</p></section>
 
             <section class="card feature-card update-center-card">
               <div class="card-head"><div><h2>UPDATE CENTER 2.0</h2><p>Download, verify, defer, and apply official DragonStrap releases</p></div><span class="status-dot" id="updateStatusDot"></span></div>
               <div class="update-state-grid update-state-grid-wide">
-                <div><span>Current</span><strong id="updateCurrentVersion">2.0.4</strong></div>
+                <div><span>Current</span><strong id="updateCurrentVersion">2.3.3</strong></div>
                 <div><span>Latest</span><strong id="updateLatestVersion">—</strong></div>
                 <div><span>Build</span><strong id="updateBuildMode">Detecting…</strong></div>
                 <div><span>Feed</span><strong id="updateFeedStatus">Checking…</strong></div>
@@ -761,9 +769,10 @@
                 <div><span>Verification</span><strong id="updateVerificationState">—</strong></div>
               </div>
               <div class="control-list update-controls update-controls-grid">
-                <label class="toggle-row">Check for updates on startup<input id="checkForUpdatesSetting" type="checkbox" checked></label>
-                <label>Release channel<select id="updateChannelSetting"><option value="stable">Stable</option><option value="prerelease">Pre-release</option></select></label>
+                <label class="toggle-row"><span>Check for updates on startup<small>Look for releases when DragonStrap opens. Download and installation stay manual.</small></span><input id="checkForUpdatesSetting" type="checkbox" checked></label>
+                <label>Release channel<small>Stable is recommended. Pre-release includes published preview builds.</small><select id="updateChannelSetting"><option value="stable">Stable</option><option value="prerelease">Pre-release</option></select></label>
               </div>
+              <div class="settings-reset-row"><button class="secondary-action" id="resetUpdatePreferences">RESET UPDATE PREFERENCES</button><small>Defaults: startup checks on, Stable channel. Downloaded packages and reminders are retained.</small></div>
               <div class="update-package-row"><span>Selected package</span><code id="updateSelectedAsset">No release selected</code></div>
               <div class="update-progress-panel">
                 <div class="update-progress-copy"><strong id="updateDownloadStatus">Idle</strong><span id="updateDownloadPercent">0%</span></div>
@@ -818,9 +827,10 @@
               <div class="release-note">DragonStrap 2.0 defines versioned plugin/service boundaries, but third-party plugin code is not executed yet. This keeps the v2.0.0 security boundary equivalent to the stable v1.x application while future extensions target documented contracts.</div>
             </section>
 
-            <section class="card feature-card" id="aboutCard" tabindex="-1">
+            <section class="card feature-card settings-about-card" id="aboutCard" tabindex="-1">
               <div class="card-head"><div><h2>ABOUT</h2><p>DragonStrap 2.0 stable architecture release</p></div></div>
-              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.0.4</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.3.3</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+              <div class="about-website"><div><strong>Purple Dragon Foundation</strong><small>www.purpledragonfoundationltd.xyz</small></div><button class="secondary-action" id="aboutWebsiteBtn" type="button">OPEN WEBSITE ↗</button></div>
             </section>
           </div>
         </section>
@@ -828,6 +838,18 @@
     </div>
 
     <footer class="footer panel-edge"><span>DRAGONSTRAP</span><span>•</span><span>PURPLE DRAGON UI/UX</span><span class="footer-right" id="footerStatus">INITIALIZING</span></footer>
+
+    <dialog class="dragon-help-dialog first-run-dialog" id="firstRunDialog" aria-labelledby="firstRunTitle" aria-describedby="firstRunIntro">
+      <div class="dragon-help-shell">
+        <div class="dragon-help-head"><div><span class="dragon-help-kicker">WELCOME TO DRAGONSTRAP</span><h2 id="firstRunTitle">Set up your launch</h2><p id="firstRunIntro">A short guide to the local checks and controls.</p></div><button class="round-btn" id="firstRunClose" type="button" aria-label="Remind me next launch">×</button></div>
+        <div class="first-run-progress" id="firstRunProgress" aria-label="Setup progress"></div>
+        <section class="first-run-step" data-first-run-step="0"><h3>Check your installation</h3><p>DragonStrap checks your local Roblox installation. Player is needed to launch; Studio is optional.</p><div class="first-run-status"><span>Roblox Player</span><strong id="firstRunPlayer">Checking…</strong></div><div class="first-run-status"><span>Roblox Studio (optional)</span><strong id="firstRunStudio">Checking…</strong></div><button class="secondary-action" type="button" id="firstRunRefresh">CHECK AGAIN</button></section>
+        <section class="first-run-step" data-first-run-step="1" hidden><h3>Choose a channel</h3><p>The production channel uses the official live Roblox build. Channels lets you review the selected deployment and install or update Player if needed.</p><div class="first-run-status"><span>Selected channel</span><strong id="firstRunChannel">Checking…</strong></div><button class="secondary-action" type="button" data-first-run-view="channels">OPEN CHANNELS ↗</button></section>
+        <section class="first-run-step" data-first-run-step="2" hidden><h3>Get ready to launch</h3><p>Launch opens Player after detection. You can choose a profile and review the target before starting. DragonStrap does not launch Roblox from this guide.</p><div class="first-run-status"><span>Player readiness</span><strong id="firstRunReady">Checking…</strong></div><button class="secondary-action" type="button" data-first-run-view="launch">OPEN LAUNCH ↗</button></section>
+        <section class="first-run-step" data-first-run-step="3" hidden><h3>Know where to recover</h3><p>Recovery contains diagnostics, configuration restore points, and Safe Repair. Create a restore point before changing settings you may want to undo.</p><button class="secondary-action" type="button" data-first-run-view="maintenance">OPEN RECOVERY ↗</button></section>
+        <div class="first-run-actions"><button class="secondary-action" id="firstRunLater" type="button">REMIND ME NEXT LAUNCH</button><div><button class="secondary-action" id="firstRunBack" type="button">BACK</button><button class="primary-action" id="firstRunNext" type="button">NEXT</button></div></div>
+      </div>
+    </dialog>
 
     <dialog class="dragon-help-dialog" id="helpDialog" aria-labelledby="helpDialogTitle">
       <div class="dragon-help-shell">

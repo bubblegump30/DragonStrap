@@ -1,7 +1,7 @@
 {
   "name": "dragonstrap",
   "productName": "DragonStrap",
-  "version": "2.0.4",
+  "version": "2.3.3",
   "private": true,
   "description": "DragonStrap 2.0 Windows Roblox bootstrapper with consolidated service architecture, coordinated bootstrap/update pipeline, plugin-ready contracts, lazy-loaded UI centers, recovery, profiles, and verified updates",
   "main": "main.js",
@@ -13,6 +13,7 @@
     "test": "node --test tests/*.test.js",
     "release:prepare": "node scripts/prepare-release.js",
     "release:verify": "node scripts/verify-release.js",
+    "ui:verify": "electron scripts/verify-ui-layout.js",
     "pack:win": "npm run release:verify && electron-builder --win --x64 --dir",
     "dist:win": "npm run release:verify && electron-builder --win --x64"
   },

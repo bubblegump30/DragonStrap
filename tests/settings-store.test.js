@@ -74,3 +74,50 @@ test('SettingsStore persists validated Server Intelligence profile preferences',
   assert.equal(after.serverHideFull,true);
   fs.rmSync(dir, { recursive:true, force:true });
 });
+
+test('preference resets affect only their declared scope and persist defaults', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dragonstrap-reset-'));
+  try {
+    const store = new SettingsStore(dir);
+    const before = store.update({ notifications:false, autoRefresh:false, refreshSeconds:600, checkForUpdates:false, updateChannel:'prerelease', fpsCap:165, channel:'ZCanary', updateDeferredVersion:'9.0.0', updateDeferredUntil:1893456000000 });
+    const general = store.resetPreferences('general');
+    assert.equal(general.notifications, true);
+    assert.equal(general.autoRefresh, true);
+    assert.equal(general.refreshSeconds, 60);
+    for (const key of Object.keys(before).filter(k => !['notifications','autoRefresh','refreshSeconds'].includes(k))) assert.equal(general[key], before[key]);
+    const updates = store.resetPreferences('updates');
+    assert.equal(updates.checkForUpdates, true);
+    assert.equal(updates.updateChannel, 'stable');
+    for (const key of Object.keys(general).filter(k => !['checkForUpdates','updateChannel'].includes(k))) assert.equal(updates[key], general[key]);
+    assert.deepEqual(new SettingsStore(dir).getAll(), updates);
+    assert.throws(() => store.resetPreferences('__proto__'), /Unknown/);
+    assert.deepEqual(store.getAll(), updates);
+  } finally { fs.rmSync(dir, { recursive:true, force:true }); }
+});
+
+test('failed preference reset preserves prior in-memory and persisted values', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dragonstrap-reset-failure-'));
+  try {
+    const store = new SettingsStore(dir);
+    const before = store.update({notifications:false, autoRefresh:false});
+    store.filePath = path.join(dir, 'blocked');
+    fs.mkdirSync(store.filePath);
+    assert.throws(() => store.resetPreferences('general'));
+    assert.deepEqual(store.getAll(), before);
+    assert.deepEqual(new SettingsStore(dir).getAll(), before);
+  } finally { fs.rmSync(dir, { recursive:true, force:true }); }
+});
+
+test('first-run completion persists for new installs and migrates existing settings', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const os = require('os');
+  const fresh = fs.mkdtempSync(path.join(os.tmpdir(), 'dragon-first-run-'));
+  const store = new SettingsStore(fresh);
+  assert.equal(store.getAll().firstRunComplete, false);
+  store.update({ firstRunComplete: true });
+  assert.equal(new SettingsStore(fresh).getAll().firstRunComplete, true);
+  const existing = fs.mkdtempSync(path.join(os.tmpdir(), 'dragon-existing-'));
+  fs.writeFileSync(path.join(existing, 'settings.json'), JSON.stringify({ notifications: false }));
+  assert.equal(new SettingsStore(existing).getAll().firstRunComplete, true);
+});

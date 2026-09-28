@@ -53,7 +53,9 @@ class LaunchTargetService {
       if (!placeId) {
         return { ok: false, code: 'PLACE_ID_NOT_FOUND', message: 'No Roblox Place ID was found in that URL.' };
       }
-      const instanceId = explicitInstanceId || cleanInstanceId(url.searchParams.get('gameInstanceId'));
+      const embeddedInstanceId = url.searchParams.get('gameInstanceId');
+      if (embeddedInstanceId && !cleanInstanceId(embeddedInstanceId)) return { ok:false, code:'INVALID_INSTANCE_ID', message:'Game Instance ID contains unsupported characters.' };
+      const instanceId = explicitInstanceId || cleanInstanceId(embeddedInstanceId);
       return this.#buildExperience(placeId, instanceId);
     }
 
@@ -72,6 +74,7 @@ class LaunchTargetService {
       for (const [key, value] of url.searchParams.entries()) {
         if (ALLOWED_DEEPLINK_PARAMS.has(key) && value) params.set(key, value);
       }
+      if (url.searchParams.has('gameInstanceId') && !cleanInstanceId(url.searchParams.get('gameInstanceId'))) return { ok:false, code:'INVALID_INSTANCE_ID', message:'Game Instance ID contains unsupported characters.' };
       params.set('placeId', placeId);
       if (explicitInstanceId) params.set('gameInstanceId', explicitInstanceId);
 

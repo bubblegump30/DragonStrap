@@ -30,3 +30,10 @@ test('LaunchTargetService rejects unrelated websites', () => {
   assert.equal(result.ok, false);
   assert.equal(result.code, 'UNSUPPORTED_HOST');
 });
+
+test('LaunchTargetService rejects malformed embedded server IDs rather than silently dropping them', () => {
+  const url = service.normalize('https://www.roblox.com/games/1818/?gameInstanceId=bad%20id');
+  assert.equal(url.code, 'INVALID_INSTANCE_ID');
+  const deeplink = service.normalize('roblox://experiences/start?placeId=1818&gameInstanceId=bad%20id');
+  assert.equal(deeplink.code, 'INVALID_INSTANCE_ID');
+});
