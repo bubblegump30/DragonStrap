@@ -1,11 +1,15 @@
-# DragonStrap v2.3.3 — Layout balance
+# DragonStrap v2.3.3 — Windows release
 
-Addresses the remaining FastFlags and Settings gaps shown in the September 28 Windows screenshots. FastFlags controls flow into balanced columns rather than rigid shared grid rows; Settings shortcuts fill the space beside General. The one-click Verify-UI.cmd workflow remains included. Automated checks pass; Windows visual verification remains necessary.
+This is the first full Windows package since v2.0.4. It includes the v2.0.5–v2.3.3 source updates: cleaner layouts and dashboard status, Settings defaults, more reliable backups, first-run guidance, Launch Center refinements, saved-profile workflow, and the FastFlags and Settings layout fixes.
 
-## Publishing checklist
+## Downloads
 
-This source update does not contain a built Windows executable. Before publishing v2.3.3 on GitHub Releases, run `Verify-UI.cmd` on Windows, build both Portable and Setup x64 executables, and upload `SHA256SUMS.txt` generated from those exact files. Verify the hashes and launch each package. The Update Center consumes published assets and must not be offered a source ZIP as a binary update.
+- **Setup (x64):** `DragonStrap-Setup-2.3.3-x64.exe`
+- **Portable (x64):** `DragonStrap-Portable-2.3.3-x64.exe`
+- **Integrity:** `SHA256SUMS.txt` contains SHA-256 hashes for the release files.
 
-## Upgrade summary from v2.0.4
+Run the installer for a normal installation, or use Portable without installation. Windows may display a SmartScreen warning because these packages are unsigned. Verify a downloaded file with `Get-FileHash .\DragonStrap-Setup-2.3.3-x64.exe -Algorithm SHA256` and compare it with `SHA256SUMS.txt`.
 
-The intervening source releases improve UI/UX, dashboard status, Settings defaults, backup reliability, first-run guidance, launch targets, and saved-profile workflow. Existing settings remain local; first-run completion migrates existing installations as completed. Review the changelog for individual version details.
+## Upgrade notes
+
+Existing local settings remain in place. First-run completion migrates existing installations as completed. The Update Center requires the published executables and matching checksums. See [CHANGELOG.md](https://github.com/bubblegump30/DragonStrap/blob/main/CHANGELOG.md) for the individual versions.
