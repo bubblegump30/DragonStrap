@@ -35,6 +35,10 @@ DragonStrap keeps privileged process/filesystem work in the main process. The re
 
 Installation/update/recovery operations use one coordinated destructive-operation lock. Roblox package installation remains staged and validated before commit, self-updates remain SHA-256 verified, and recovery continues to use allowlisted locations and transactional restore behavior.
 
+## User tutorial
+
+Follow the [DragonStrap step-by-step user tutorial](docs/USER-GUIDE.md) for downloading, installing Roblox Player, launching games, tuning performance, using FastFlags, updating, and recovery.
+
 ## Run from source
 
 Requirements: Windows 10/11, Node.js, npm, and the Windows `tar.exe` utility used by the Roblox package engine.
