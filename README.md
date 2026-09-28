@@ -39,10 +39,10 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest published Windows installer and portable app | v2.0.4 | [GitHub Releases](https://github.com/bubblegump30/DragonStrap/releases/latest) |
+| Latest published Windows installer and portable app | v2.3.3 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.3.3) |
 | Current repository source | v2.3.3 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
-Source ZIPs and repository code are for development; they are not Windows installers. A v2.3.3 Windows release should follow a Windows build, UI check, and SHA-256 verification. Do not use a source archive as an Update Center binary.
+Download the Setup or Portable x64 executable from the v2.3.3 release and compare its SHA-256 hash with `SHA256SUMS.txt`. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
