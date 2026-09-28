@@ -1,0 +1,68 @@
+name: DragonStrap Windows release
+
+on:
+  push:
+    branches:
+      - release/v2.3.3-windows
+
+permissions:
+  contents: write
+
+jobs:
+  package-and-publish:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install
+      - name: Verify desktop layouts
+        run: npm run ui:verify
+      - name: Build and hash Windows packages
+        shell: pwsh
+        run: .\scripts\Build-Windows-Release.ps1 -SkipInstall
+      - name: Validate package checksums
+        shell: pwsh
+        run: |
+          $version = (Get-Content VERSION -Raw).Trim()
+          if ($version -ne '2.3.3') { throw "Unexpected release version: $version" }
+          foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe")) {
+            $file = Join-Path dist $name
+            if (-not (Test-Path $file)) { throw "Missing $file" }
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            $line = "$hash  $name"
+            if (-not ((Get-Content dist/SHA256SUMS.txt) -ccontains $line)) { throw "Checksum mismatch: $name" }
+            Write-Host $line
+          }
+      - name: Preserve release packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: DragonStrap-v2.3.3-Windows-x64
+          path: |
+            dist/DragonStrap-Portable-2.3.3-x64.exe
+            dist/DragonStrap-Setup-2.3.3-x64.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if (gh release view v2.3.3 --repo ${{ github.repository }} *> $null) {
+            throw 'v2.3.3 already exists; refusing to overwrite it'
+          }
+          gh release create v2.3.3 `
+            dist/DragonStrap-Portable-2.3.3-x64.exe `
+            dist/DragonStrap-Setup-2.3.3-x64.exe `
+            dist/SHA256SUMS.txt `
+            --repo ${{ github.repository }} `
+            --target ${{ github.sha }} `
+            --title 'DragonStrap v2.3.3' `
+            --notes-file docs/RELEASE-v2.3.3.md `
+            --latest
