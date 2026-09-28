@@ -42,7 +42,9 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 | Latest published Windows installer and portable app | v2.3.3 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.3.3) |
 | Current repository source | v2.3.3 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
-Download the Setup or Portable x64 executable from the v2.3.3 release and compare its SHA-256 hash with `SHA256SUMS.txt`. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+Download the Setup or Portable x64 executable from the v2.3.3 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+
+The [VirusTotal report for the v2.3.3 Setup executable](https://www.virustotal.com/gui/file/66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf?nocache=1) corresponds to SHA-256 `66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf`. This link is for Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
