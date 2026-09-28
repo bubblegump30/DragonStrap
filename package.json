@@ -15,7 +15,7 @@
     "release:verify": "node scripts/verify-release.js",
     "ui:verify": "electron scripts/verify-ui-layout.js",
     "pack:win": "npm run release:verify && electron-builder --win --x64 --dir",
-    "dist:win": "npm run release:verify && electron-builder --win --x64"
+    "dist:win": "npm run release:verify && electron-builder --win --x64 --publish never"
   },
   "devDependencies": {
     "electron": "44.3.0",
