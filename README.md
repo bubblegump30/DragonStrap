@@ -40,7 +40,7 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 | Item | Version | Where |
 | --- | --- | --- |
 | Latest published Windows installer and portable app | v2.0.4 | [GitHub Releases](https://github.com/bubblegump30/DragonStrap/releases/latest) |
-| Current repository source | v2.3.3 | This branch after merge |
+| Current repository source | v2.3.3 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
 Source ZIPs and repository code are for development; they are not Windows installers. A v2.3.3 Windows release should follow a Windows build, UI check, and SHA-256 verification. Do not use a source archive as an Update Center binary.
 
