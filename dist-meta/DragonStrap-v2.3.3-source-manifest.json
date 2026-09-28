@@ -1,7 +1,7 @@
 {
   "product": "DragonStrap",
   "version": "2.3.3",
-  "generatedAt": "2026-09-28T10:07:34.757Z",
+  "generatedAt": "2026-09-28T10:10:41.907Z",
   "files": [
     {
       "file": ".github/FUNDING.yml",
@@ -485,8 +485,8 @@
     },
     {
       "file": "scripts/verify-release.js",
-      "sha256": "98377800040a59ec75955e254f16cfb5e7256137d1b5cec01efd62b2ae532e54",
-      "size": 5066
+      "sha256": "20876ce026c7ec96eb0a37fdff4d02c7bd8401efaae62a5c652408302e1f2c6b",
+      "size": 5089
     },
     {
       "file": "scripts/verify-ui-layout.js",
