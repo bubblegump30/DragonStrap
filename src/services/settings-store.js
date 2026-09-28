@@ -23,7 +23,8 @@ const DEFAULTS = Object.freeze({
   serverOccupancy: 'any',
   serverFavoritesOnly: false,
   serverHideFull: false,
-  theme: 'neo-purple'
+  theme: 'neo-purple',
+  firstRunComplete: false
 });
 
 const PROFILES = new Set(['default', 'balanced', 'performance', 'quality', 'studio', 'custom']);
@@ -50,6 +51,7 @@ function sanitizeSetting(key, value) {
     case 'minimizeOnLaunch':
     case 'notifications':
     case 'checkForUpdates': return typeof value === 'boolean' ? value : undefined;
+    case 'firstRunComplete': return typeof value === 'boolean' ? value : undefined;
     case 'updateChannel': return UPDATE_CHANNELS.has(value) ? value : undefined;
     case 'updateDeferredUntil': {
       const number = Number(value);
@@ -91,6 +93,8 @@ class SettingsStore {
       const raw = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
       if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return;
       const loaded = { ...DEFAULTS };
+      // Existing installations have already passed their first run.
+      if (!Object.hasOwn(raw, 'firstRunComplete')) loaded.firstRunComplete = true;
       for (const key of Object.keys(DEFAULTS)) {
         if (!Object.hasOwn(raw, key)) continue;
         const sanitized = sanitizeSetting(key, raw[key]);
@@ -111,15 +115,26 @@ class SettingsStore {
 
   getAll() { return { ...this.data }; }
 
+  resetPreferences(scope) {
+    const groups = {
+      general: ['notifications', 'autoRefresh', 'refreshSeconds'],
+      updates: ['checkForUpdates', 'updateChannel']
+    };
+    if (!Object.hasOwn(groups, scope)) throw new TypeError('Unknown preference reset scope.');
+    return this.update(Object.fromEntries(groups[scope].map(key => [key, DEFAULTS[key]])));
+  }
+
   update(patch) {
     if (!patch || typeof patch !== 'object' || Array.isArray(patch)) {
       throw new TypeError('Settings patch must be an object.');
     }
+    const previous = this.data;
+    this.data = { ...previous };
     for (const [key, value] of Object.entries(patch)) {
       const sanitized = sanitizeSetting(key, value);
       if (sanitized !== undefined) this.data[key] = sanitized;
     }
-    this.#save();
+    try { this.#save(); } catch (error) { this.data = previous; throw error; }
     return this.getAll();
   }
 }

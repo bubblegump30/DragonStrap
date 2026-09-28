@@ -12,8 +12,8 @@ test('Roblox Overview labels real build identifiers instead of bare number fragm
   assert.match(html, /Installed Player Build/);
   assert.match(html, /Installed Studio Build/);
   assert.match(html, /Selected Channel/);
-  assert.match(app, /q\('#installDetail'\)\.textContent = installed \? status\.version/);
-  assert.match(app, /q\('#studioDetail'\)\.textContent = studioInstalled \? status\.studioVersion/);
+  assert.match(app, /q\('#installDetail'\)\.textContent = installed \? \(status\.version \|\| 'Build unavailable'\)/);
+  assert.match(app, /q\('#studioDetail'\)\.textContent = studioInstalled \? \(status\.studioVersion \|\| 'Build unavailable'\)/);
   assert.doesNotMatch(app, /status\.version\.replace\('version-', ''\)/);
   assert.doesNotMatch(app, /status\.studioVersion\.replace\('version-', ''\)/);
 });

@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
   apiVersion: '2.0.0',
   getCoreState: () => ipcRenderer.invoke('dragonstrap:core-state'),
   getAppInfo: () => ipcRenderer.invoke('dragonstrap:app-info'),
+  openProjectWebsite: () => ipcRenderer.invoke('dragonstrap:open-project-website'),
   getReliabilityState: () => ipcRenderer.invoke('dragonstrap:reliability-state'),
   openReliabilityLogs: () => ipcRenderer.invoke('dragonstrap:reliability-open-logs'),
   getUpdateState: () => ipcRenderer.invoke('dragonstrap:updates-state'),
@@ -25,6 +26,7 @@ contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
   },
   getRobloxStatus: () => ipcRenderer.invoke('dragonstrap:roblox-status'),
   getSettings: () => ipcRenderer.invoke('dragonstrap:settings-get'),
+  resetPreferences: scope => ipcRenderer.invoke('dragonstrap:settings-reset-preferences', scope),
   updateSettings: patch => ipcRenderer.invoke('dragonstrap:settings-update', patch),
   getConfigurationProfiles: () => ipcRenderer.invoke('dragonstrap:configuration-profiles-state'),
   saveConfigurationProfile: name => ipcRenderer.invoke('dragonstrap:configuration-profile-save-current', name),
@@ -53,6 +55,7 @@ contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
     ipcRenderer.on('dragonstrap:roblox-status-changed', listener);
     return () => ipcRenderer.removeListener('dragonstrap:roblox-status-changed', listener);
   },
+  previewLaunchTarget: options => ipcRenderer.invoke('dragonstrap:launch-target-preview', options),
   launchPlayer: options => ipcRenderer.invoke('dragonstrap:launch-player', options),
   launchStudio: () => ipcRenderer.invoke('dragonstrap:launch-studio'),
   getStudioCenterState: () => ipcRenderer.invoke('dragonstrap:studio-center-state'),

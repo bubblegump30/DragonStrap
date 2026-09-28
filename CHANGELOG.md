@@ -1,3 +1,142 @@
+## v2.3.3 — Layout balance
+
+- Balanced FastFlags control cards in two flowing columns so a short Safe Core card no longer leaves an empty row beside the editor.
+- Stretched the Settings shortcut panel alongside General and distributed its controls through the available height.
+- Kept the single-column layout at narrower widths.
+
+## v2.3.2 — Easier UI verification
+
+- Added Verify-UI.cmd to install missing dependencies and run the Electron layout check from any working directory.
+- Expanded the layout check across Launch, Instances, FastFlags, Recovery, and Settings, including clipped button labels.
+- Documented both one-click and PowerShell workflows.
+
+## v2.3.1 — Layout hotfix
+
+- Allowed Quick Launch labels to wrap within their buttons at desktop and smaller widths.
+- Reflowed FastFlags into a full-width browser and a balanced control grid.
+- Added direct navigation to useful next steps on Instances, Recovery, and Settings.
+- Removed the unpaired About card gap by spanning the final Settings row.
+
+## v2.3.0 — Profiles refinement
+
+- Clarified session presets versus complete saved configurations in Launch Center, with direct navigation to Profiles.
+- Identified the last applied configuration without implying later individual edits remain in sync.
+- Disabled Apply until a fresh preview succeeds; stale responses cannot overwrite a newly selected profile.
+- Added clear apply progress and retry feedback.
+
+## v2.2.0 — Launch Center refinement
+
+- Preview experience and specific-server targets with the same main-process validator used at launch.
+- Disable Join until a valid target and detected Player are available; ignore stale preview responses.
+- Show honest Player readiness before a launch and label successful handoff as requested rather than confirmed running.
+- Improve action labels and target feedback while preserving the NeoPurple layout.
+
+## v2.1.0 — First-run experience
+
+- Added a four-step welcome guide using actual Player, Studio, and channel detection.
+- Added direct navigation to Channels, Launch, and Recovery, with a Settings entry to reopen the guide.
+- Persisted completion for new installations; existing installations migrate without an unsolicited welcome guide.
+- “Remind me next launch” keeps setup pending.
+
+## v2.0.12 — Project Website
+
+- Added the Purple Dragon Foundation website to Settings → About and to the product menu.
+- Both controls open `https://www.purpledragonfoundationltd.xyz/` in the system browser through a fixed main-process action.
+- The renderer cannot provide an arbitrary external URL. Navigation within DragonStrap remains protected.
+- A failed browser handoff shows a clear error message.
+- Preserved Studio backup reliability changes from v2.0.11.
+
+Validation: source checks, automated tests, and release verification. Browser handoff should be confirmed on Windows.
+
+## v2.0.11 — Studio Backup Reliability
+
+## Changes
+
+- Assign a strictly increasing timestamp for new Studio backups, including several backups within one millisecond and across service restarts. Retention now consistently keeps the newest backups.
+- Write backup metadata through a temporary file and atomic rename. If metadata cannot be committed, the copied backup is removed.
+- Validate backup metadata and file paths before listing, restoring, or pruning. A damaged record cannot redirect cleanup outside its project backup directory.
+- Restore copies use exclusive creation, so an existing project file cannot be overwritten.
+- Existing v1 Studio backup records remain readable when their metadata and backed-up files are valid. Old backups with identical timestamps have a deterministic tie order; their historical creation order cannot be recovered from the previous format.
+
+## Validation
+
+- Source checks and all 157 automated tests pass.
+- Regression coverage includes same-millisecond backups across restart, correct retention and restore, an outside-folder metadata path, failed metadata commit cleanup, and refusal to overwrite a restore destination.
+- Windows Studio integration and visual checks remain pending in this environment. The v2.0.10 Electron layout gate remains available through `npm run ui:verify` on Windows.
+
+## v2.0.10 — Windows UI Verification
+
+## Layout corrections
+
+- Give desktop dashboard columns explicit zero minimum widths so long status text cannot force horizontal overflow.
+- Let additional dashboard rows size to content at all breakpoints.
+- Remove the legacy fixed-row behavior below 1350 CSS pixels, including at high display scaling.
+- Keep all Installation Status rows within their card and bound the Help/About menu to the viewport.
+
+## Windows verification gate
+
+After `npm install`, run `npm run ui:verify`. The Electron harness loads the real renderer styles and assets without Roblox services. It checks five window and zoom combinations for horizontal overflow, Channel-row containment, card overlap, popup viewport bounds, and whether Help/About receives pointer hits above page content. Any failure exits nonzero.
+
+Automated source checks and tests run in the development environment. The Electron layout gate must still be run on Windows before claiming visual verification or publishing compiled installers; the execution environment here lacks an Electron browser binary.
+
+## v2.0.9 — Compact Dashboard Status Bar
+
+- Reduced the highlighted scan toolbar padding, button height, and gap above the dashboard cards.
+- Grouped the scan message and last-checked time together on the left.
+- Kept Install & Update aligned right with wrapping at narrower widths.
+- Limited live announcements to the status text, excluding the navigation button.
+- Preserved installation-status card sizing and the Help/About stacking fix from v2.0.8.
+
+Validation: source and release checks passed. Windows visual verification remains outstanding. This is a source package, not a compiled Windows executable.
+
+## v2.0.8 — Dashboard Layout Hotfix
+
+- Replaced fixed desktop dashboard row heights with content-sized rows that retain the existing minimum heights.
+- Made Installation Status content contribute to the card height, preserving space for the Channel description.
+- Raised the complete header stacking context above the workspace, so Help/About stays visible and clickable above cards and page headings.
+- Made the dropdown background opaque for readable menu text.
+- Preserved the NeoPurpleGUI design and all v2.0.7 Settings functionality.
+
+Validation: source and release checks are run for this source package. Windows visual resize and menu-hit testing remain outstanding; no runnable browser is available in this environment.
+
+## v2.0.7 — Settings QoL
+
+- Added scoped General and Update Preferences resets using validated main-process defaults.
+- Added an automatic installation refresh toggle; the interval is disabled when automatic refresh is off.
+- Made the notifications preference control non-error in-app messages. Errors remain visible.
+- Added descriptions for refresh scope, notifications, startup update checks, and release channels.
+- Added persistent inline saving, success, and failure feedback with controls locked during preference writes.
+- Failed persistence restores the previous in-memory settings; failed Settings-page edits restore the displayed controls.
+- Resets preserve Player tuning, FastFlags, saved profiles, installations, downloaded updates, and deferrals.
+
+Source release; Windows executables are not built or signed. Windows visual verification remains outstanding.
+
+## v2.0.6 — Dashboard Polish
+
+- Added scan progress, last successful check time, and explicit unknown states on scan failure.
+- Coalesced concurrent refresh requests and disabled refresh buttons during scans.
+- Replaced decorative Render/Network/Effects sliders and inert knobs with real navigation shortcuts.
+- Replaced the cosmetic services switch with a Reliability & Recovery shortcut.
+- Replaced the illustrative performance chart and percentage meters with factual labels.
+- Added explanatory tooltips for FPS, automatic configuration, rendering, and launch actions.
+- Dashboard shortcuts focus destination headings for keyboard users.
+- Preserved NeoPurpleGUI styling, existing settings, and Core API 2.0.0.
+
+Source release; Windows executables are not built or signed. Windows visual verification remains outstanding.
+
+## v2.0.5 — UI/UX Cleanup
+
+- Removed inherited feature-card and sidebar minimum heights that created unused space.
+- Standardized content gaps, heading wrapping, and action-button spacing.
+- Adjusted header, navigation, channel controls, and performance forms for narrower windows.
+- Wrapped long hardware, runtime, and configuration values instead of truncating them.
+- Added accessible labels and tooltips to compact navigation and Home shortcuts.
+- Removed historical release prefixes from feature badges; feature and Core API versions remain intact.
+- Bounded Help dialog height and allowed footer wrapping.
+- Preserved the black/purple NeoPurpleGUI styling and Core API 2.0.0.
+
+This is a presentation release. Installation, launch, update, and configuration behavior is unchanged.
+
 ## v2.0.4 — Roblox Overview Status Polish
 
 - Replaced raw unlabeled Roblox version GUID fragments on the Home overview with clearly labeled installed build IDs.
