@@ -1,0 +1,24 @@
+name: Update v2.3.3 release notes
+
+on:
+  push:
+    branches:
+      - release-notes/v2.3.3-virustotal
+
+permissions:
+  contents: write
+
+jobs:
+  update-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify published Setup hash and update release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA256: 66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf
+        run: |
+          set -euo pipefail
+          digest="$(gh api repos/${{ github.repository }}/releases/tags/v2.3.3 --jq '.assets[] | select(.name == "DragonStrap-Setup-2.3.3-x64.exe") | .digest')"
+          test "$digest" = "sha256:$EXPECTED_SHA256"
+          gh release edit v2.3.3 --repo "${{ github.repository }}" --notes-file docs/RELEASE-v2.3.3.md
