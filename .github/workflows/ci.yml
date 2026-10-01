@@ -29,3 +29,9 @@ jobs:
 
       - name: Release verification
         run: npm run release:verify
+
+      - name: Install desktop test dependencies
+        run: npm install
+
+      - name: Verify desktop layouts
+        run: npm run ui:verify

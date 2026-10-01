@@ -1,3 +1,10 @@
+## v2.4.0 — Everyday QoL (source update)
+
+- Home reports whether Roblox Player and optional Studio were detected, with the last successful scan time retained when a later scan fails.
+- The Play control shows the selected session preset and auto-apply mode from current settings.
+- Pending FastFlag changes stay visible through a sticky review action and a sidebar count; Apply still requires a validated preview.
+- Windows CI now runs the Electron layout check alongside source and unit checks.
+
 ## v2.3.3 — Layout balance
 
 - Balanced FastFlags control cards in two flowing columns so a short Safe Core card no longer leaves an empty row beside the editor.

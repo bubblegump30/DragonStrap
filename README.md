@@ -1,8 +1,8 @@
 # DragonStrap
 
-**Source v2.3.3 — UI and workflow refinements**
+**Source v2.4.0 — Everyday QoL (unreleased)**
 
-DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. The source now includes first-run guidance, refined Launch and Profiles workflows, backup reliability fixes, and UI layout improvements through v2.3.3.
+DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. The v2.4.0 source adds clearer installation status, launch preset context, and visible pending FastFlag changes. The latest published Windows executables remain v2.3.3 until the new version is built and released.
 
 ## DragonStrap 2.0 architecture
 
@@ -40,7 +40,7 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 | Item | Version | Where |
 | --- | --- | --- |
 | Latest published Windows installer and portable app | v2.3.3 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.3.3) |
-| Current repository source | v2.3.3 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
+| Current repository source | v2.4.0 (unreleased) | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
 Download the Setup or Portable x64 executable from the v2.3.3 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
@@ -99,7 +99,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.3.3`
+`2.4.0`
 
 ## Project links
 

@@ -1,7 +1,7 @@
 {
   "name": "dragonstrap",
   "productName": "DragonStrap",
-  "version": "2.3.3",
+  "version": "2.4.0",
   "private": true,
   "description": "DragonStrap 2.0 Windows Roblox bootstrapper with consolidated service architecture, coordinated bootstrap/update pipeline, plugin-ready contracts, lazy-loaded UI centers, recovery, profiles, and verified updates",
   "main": "main.js",

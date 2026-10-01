@@ -1,4 +1,9 @@
 /* DragonStrap v1.5.2 — FastFlag Manager 3.0 + Safe Core classification */
+.nav-pending-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:8px;padding:0 5px;border-radius:99px;background:rgba(170,87,236,.28);color:#f6e5ff;font-size:10px;line-height:1}
+.nav-pending-count[hidden],.fastflag-pending-banner[hidden]{display:none}
+.fastflag-pending-banner{position:sticky;top:8px;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;margin:0 0 12px;padding:8px 12px;border:1px solid rgba(190,116,244,.35);border-radius:10px;background:#21172e;box-shadow:0 8px 20px rgba(0,0,0,.34);color:#ead8f7;font-size:11px}
+.fastflag-pending-banner span{min-width:0;overflow-wrap:anywhere}.fastflag-pending-banner button{flex:0 0 auto;min-height:32px;font-size:9px}
+@media(max-width:700px){.fastflag-pending-banner{flex-wrap:wrap}.fastflag-pending-banner button{width:100%}}
 .fastflag-layout{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(390px,.82fr);gap:12px;align-items:start}
 .fastflag-browser-card{min-height:760px;display:flex;flex-direction:column}.fastflag-side-column{display:grid;gap:12px}.fastflag-editor-card,.fastflag-pending-card,.fastflag-presets-card,.fastflag-snapshots-card{min-height:0}
 .fastflag-count{align-self:flex-start;min-width:72px;padding:7px 10px;border-radius:999px;border:1px solid rgba(193,116,255,.28);background:rgba(130,48,191,.12);color:#debaff;font-size:9px;font-weight:800;letter-spacing:.14em;text-align:center;box-shadow:inset 0 0 12px rgba(181,80,255,.07)}
