@@ -1,0 +1,26 @@
+name: Sync DragonStrap VirusTotal release notes
+
+on:
+  push:
+    branches:
+      - release-notes/v2.4.0-scan-link
+
+permissions:
+  contents: write
+
+jobs:
+  update-release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify published setup assets and update notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current="$(gh api "repos/${{ github.repository }}/releases/tags/v2.4.0" --jq '.assets[] | select(.name == "DragonStrap-Setup-2.4.0-x64.exe") | .digest')"
+          previous="$(gh api "repos/${{ github.repository }}/releases/tags/v2.3.3" --jq '.assets[] | select(.name == "DragonStrap-Setup-2.3.3-x64.exe") | .digest')"
+          test "$current" = 'sha256:3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930'
+          test "$previous" = 'sha256:66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf'
+          gh release edit v2.4.0 --repo "${{ github.repository }}" --notes-file docs/RELEASE-v2.4.0.md
+          gh release edit v2.3.3 --repo "${{ github.repository }}" --notes-file docs/RELEASE-v2.3.3.md
