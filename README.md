@@ -44,7 +44,7 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 Download the Setup or Portable x64 executable from the v2.4.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-For the previous release, the [VirusTotal report for the v2.3.3 Setup executable](https://www.virustotal.com/gui/file/66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf?nocache=1) corresponds to SHA-256 `66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf`. This link is for Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report covers Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
