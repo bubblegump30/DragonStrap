@@ -48,14 +48,18 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 
 ## What changed since v2.0.4
 
-- v2.0.5–v2.0.9: spacing, navigation, Settings, dashboard, and empty-state polish.
-- v2.0.10–v2.0.12: layout verification, backup reliability, and a link to the [Purple Dragon Foundation website](https://www.purpledragonfoundationltd.xyz/).
-- v2.1.0: first-run setup guide for installation, channels, launch, and recovery.
-- v2.2.0: validated launch target preview and clearer launch readiness.
-- v2.3.0–v2.3.3: safer profile preview/apply flow, UI layout repairs, and one-click Windows UI verification.
-- v2.4.0: clearer Home readiness, selected launch preset context, and visible pending FastFlag reviews.
+| Version | Milestone | Improvements |
+| --- | --- | --- |
+| **v2.4.0** | **Everyday QoL** | Clearer Player and optional Studio detection, last successful scan time, selected launch preset and automatic Performance setting context, and a persistent pending FastFlag review action with a sidebar count. |
+| **v2.3.0–v2.3.3** | Profiles and layout refinement | Clearer session presets versus saved configurations, fresh previews before applying profiles, apply progress and retry feedback, balanced FastFlags and Settings layouts, and one-click Windows UI verification through **Verify-UI.cmd**. |
+| **v2.2.0** | Launch Center refinement | Validated experience and server target previews, clearer Player readiness, and Join availability based on a valid target and detected Player. |
+| **v2.1.0** | First-run experience | A four-step welcome guide using real installation and channel detection, shortcuts to Launch and Recovery, and a Settings option to reopen the guide. |
+| **v2.0.10–v2.0.12** | Verification, backups, and project links | Electron layout checks across window sizes and display scaling, reliable Studio backup ordering and metadata writes, protected restore destinations, and the [Purple Dragon Foundation website](https://www.purpledragonfoundationltd.xyz/) in About and the product menu. |
+| **v2.0.5–v2.0.9** | UI, dashboard, and Settings polish | More consistent spacing and responsive layouts, clearer scan states and tooltips, scoped Settings resets with save feedback, a compact status bar, and fixes for clipped Installation Status content and the Help/About dropdown. |
 
-See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for details.
+**Latest release and repository updates:** [v2.4.0 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.0) are published with SHA-256 checksums. The [current Setup VirusTotal report](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) matches the published v2.4.0 installer; Portable has a separate hash. GitHub workflows now use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned.
+
+See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for the full history.
 
 ## User tutorial
 
