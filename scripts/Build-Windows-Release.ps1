@@ -13,7 +13,7 @@ npm run release:prepare
 if ($env:CSC_LINK) {
     Write-Host 'Windows code-signing input detected. electron-builder will attempt signing.' -ForegroundColor Green
 } else {
-    Write-Warning 'No CSC_LINK signing input detected. Windows release artifacts will be unsigned unless another signing provider is configured.'
+    Write-Host 'Unsigned Windows release selected; no CSC_LINK code-signing input configured.' -ForegroundColor Cyan
 }
 
 npm run dist:win
