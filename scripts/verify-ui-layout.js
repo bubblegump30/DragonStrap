@@ -52,11 +52,20 @@ function inspectSecondaryViews() {
   const issues = [];
   const views = [...document.querySelectorAll('.view')];
   const original = views.find(view => view.classList.contains('active'));
+  const pendingBanner = document.querySelector('#fastFlagPendingBanner');
+  const pendingNavCount = document.querySelector('#fastFlagNavCount');
+  const originalBannerHidden = pendingBanner?.hidden;
+  const originalNavHidden = pendingNavCount?.hidden;
   for (const name of ['launch', 'instances', 'fastflags', 'maintenance', 'settings']) {
     views.forEach(view => view.classList.toggle('active', view.dataset.view === name));
+    if (name === 'fastflags') { pendingBanner.hidden = false; pendingNavCount.hidden = false; }
     // Force layout before checking this page.
     document.body.getBoundingClientRect();
     if (document.documentElement.scrollWidth > innerWidth + 2) issues.push(`${name}: horizontal overflow`);
+    if (name === 'fastflags') {
+      const banner = pendingBanner.getBoundingClientRect();
+      if (banner.left < -2 || banner.right > innerWidth + 2) issues.push('fastflags: pending bar beyond viewport');
+    }
     for (const button of document.querySelectorAll(`.view[data-view="${name}"] button`)) {
       if (button.offsetParent === null || button.clientWidth < 1) continue;
       const text = document.createRange();
@@ -68,6 +77,8 @@ function inspectSecondaryViews() {
       }
     }
   }
+  pendingBanner.hidden = originalBannerHidden;
+  pendingNavCount.hidden = originalNavHidden;
   views.forEach(view => view.classList.toggle('active', view === original));
   return issues;
 }

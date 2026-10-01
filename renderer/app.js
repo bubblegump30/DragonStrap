@@ -6,6 +6,7 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({ 
 
 const state = {
   roblox: null,
+  lastSuccessfulScanAt: null,
   settings: null,
   refreshTimer: null,
   launchPending: false,
@@ -186,6 +187,9 @@ function renderHomePerformanceWidget() {
     q('#homePerfStatus').textContent = autoApply
       ? `Auto-apply enabled · ${profileLabel} · ${fpsLabel(fps)} FPS`
       : `Manual mode · ${profileLabel} · ${fpsLabel(fps)} FPS`;
+  }
+  if (q('#launchPresetSummary')) {
+    q('#launchPresetSummary').textContent = `Session preset: ${profileLabel} · ${autoApply ? 'Auto-apply on' : 'Manual performance'}`;
   }
 }
 
@@ -684,6 +688,13 @@ function renderFastFlagPending() {
   const pendingCount = fastFlagPendingCount();
   const preview = state.fastFlags.preview;
   const changes = preview?.ok ? (preview.changes || []) : [];
+  const banner = q('#fastFlagPendingBanner');
+  const navCount = q('#fastFlagNavCount');
+  if (banner) banner.hidden = pendingCount === 0;
+  if (q('#fastFlagPendingBannerText')) q('#fastFlagPendingBannerText').textContent = `${pendingCount} pending FastFlag change${pendingCount === 1 ? '' : 's'} · ${preview?.ok ? 'Review before applying' : preview ? 'Needs attention' : 'Validating…'}`;
+  if (navCount) { navCount.hidden = pendingCount === 0; navCount.textContent = String(pendingCount); }
+  const nav = q('.nav-item[data-tab="fastflags"]');
+  if (nav) { nav.setAttribute('aria-label', pendingCount ? `FastFlags, ${pendingCount} pending changes` : 'FastFlags'); nav.title = pendingCount ? `${pendingCount} pending changes` : 'FastFlags'; }
   q('#fastFlagPendingCount').textContent = String(changes.length || pendingCount);
   q('#fastFlagApplyPending').disabled = !preview?.ok || changes.length === 0;
   q('#fastFlagDiscardPending').disabled = pendingCount === 0;
@@ -1599,16 +1610,26 @@ function renderRobloxStatus(status) {
 function renderDashboardScan(phase) {
   const busy = phase === 'scanning';
   const failed = phase === 'error';
-  q('#dashboardScanStatus').textContent = busy ? 'Checking local installations…' : failed ? 'Scan failed — refresh to retry' : 'Local installation scan complete';
-  q('#dashboardScanStatus').dataset.state = phase;
+  const playerReady = Boolean(state.roblox?.installed);
+  const studioReady = Boolean(state.roblox?.studioInstalled);
+  const status = q('#dashboardScanStatus');
+  status.textContent = busy ? 'Checking local installations…' : failed ? 'Scan failed — refresh to retry'
+    : playerReady ? (studioReady ? 'Roblox Player and Studio ready' : 'Roblox Player ready · Studio optional')
+      : 'Roblox Player not detected · Install from Channels';
+  status.dataset.state = busy || failed ? phase : playerReady ? 'ready' : 'missing';
   for (const id of ['homeRefresh', 'refreshStatus', 'instanceRefresh', 'launchCenterRefresh']) {
     const button = q('#' + id);
     if (button) { button.disabled = busy; button.setAttribute('aria-busy', String(busy)); }
   }
   if (phase === 'ready') {
     const now = new Date();
+    state.lastSuccessfulScanAt = now;
     q('#dashboardCheckedAt').textContent = 'Checked ' + now.toLocaleTimeString();
     q('#dashboardCheckedAt').title = now.toLocaleString();
+  } else if (failed) {
+    const last = state.lastSuccessfulScanAt;
+    q('#dashboardCheckedAt').textContent = last ? 'Last successful check ' + last.toLocaleTimeString() : 'No successful check yet';
+    q('#dashboardCheckedAt').title = last ? last.toLocaleString() : '';
   }
   if (busy || failed) {
     for (const id of ['installGauge', 'studioGauge']) q('#' + id).textContent = busy ? 'CHECK' : 'UNKNOWN';
@@ -2888,6 +2909,10 @@ q('#fastFlagEditorClear').addEventListener('click', clearFastFlagEditor);
 q('#fastFlagQueueSet').addEventListener('click', queueFastFlagSet);
 q('#fastFlagQueueRemove').addEventListener('click', queueFastFlagRemove);
 q('#fastFlagApplyPending').addEventListener('click', applyFastFlagPending);
+q('#fastFlagReviewPending').addEventListener('click', () => {
+  q('#fastFlagPendingList')?.scrollIntoView({ behavior:'smooth', block:'center' });
+  q('#fastFlagApplyPending')?.focus({ preventScroll:true });
+});
 q('#fastFlagDiscardPending').addEventListener('click', discardFastFlagPending);
 q('#fastFlagSelectFiltered').addEventListener('click', selectFilteredFastFlags);
 q('#fastFlagClearSelection').addEventListener('click', clearFastFlagSelection);

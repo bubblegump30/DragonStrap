@@ -40,7 +40,7 @@
         <div class="product-menu" id="productMenu">
           <button class="product-menu-trigger" id="productMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="productMenuPopup">
             <span class="avatar dragon-avatar" aria-hidden="true"><img src="assets/dragon-app-icon.png" alt="" /></span>
-            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.3.3</span></span>
+            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.4.0</span></span>
             <span class="product-menu-chevron" aria-hidden="true">⌄</span>
           </button>
           <div class="product-menu-popup" id="productMenuPopup" role="menu" aria-label="DragonStrap menu" hidden>
@@ -59,7 +59,7 @@
           <button class="nav-item" data-tab="launch" aria-label="Launch" title="Launch">▷ <span>Launch</span></button>
           <button class="nav-item" data-tab="instances" aria-label="Instances" title="Instances">▣ <span>Instances</span></button>
           <button class="nav-item" data-tab="performance" aria-label="Performance Center" title="Performance Center">◴ <span>Performance Center</span></button>
-          <button class="nav-item" data-tab="fastflags" aria-label="FastFlags" title="FastFlags">⚑ <span>FastFlags</span></button>
+          <button class="nav-item" data-tab="fastflags" aria-label="FastFlags" title="FastFlags">⚑ <span>FastFlags</span><b class="nav-pending-count" id="fastFlagNavCount" hidden aria-hidden="true">0</b></button>
           <button class="nav-item" data-tab="servers" aria-label="Servers" title="Servers">◎ <span>Servers</span></button>
           <button class="nav-item" data-tab="studio" aria-label="Studio" title="Studio">◇ <span>Studio</span></button>
           <button class="nav-item" data-tab="channels" aria-label="Channels" title="Channels">⇄ <span>Channels</span></button>
@@ -81,6 +81,7 @@
                   <div class="knob-scale"><span>LAUNCH</span><span>PLAYER</span></div>
                   <div class="mode-label" id="launchState">ROBLOX PLAYER</div>
                   <small id="launchHint">Press PLAY to launch Roblox.</small>
+                  <small class="launch-preset-summary" id="launchPresetSummary">Loading launch preset…</small>
                 </div>
                 <div class="mode-stack" id="launchModes">
                   <button class="mode-btn" data-profile="default">◒ <span>Default</span></button>
@@ -159,7 +160,7 @@
               <div class="card-head"><div><h2>DRAGONSTRAP</h2><p>Stable Roblox bootstrapper</p></div></div>
               <button class="secondary-action" data-tab-jump="maintenance" title="Open integrity checks, restore points, and repair tools">RELIABILITY &amp; RECOVERY</button>
               <div class="power-stats">
-                <div><span>Version</span><strong id="appVersion">2.3.3</strong></div>
+                <div><span>Version</span><strong id="appVersion">2.4.0</strong></div>
                 <div><span>Roblox</span><strong id="robloxSummary">Checking</strong></div>
                 <div><span>Release channel</span><strong>Stable</strong></div>
               </div>
@@ -354,6 +355,7 @@
 
         <section class="view" data-view="fastflags">
           <div class="page-heading"><div><h1>FASTFLAG MANAGER 3.0</h1><p>Understand, classify, compare, bulk-edit and safely snapshot Roblox Player FastFlags.</p></div><span class="phase-badge">INTELLIGENCE</span></div>
+          <div class="fastflag-pending-banner" id="fastFlagPendingBanner" hidden role="status"><span id="fastFlagPendingBannerText">No pending changes</span><button class="small-action" id="fastFlagReviewPending" type="button">REVIEW CHANGES</button></div>
           <div class="fastflag-layout">
             <section class="card fastflag-browser-card">
               <div class="card-head"><div><h2>CLIENT FLAGS</h2><p>ClientAppSettings.json with inferred metadata and conflict analysis</p></div><span class="fastflag-count" id="fastFlagCount">0 FLAGS</span></div>
@@ -761,7 +763,7 @@
             <section class="card feature-card update-center-card">
               <div class="card-head"><div><h2>UPDATE CENTER 2.0</h2><p>Download, verify, defer, and apply official DragonStrap releases</p></div><span class="status-dot" id="updateStatusDot"></span></div>
               <div class="update-state-grid update-state-grid-wide">
-                <div><span>Current</span><strong id="updateCurrentVersion">2.3.3</strong></div>
+                <div><span>Current</span><strong id="updateCurrentVersion">2.4.0</strong></div>
                 <div><span>Latest</span><strong id="updateLatestVersion">—</strong></div>
                 <div><span>Build</span><strong id="updateBuildMode">Detecting…</strong></div>
                 <div><span>Feed</span><strong id="updateFeedStatus">Checking…</strong></div>
@@ -829,7 +831,7 @@
 
             <section class="card feature-card settings-about-card" id="aboutCard" tabindex="-1">
               <div class="card-head"><div><h2>ABOUT</h2><p>DragonStrap 2.0 stable architecture release</p></div></div>
-              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.3.3</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.4.0</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
               <div class="about-website"><div><strong>Purple Dragon Foundation</strong><small>www.purpledragonfoundationltd.xyz</small></div><button class="secondary-action" id="aboutWebsiteBtn" type="button">OPEN WEBSITE ↗</button></div>
             </section>
           </div>
