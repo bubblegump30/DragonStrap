@@ -1,8 +1,8 @@
 # DragonStrap
 
-**Source v2.4.0 — Everyday QoL (unreleased)**
+**v2.4.0 — Everyday QoL · Windows release**
 
-DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. The v2.4.0 source adds clearer installation status, launch preset context, and visible pending FastFlag changes. The latest published Windows executables remain v2.3.3 until the new version is built and released.
+DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.0 adds clearer installation status, launch preset context, and visible pending FastFlag changes. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
 ## DragonStrap 2.0 architecture
 
@@ -39,12 +39,12 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest published Windows installer and portable app | v2.3.3 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.3.3) |
-| Current repository source | v2.4.0 (unreleased) | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
+| Latest published Windows installer and portable app | v2.4.0 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.0) |
+| Current repository source | v2.4.0 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
-Download the Setup or Portable x64 executable from the v2.3.3 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+Download the Setup or Portable x64 executable from the v2.4.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.3.3 Setup executable](https://www.virustotal.com/gui/file/66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf?nocache=1) corresponds to SHA-256 `66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf`. This link is for Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+For the previous release, the [VirusTotal report for the v2.3.3 Setup executable](https://www.virustotal.com/gui/file/66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf?nocache=1) corresponds to SHA-256 `66e2d71c5a2af1608a530f46918dd8efebf235f8200f943afedb26208dce01cf`. This link is for Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
@@ -53,6 +53,7 @@ The [VirusTotal report for the v2.3.3 Setup executable](https://www.virustotal.c
 - v2.1.0: first-run setup guide for installation, channels, launch, and recovery.
 - v2.2.0: validated launch target preview and clearer launch readiness.
 - v2.3.0–v2.3.3: safer profile preview/apply flow, UI layout repairs, and one-click Windows UI verification.
+- v2.4.0: clearer Home readiness, selected launch preset context, and visible pending FastFlag reviews.
 
 See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for details.
 
