@@ -1,14 +1,20 @@
 # DragonStrap v2.4.0 — Everyday QoL
 
-This is an unreleased source update. The latest published Windows Setup and Portable executables remain v2.3.3.
+This Windows release makes the daily launch and FastFlags workflow clearer.
 
-## Changes
+## What changed
 
-- Home shows whether Player and optional Studio are detected, plus when the last successful scan finished. A failed retry does not present an older result as a fresh check.
-- Home Play shows the selected session preset and whether automatic Performance settings are enabled.
-- FastFlags has a visible pending count in the sidebar and a sticky review shortcut while changes are queued. Apply still uses the validated before/after preview.
-- Windows CI runs source checks, unit tests, release verification, and the desktop layout check at multiple window sizes and scaling levels.
+- Home reports whether Roblox Player and optional Studio were detected and shows the last successful scan time when a later check fails.
+- Play displays the selected session preset and automatic Performance setting state.
+- FastFlags shows a pending count in the sidebar and a sticky shortcut to review queued changes. Applying changes still requires a validated before/after preview.
+- The Windows layout check covers the pending bar at several window sizes and scaling levels.
 
-## Before a Windows release
+## Downloads
 
-Run the UI check on a Windows desktop, test the affected controls against real Player installations, build Setup and Portable x64, verify both packages launch, and publish `SHA256SUMS.txt` generated from the final files. Do not use a source archive as an Update Center binary.
+- **Setup (x64):** `DragonStrap-Setup-2.4.0-x64.exe`
+- **Portable (x64):** `DragonStrap-Portable-2.4.0-x64.exe`
+- **Integrity:** Compare each downloaded file with `SHA256SUMS.txt` in this release.
+
+These packages are unsigned, so Windows may display a SmartScreen warning. This release was built and checked on a Windows GitHub Actions runner; automated layout and packaging checks do not replace a manual launch check on a desktop with Roblox installed.
+
+Existing local settings are retained. See [CHANGELOG.md](https://github.com/bubblegump30/DragonStrap/blob/main/CHANGELOG.md) for the full version history.
