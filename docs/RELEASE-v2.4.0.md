@@ -14,6 +14,7 @@ This Windows release makes the daily launch and FastFlags workflow clearer.
 - **Setup (x64):** `DragonStrap-Setup-2.4.0-x64.exe`
 - **Portable (x64):** `DragonStrap-Portable-2.4.0-x64.exe`
 - **Integrity:** Compare each downloaded file with `SHA256SUMS.txt` in this release.
+- **Setup VirusTotal report:** [View the report](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) for SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report covers Setup only; Portable has a separate hash.
 
 These packages are unsigned, so Windows may display a SmartScreen warning. This release was built and checked on a Windows GitHub Actions runner; automated layout and packaging checks do not replace a manual launch check on a desktop with Roblox installed.
 
