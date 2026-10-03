@@ -1,6 +1,6 @@
 # DragonStrap
 
-**Source v2.4.1 — Disable all Player FastFlags**
+**v2.4.1 — Disable all Player FastFlags · Windows release**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
@@ -39,12 +39,12 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest published Windows installer and portable app | v2.4.0 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.0) |
+| Latest published Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
 | Current repository source | v2.4.1 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
-Download the Setup or Portable x64 executable from the v2.4.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+Download the Setup or Portable x64 executable from the v2.4.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report covers Setup only; Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
@@ -58,7 +58,7 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 | **v2.0.10–v2.0.12** | Verification, backups, and project links | Electron layout checks across window sizes and display scaling, reliable Studio backup ordering and metadata writes, protected restore destinations, and the [Purple Dragon Foundation website](https://www.purpledragonfoundationltd.xyz/) in About and the product menu. |
 | **v2.0.5–v2.0.9** | UI, dashboard, and Settings polish | More consistent spacing and responsive layouts, clearer scan states and tooltips, scoped Settings resets with save feedback, a compact status bar, and fixes for clipped Installation Status content and the Help/About dropdown. |
 
-**Latest release and repository updates:** [v2.4.0 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.0) are published with SHA-256 checksums. The [current Setup VirusTotal report](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) matches the published v2.4.0 installer; Portable has a separate hash. GitHub workflows now use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned.
+**Latest release and repository updates:** [v2.4.1 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) are published with SHA-256 checksums. GitHub workflows use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned. The linked v2.4.0 VirusTotal report above applies to the previous installer.
 
 See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for the full history.
 
