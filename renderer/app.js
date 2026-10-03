@@ -837,6 +837,8 @@ function renderFastFlagSnapshots(items = []) {
 }
 
 function renderFastFlagState(result) {
+  q('#fastFlagDisableAll').disabled=!result?.ok;
+  q('#fastFlagRestoreDisabled').disabled=!result?.ok || !result.disabledBackupExists;
   if (!result?.ok) {
     state.fastFlags.entries=[]; state.fastFlags.path=result?.path || ''; state.fastFlags.selectedKeys.clear();
     q('#fastFlagCount').textContent='UNAVAILABLE'; q('#fastFlagPath').textContent=result?.path || 'Roblox Player not detected';
@@ -984,6 +986,28 @@ async function importFastFlagPresetShare(){
   renderFastFlagPresets(result.items || []); if (result.preset?.id) q('#fastFlagPresetSelect').value=result.preset.id; syncFastFlagPresetButtons();
   const ignored=result.ignoredProtected?.length ? ` ${result.ignoredProtected.length} Performance Center key(s) were excluded.` : '';
   showToast(`Imported shared preset “${result.preset.name}”.${ignored}`);
+}
+
+async function changeAllFastFlags(restore = false) {
+  const message = restore
+    ? 'Restore the last disabled Player flag set, including locked flags? This replaces current overrides. Pre-launch auto-apply is not changed.'
+    : 'Disable ALL Player FastFlag overrides, including LOCKED Performance Center flags? A restorable copy will be saved, pending edits discarded, and pre-launch auto-apply switched off. Restart Roblox afterward.';
+  if (!window.confirm(message)) return;
+  const buttons = [q('#fastFlagDisableAll'), q('#fastFlagRestoreDisabled')];
+  buttons.forEach(button => { button.disabled=true; });
+  try {
+    const result = restore ? await window.dragonStrap.restoreDisabledFastFlags() : await window.dragonStrap.disableAllFastFlags();
+    if (!result.ok) { showToast(result.message || 'FastFlag operation failed.', true); return; }
+    state.fastFlags.pendingSet.clear(); state.fastFlags.pendingRemove.clear(); state.fastFlags.selectedKeys.clear(); state.fastFlags.preview=null; clearFastFlagEditor();
+    state.settings = await window.dragonStrap.getSettings();
+    renderPerformanceSettings();
+    await Promise.all([refreshFastFlags(false), refreshPerformanceState(false), refreshFastFlagPreview()]);
+    showToast(restore ? `Restored ${result.total} flags, including locked values. Restart Roblox to use them.` : `Disabled ${result.removedCount} flags (${result.protectedRemoved} locked). Auto-apply is off. Restart Roblox.`);
+  } catch (error) {
+    showToast(error.message || 'FastFlag operation failed.', true);
+  } finally {
+    await refreshFastFlags(false);
+  }
 }
 
 async function restoreFastFlagSnapshot(){
@@ -2927,6 +2951,8 @@ q('#fastFlagOpenFile').addEventListener('click', async () => {
   showToast(result.ok ? 'Opened ClientAppSettings.json location.' : (result.message || 'FastFlag file location unavailable.'), !result.ok);
 });
 q('#fastFlagRestoreBackup').addEventListener('click', restoreFastFlagsBackup);
+q('#fastFlagDisableAll').addEventListener('click', () => changeAllFastFlags(false));
+q('#fastFlagRestoreDisabled').addEventListener('click', () => changeAllFastFlags(true));
 q('#fastFlagPresetSave').addEventListener('click', saveFastFlagPreset);
 q('#fastFlagPresetLoad').addEventListener('click', loadFastFlagPresetToPending);
 q('#fastFlagPresetShare').addEventListener('click', exportFastFlagPresetShare);

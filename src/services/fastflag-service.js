@@ -34,6 +34,7 @@ class FastFlagService {
   constructor(fsImpl = fs, options = {}) {
     this.fs = fsImpl;
     this.snapshotStore = options.snapshotStore || null;
+    this.settingsStore = options.settingsStore || null;
   }
 
   getClientSettingsPath(status) {
@@ -63,6 +64,7 @@ class FastFlagService {
         path:filePath,
         backupPath:this.getBackupPath(status),
         backupExists:this.fs.existsSync(this.getBackupPath(status)),
+        disabledBackupExists:this.fs.existsSync(`${filePath}.dragonstrap.disabled.bak`),
         exists:this.fs.existsSync(filePath),
         total:entries.length,
         editableCount:entries.filter(x=>!x.protected).length,
@@ -206,6 +208,48 @@ class FastFlagService {
     if (!filePath) return { ok:false, code:'ROBLOX_NOT_FOUND', message:'Roblox Player was not detected.' };
     try { return { ok:true, path:filePath, data:this.#read(filePath) }; }
     catch(error){ return { ok:false, code:'INVALID_CLIENT_SETTINGS', message:error.message, path:filePath }; }
+  }
+
+  disableAll(status) {
+    const filePath = this.getClientSettingsPath(status);
+    if (!filePath) return { ok:false, code:'ROBLOX_NOT_FOUND', message:'Roblox Player was not detected.' };
+    if (!this.settingsStore) return { ok:false, code:'SETTINGS_UNAVAILABLE', message:'Launch settings are unavailable; auto-apply cannot be disabled safely.' };
+    const previous = this.settingsStore.getAll().performanceAutoApply;
+    let settingsChanged = false;
+    try {
+      const current = this.#read(filePath);
+      const keys = Object.keys(current);
+      // Keep the last non-empty set recoverable across repeated clicks and restarts.
+      if (keys.length) {
+        if (this.snapshotStore) this.snapshotStore.create(current, 'before-disable-all');
+        this.#write(`${filePath}.dragonstrap.disabled.bak`, current);
+      }
+      this.settingsStore.update({ performanceAutoApply:false });
+      settingsChanged = true;
+      if (keys.length) this.#write(filePath, {});
+      return { ok:true, path:filePath, removedCount:keys.length, protectedRemoved:keys.filter(key => PROTECTED_KEYS.has(key)).length, settings:this.settingsStore.getAll() };
+    } catch (error) {
+      if (settingsChanged) {
+        try { this.settingsStore.update({ performanceAutoApply:previous }); }
+        catch { return { ok:false, code:'DISABLE_ALL_FAILED', message:`${error.message} Auto-apply remains off; check Performance Center before launching.` }; }
+      }
+      return { ok:false, code:'DISABLE_ALL_FAILED', message:error.message };
+    }
+  }
+
+  restoreDisabled(status) {
+    const filePath = this.getClientSettingsPath(status);
+    if (!filePath) return { ok:false, code:'ROBLOX_NOT_FOUND', message:'Roblox Player was not detected.' };
+    const backupPath = `${filePath}.dragonstrap.disabled.bak`;
+    if (!this.fs.existsSync(backupPath)) return { ok:false, code:'NO_DISABLED_BACKUP', message:'No disabled FastFlag set exists for this Player installation.' };
+    try {
+      const flags = this.#read(backupPath);
+      if (this.snapshotStore) this.snapshotStore.create(this.#read(filePath), 'before-disabled-restore');
+      this.#write(filePath, flags);
+      return { ok:true, path:filePath, restored:true, total:Object.keys(flags).length };
+    } catch (error) {
+      return { ok:false, code:'DISABLED_RESTORE_FAILED', message:error.message };
+    }
   }
 
   restoreBackup(status) {

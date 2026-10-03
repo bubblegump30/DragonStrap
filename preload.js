@@ -95,6 +95,8 @@ contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
   clearRecentServers: () => ipcRenderer.invoke('dragonstrap:server-intelligence-clear-recent'),
   applyFastFlags: patch => ipcRenderer.invoke('dragonstrap:fastflags-apply', patch),
   restoreFastFlagsBackup: () => ipcRenderer.invoke('dragonstrap:fastflags-restore-backup'),
+  disableAllFastFlags: () => ipcRenderer.invoke('dragonstrap:fastflags-disable-all'),
+  restoreDisabledFastFlags: () => ipcRenderer.invoke('dragonstrap:fastflags-restore-disabled'),
   exportFastFlags: () => ipcRenderer.invoke('dragonstrap:fastflags-export'),
   importFastFlags: () => ipcRenderer.invoke('dragonstrap:fastflags-import'),
   listFastFlagPresets: () => ipcRenderer.invoke('dragonstrap:fastflags-presets-list'),

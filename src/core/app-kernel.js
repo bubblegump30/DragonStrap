@@ -65,7 +65,7 @@ class AppKernel {
     const performanceProfileStore = this.register('performance.profiles', new PerformanceProfileStore(userData), ['performance.profiles']);
     const performanceCenterService = this.register('performance.center', new PerformanceCenterService({ performanceService, profileStore:performanceProfileStore }), ['performance.intelligence']);
     const fastFlagSnapshotStore = this.register('fastflags.snapshots', new FastFlagSnapshotStore(userData), ['fastflags.snapshots']);
-    const fastFlagService = this.register('fastflags.player', new FastFlagService(fs, { snapshotStore:fastFlagSnapshotStore }), ['fastflags.read','fastflags.write']);
+    const fastFlagService = this.register('fastflags.player', new FastFlagService(fs, { snapshotStore:fastFlagSnapshotStore, settingsStore }), ['fastflags.read','fastflags.write']);
     const fastFlagPresetStore = this.register('fastflags.presets', new FastFlagPresetStore(userData), ['fastflags.presets']);
     const configurationProfileStore = this.register('configuration.profiles.store', new ConfigurationProfileStore(userData), ['profiles.store']);
     const configurationProfileService = this.register('configuration.profiles', new ConfigurationProfileService({ store:configurationProfileStore, settingsStore, fastFlagService, performanceService }), ['profiles.capture','profiles.apply']);
