@@ -1,3 +1,11 @@
+## v2.4.1 — Disable all Player FastFlags
+
+- Added Disable all flags, including LOCKED Performance Center overrides, with a confirmation and complete restorable copy.
+- Turns off pre-launch Performance auto-apply so the next launch does not restore the removed overrides.
+- Added Restore disabled flags to replace current overrides with the last saved set, including locked values. Auto-apply is unchanged by restoration.
+- Pending editor changes are discarded after a successful disable or restore. Roblox must be restarted for the changed overrides to take effect.
+- Existing individual locks, presets, and separate Studio configuration remain available. Manually applying settings or profiles can add overrides again.
+
 ## v2.4.0 — Everyday QoL (source update)
 
 - Home reports whether Roblox Player and optional Studio were detected, with the last successful scan time retained when a later scan fails.

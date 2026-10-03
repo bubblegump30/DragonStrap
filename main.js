@@ -323,6 +323,8 @@ function registerIpc() {
   ipcMain.handle('dragonstrap:server-intelligence-clear-recent', () => ({ ok:true, recent:serverIntelligenceService.clearRecent() }));
 
   ipcMain.handle('dragonstrap:fastflags-state', async () => fastFlagService.getState(await getRobloxStatus()));
+  ipcMain.handle('dragonstrap:fastflags-disable-all', async () => { const result=fastFlagService.disableAll(await getRobloxStatus()); if(result.ok) invalidateConfigurationProfile(); return result; });
+  ipcMain.handle('dragonstrap:fastflags-restore-disabled', async () => { const result=fastFlagService.restoreDisabled(await getRobloxStatus()); if(result.ok) invalidateConfigurationProfile(); return result; });
   ipcMain.handle('dragonstrap:fastflags-preview', async (_event, patch) => fastFlagService.previewPatch(await getRobloxStatus(), patch));
   ipcMain.handle('dragonstrap:fastflags-apply', async (_event, patch) => { const result=fastFlagService.applyPatch(await getRobloxStatus(), patch); if(result.ok && !result.noChanges) invalidateConfigurationProfile(); return result; });
   ipcMain.handle('dragonstrap:fastflags-restore-backup', async () => { const result=fastFlagService.restoreBackup(await getRobloxStatus()); if(result.ok && result.restored) invalidateConfigurationProfile(); return result; });

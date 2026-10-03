@@ -159,3 +159,58 @@ test('FastFlagService preview carries trust metadata for Safe Core changes', () 
   assert.equal(preview.changes[0].warnings.some(w=>w.code==='SAFE_CORE'),true);
   fs.rmSync(root, { recursive:true, force:true });
 });
+
+const { SettingsStore } = require('../src/services/settings-store');
+
+test('disable all removes locked and editable overrides, persists auto-apply off, and restores the exact saved set', () => {
+  const flags = { DFIntTaskSchedulerTargetFps:'120', FFlagExample:'False', FStringExample:'keep', FIntDebugForceMSAASamples:'4' };
+  const { root, status, settingsPath } = fixture(flags);
+  try {
+    const settings = new SettingsStore(root);
+    const service = new FastFlagService(fs, { settingsStore:settings });
+    const result = service.disableAll(status);
+    assert.equal(result.ok, true);
+    assert.equal(result.removedCount, 4);
+    assert.equal(result.protectedRemoved, 2);
+    assert.deepEqual(JSON.parse(fs.readFileSync(settingsPath, 'utf8')), {});
+    assert.equal(new SettingsStore(root).getAll().performanceAutoApply, false);
+    assert.equal(service.getState(status).disabledBackupExists, true);
+    assert.equal(service.disableAll(status).removedCount, 0);
+    const restarted = new FastFlagService(fs, { settingsStore:new SettingsStore(root) });
+    assert.equal(restarted.restoreDisabled(status).ok, true);
+    assert.deepEqual(JSON.parse(fs.readFileSync(settingsPath, 'utf8')), flags);
+    assert.equal(settings.getAll().performanceAutoApply, false);
+    assert.equal(restarted.applyPatch(status, { remove:['DFIntTaskSchedulerTargetFps'] }).code, 'PERFORMANCE_PROTECTED');
+  } finally { fs.rmSync(root, { recursive:true, force:true }); }
+});
+
+test('disable all preserves flags and launch settings when the clear write fails', () => {
+  const { root, status, settingsPath } = fixture({ DFIntTaskSchedulerTargetFps:'120', FFlagExample:'True' });
+  try {
+    const settings = new SettingsStore(root);
+    const before = fs.readFileSync(settingsPath, 'utf8');
+    const failingFs = Object.create(fs);
+    failingFs.renameSync = (from, to) => { if (to === settingsPath) throw new Error('write denied'); return fs.renameSync(from, to); };
+    const service = new FastFlagService(failingFs, { settingsStore:settings });
+    assert.equal(service.disableAll(status).ok, false);
+    assert.equal(fs.readFileSync(settingsPath, 'utf8'), before);
+    assert.equal(settings.getAll().performanceAutoApply, true);
+    assert.deepEqual(JSON.parse(fs.readFileSync(`${settingsPath}.dragonstrap.disabled.bak`, 'utf8')), JSON.parse(before));
+  } finally { fs.rmSync(root, { recursive:true, force:true }); }
+});
+
+test('disable all does not change malformed settings or clear flags if preferences cannot be saved', () => {
+  const { root, status, settingsPath } = fixture({ FFlagExample:'True' });
+  try {
+    const settings = { getAll:() => ({ performanceAutoApply:true }), update:() => { throw new Error('preferences denied'); } };
+    const service = new FastFlagService(fs, { settingsStore:settings });
+    const before = fs.readFileSync(settingsPath, 'utf8');
+    assert.equal(service.disableAll(status).ok, false);
+    assert.equal(fs.readFileSync(settingsPath, 'utf8'), before);
+    fs.writeFileSync(settingsPath, 'invalid json');
+    assert.equal(service.disableAll(status).ok, false);
+    assert.equal(fs.readFileSync(settingsPath, 'utf8'), 'invalid json');
+    assert.equal(service.disableAll({}).code, 'ROBLOX_NOT_FOUND');
+    assert.equal(service.restoreDisabled({}).code, 'ROBLOX_NOT_FOUND');
+  } finally { fs.rmSync(root, { recursive:true, force:true }); }
+});

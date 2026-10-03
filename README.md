@@ -1,8 +1,8 @@
 # DragonStrap
 
-**v2.4.0 — Everyday QoL · Windows release**
+**Source v2.4.1 — Disable all Player FastFlags**
 
-DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.0 adds clearer installation status, launch preset context, and visible pending FastFlag changes. Windows Setup and Portable x64 packages are available on GitHub Releases.
+DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
 ## DragonStrap 2.0 architecture
 
@@ -40,7 +40,7 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 | Item | Version | Where |
 | --- | --- | --- |
 | Latest published Windows installer and portable app | v2.4.0 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.0) |
-| Current repository source | v2.4.0 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
+| Current repository source | v2.4.1 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
 
 Download the Setup or Portable x64 executable from the v2.4.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
@@ -50,6 +50,7 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 
 | Version | Milestone | Improvements |
 | --- | --- | --- |
+| **v2.4.1** | Disable all Player FastFlags | Removes every Player override, including locked keys, saves a restorable copy, and switches off pre-launch auto-apply. Restore brings back the complete set; restart Roblox for changes to take effect. |
 | **v2.4.0** | **Everyday QoL** | Clearer Player and optional Studio detection, last successful scan time, selected launch preset and automatic Performance setting context, and a persistent pending FastFlag review action with a sidebar count. |
 | **v2.3.0–v2.3.3** | Profiles and layout refinement | Clearer session presets versus saved configurations, fresh previews before applying profiles, apply progress and retry feedback, balanced FastFlags and Settings layouts, and one-click Windows UI verification through **Verify-UI.cmd**. |
 | **v2.2.0** | Launch Center refinement | Validated experience and server target previews, clearer Player readiness, and Join availability based on a valid target and detected Player. |
@@ -104,7 +105,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.4.0`
+`2.4.1`
 
 ## Project links
 
