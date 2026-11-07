@@ -1,3 +1,13 @@
+## Local preview development — v2.5.0-preview.4 (not published)
+
+- Added an Account & Session Center in the local preview, including isolated Roblox sign-in and optional encrypted session-cookie import.
+- Corrected saved-game launch handoff through the registered Windows protocol handler; one normal saved-account join was verified live.
+- Added an extract-once Folder Portable build and deferred secondary startup work.
+- Replaced the combined telemetry placeholder with independent NVIDIA GPU temperature, WMI CPU sensors and PresentMon FPS providers.
+- Verified a live GPU sensor reading. FPS capture requires Windows ETW permissions; CPU temperature requires a supported WMI provider. Both remain unverified live on the test PC.
+- Local preview verification: 212 tests plus Windows layout checks passed. Preview implementation has not been pushed or release-published.
+- Full scope, evidence and remaining acceptance: [preview development report](docs/PREVIEW-DEVELOPMENT.md).
+
 ## v2.4.1 — Disable all Player FastFlags
 
 - Added Disable all flags, including LOCKED Performance Center overrides, with a confirmation and complete restorable copy.

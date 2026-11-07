@@ -4,6 +4,12 @@
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
+## v2.5.0 preview development — 7 November 2026
+
+Local development has reached **v2.5.0-preview.4** with an Account & Session Center, a corrected registered game-launch handoff, an extract-once Folder Portable build, and independent GPU/CPU/FPS telemetry providers.
+
+The application source on main and published Windows downloads remain **v2.4.1**. Preview implementation and packages have not been published to GitHub. See the [preview development and verification report](docs/PREVIEW-DEVELOPMENT.md) for tested behavior, startup measurements, telemetry permission requirements and remaining acceptance work.
+
 ## DragonStrap 2.0 architecture
 
 - `AppKernel` owns service construction and dependency wiring instead of `main.js` creating services ad hoc.
