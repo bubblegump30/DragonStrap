@@ -404,17 +404,22 @@ select:disabled { opacity: .55; cursor: not-allowed; }
 }
 .settings-release-grid { align-items:stretch; }
 .settings-guide-card { display:flex; flex-direction:column; }
-.settings-guide-card .gap-action-grid {
-  flex:1;
-  grid-template-rows:repeat(3,minmax(48px,1fr));
-  align-content:stretch;
-  margin-block:22px;
-}
-.settings-guide-card .gap-action-grid button { height:100%; }
-.settings-guide-card .gap-card-note { margin-top:auto!important; }
+.settings-guide-card .gap-card-note { margin-top:auto!important; color:var(--muted); }
+.workspace-shortcuts { display:grid; gap:10px; align-content:center; flex:1; margin:20px 0; }
+.workspace-shortcut { display:grid; grid-template-columns:42px minmax(0,1fr) 16px; align-items:center; gap:14px; width:100%; min-width:0; padding:16px; border:1px solid rgba(176,132,211,.22); border-radius:13px; background:linear-gradient(115deg,rgba(64,43,81,.48),rgba(26,19,35,.78)); color:#eee4f7; font:inherit; text-align:left; cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,255,255,.035); transition:background .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease; }
+.workspace-shortcut-icon { display:grid; place-items:center; width:42px; height:42px; border:1px solid rgba(181,124,231,.19); border-radius:11px; background:rgba(170,98,236,.08); color:#d4b2f2; }
+.workspace-shortcut-icon svg { width:23px; height:23px; }
+.workspace-shortcut-copy { display:grid; gap:5px; min-width:0; }
+.workspace-shortcut-copy strong { font-size:14px; font-weight:650; line-height:1.35; letter-spacing:.01em; }
+.workspace-shortcut-copy > span { color:#b6a4c4; font-size:12px; line-height:1.5; letter-spacing:0; font-weight:400; }
+.workspace-shortcut-arrow { display:grid; place-items:center; color:#a88fbd; transition:color .16s ease,transform .16s ease; }
+.workspace-shortcut-arrow svg { width:16px; height:16px; }
+.workspace-shortcut:hover { border-color:rgba(186,132,237,.5); background:linear-gradient(115deg,rgba(83,49,111,.5),rgba(35,23,46,.86)); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 5px 16px rgba(8,4,14,.16); }
+.workspace-shortcut:hover .workspace-shortcut-arrow { color:#e6cdfa; transform:translateX(2px); }
+.workspace-shortcut:active { transform:translateY(0); }
+.workspace-shortcut:focus-visible { outline:2px solid #bd85ed; outline-offset:3px; }
+@media(max-width:600px) { .workspace-shortcut { grid-template-columns:36px minmax(0,1fr) 14px; gap:11px; padding:13px; } .workspace-shortcut-icon { width:36px; height:36px; border-radius:9px; } }
+@media(prefers-reduced-motion:reduce) { .workspace-shortcut,.workspace-shortcut-arrow { transition:none; } .workspace-shortcut:hover,.workspace-shortcut:hover .workspace-shortcut-arrow { transform:none; } }
 @media(max-width:1050px) {
   .view[data-view="fastflags"] .fastflag-side-column { column-count:1; }
-}
-@media(max-width:1350px) {
-  .settings-guide-card .gap-action-grid { grid-template-rows:none; flex:none; }
 }

@@ -41,7 +41,7 @@
         <div class="product-menu" id="productMenu">
           <button class="product-menu-trigger" id="productMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="productMenuPopup">
             <span class="avatar dragon-avatar" aria-hidden="true"><img src="assets/dragon-app-icon.png" alt="" /></span>
-            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.6.0</span></span>
+            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.6.1</span></span>
             <span class="product-menu-chevron" aria-hidden="true">⌄</span>
           </button>
           <div class="product-menu-popup" id="productMenuPopup" role="menu" aria-label="DragonStrap menu" hidden>
@@ -162,7 +162,7 @@
               <div class="card-head"><div><h2>DRAGONSTRAP</h2><p>Stable Roblox bootstrapper</p></div></div>
               <button class="secondary-action" data-tab-jump="maintenance" title="Open integrity checks, restore points, and repair tools">RELIABILITY &amp; RECOVERY</button>
               <div class="power-stats">
-                <div><span>Version</span><strong id="appVersion">2.6.0</strong></div>
+                <div><span>Version</span><strong id="appVersion">2.6.1</strong></div>
                 <div><span>Roblox</span><strong id="robloxSummary">Checking</strong></div>
                 <div><span>Release channel</span><strong>Stable</strong></div>
               </div>
@@ -765,12 +765,20 @@
               <p id="preferencesSaveStatus" class="settings-save-status" role="status" aria-live="polite">Changes save automatically on this device.</p>
             </section>
 
-            <section class="card feature-card settings-guide-card"><div class="card-head"><div><h2>YOUR WORKSPACE</h2><p>Direct paths to the most common tasks</p></div></div><div class="gap-action-grid"><button class="secondary-action" type="button" data-tab-jump="launch">LAUNCH ROBLOX ↗</button><button class="secondary-action" type="button" data-tab-jump="profiles">SAVED PROFILES ↗</button><button class="secondary-action" type="button" data-tab-jump="maintenance">REPAIR & RECOVERY ↗</button></div><p class="gap-card-note">The setup guide in General can walk through these centers again.</p></section>
+            <section class="card feature-card settings-guide-card">
+              <div class="card-head"><div><h2>YOUR WORKSPACE</h2><p>Quick access to your essential tools</p></div></div>
+              <div class="workspace-shortcuts" aria-label="Workspace shortcuts">
+                <button class="workspace-shortcut" type="button" data-tab-jump="launch"><span class="workspace-shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 5 10 7-10 7V5Z"/><path d="M5 5v14"/></svg></span><span class="workspace-shortcut-copy"><strong>Launch Roblox</strong><span>Choose an experience and join a server.</span></span><span class="workspace-shortcut-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></span></button>
+                <button class="workspace-shortcut" type="button" data-tab-jump="profiles"><span class="workspace-shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg></span><span class="workspace-shortcut-copy"><strong>Saved profiles</strong><span>Preview and apply your saved configurations.</span></span><span class="workspace-shortcut-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></span></button>
+                <button class="workspace-shortcut" type="button" data-tab-jump="maintenance"><span class="workspace-shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 4 8 9 8 9s8-5 8-9V6l-8-3Z"/><path d="m8.5 11.5 2.5 2.5 4.5-5"/></svg></span><span class="workspace-shortcut-copy"><strong>Repair & recovery</strong><span>Check installation health and restore a backup.</span></span><span class="workspace-shortcut-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></span></button>
+              </div>
+              <p class="gap-card-note">Open the setup guide in General for a guided walkthrough.</p>
+            </section>
 
             <section class="card feature-card update-center-card">
               <div class="card-head"><div><h2>UPDATE CENTER 2.0</h2><p>Download, verify, defer, and apply official DragonStrap releases</p></div><span class="status-dot" id="updateStatusDot"></span></div>
               <div class="update-state-grid update-state-grid-wide">
-                <div><span>Current</span><strong id="updateCurrentVersion">2.6.0</strong></div>
+                <div><span>Current</span><strong id="updateCurrentVersion">2.6.1</strong></div>
                 <div><span>Latest</span><strong id="updateLatestVersion">—</strong></div>
                 <div><span>Build</span><strong id="updateBuildMode">Detecting…</strong></div>
                 <div><span>Feed</span><strong id="updateFeedStatus">Checking…</strong></div>
@@ -838,7 +846,7 @@
 
             <section class="card feature-card settings-about-card" id="aboutCard" tabindex="-1">
               <div class="card-head"><div><h2>ABOUT</h2><p>DragonStrap 2.0 stable architecture release</p></div></div>
-              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.6.0</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.6.1</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
               <div class="about-website"><div><strong>Purple Dragon Foundation</strong><small>www.purpledragonfoundationltd.xyz</small></div><button class="secondary-action" id="aboutWebsiteBtn" type="button">OPEN WEBSITE ↗</button></div>
             </section>
           </div>

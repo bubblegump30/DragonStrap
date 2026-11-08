@@ -62,6 +62,7 @@ function inspectSecondaryViews() {
     // Force layout before checking this page.
     document.body.getBoundingClientRect();
     if (document.documentElement.scrollWidth > innerWidth + 2) issues.push(`${name}: horizontal overflow`);
+    if(name==='settings')for(const shortcut of document.querySelectorAll('.workspace-shortcut')){const box=shortcut.getBoundingClientRect();if(box.height>112||box.height<64)issues.push('settings: workspace shortcut lost compact sizing');}
     if (name === 'fastflags') {
       const banner = pendingBanner.getBoundingClientRect();
       if (banner.left < -2 || banner.right > innerWidth + 2) issues.push('fastflags: pending bar beyond viewport');
