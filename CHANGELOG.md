@@ -1,3 +1,12 @@
+## v2.6.0 — Account groups, bulk actions and session history
+
+- Add optional local account groups with atomic create/rename/assignment/removal. Existing accounts load ungrouped; credentials remain in the separate encrypted vault.
+- Add retained multi-selection, visible-row selection, group filtering and serial bulk actions with per-account results.
+- Review favorite-game and managed-session targets before launch/stop; reject changed targets, require explicit concurrency for multi-account launches, and support cancelling remaining work.
+- Separate active Sessions from persisted History with search, account/outcome filters, 50-entry pages and truthful detached/exit labels.
+- Retain account labels in history and block removing an account while it is launching.
+- Add 16 backend regressions plus real renderer checks for groups, review/cancel, selection retention, bulk results, history pagination/privacy and dialog layouts.
+
 ## v2.5.1 — Account & Session Center reliability
 
 - Keep newly restarted sessions out of the previous process snapshot scan, preventing false immediate exit reports.

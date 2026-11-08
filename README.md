@@ -1,6 +1,6 @@
 # DragonStrap
 
-**v2.5.1 — Account & Session Center reliability · Windows stable release**
+**v2.6.0 — Account groups, bulk actions & session history · Windows stable release**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
@@ -10,11 +10,21 @@ The Accounts sidebar entry opens saved accounts, per-account games and servers, 
 
 See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md) and [preview verification report](docs/PREVIEW-DEVELOPMENT.md). Normal saved-account game launching and live CPU/GPU/FPS readings were verified on the test PC, and the user accepted preview.6 as the baseline for stable v2.5.0. Private/specific-server joins, concurrency, anti-AFK, restart recovery and administrator tuning remain acceptance items. FPS targets remain legacy overrides; measured FPS is separate.
 
+## Account groups and bulk workflows
+
+Create or rename a group, then select accounts and use **Move accounts to group**. Each account belongs to one optional group; removing a group keeps its accounts and encrypted credentials. Older account files load as ungrouped without an automatic rewrite.
+
+Selection survives search/group filtering and refresh. The selected count includes hidden rows. Bulk actions refresh account details, mark accounts favorite, assign groups, launch each account’s favorite game, or stop selected managed sessions. Launch and stop actions have a review screen with account-specific targets. Changed favorites or replacement sessions are rejected instead of silently using a new target. **Cancel remaining** leaves the current request to finish and skips later accounts. Multiple launch attempts require the existing concurrent-launch preference; Roblox still decides which clients remain open.
+
+**Sessions** shows active managed clients. **History** retains the newest 1,000 completed/detached sessions, with account/game search, account/outcome filters, local timestamps, tracked duration and join-confirmation context. Pages contain 50 entries. Closing the manager is labeled as detaching, and an exit is not automatically called a crash.
+
+See [the v2.6 workflow guide](docs/ACCOUNT-WORKFLOWS-v2.6.0.md) for details.
+
 ## Monitoring requirements
 
 The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sampling runs only while Monitoring is open.
 
-For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.5.1 is available on that channel.
+For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.6.0 is available on that channel.
 
 ## DragonStrap 2.0 architecture
 
@@ -51,18 +61,19 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest stable Windows release | v2.5.1 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.1) |
+| Latest stable Windows release | v2.6.0 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.6.0) |
 | Previous accepted prerelease | v2.5.0-preview.6 | [Preview archive](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0-preview.6) |
-| Current repository source | v2.5.1 | GitHub main; optional features retain documented limitations |
+| Current repository source | v2.6.0 | GitHub main; optional features retain documented limitations |
 
-Download the desired package from the v2.5.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+Download the desired package from the v2.6.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1, v2.5.0, or any v2.5.0 preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1, v2.5.x, v2.6.0, or any preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
 | Version | Milestone | Improvements |
 | --- | --- | --- |
+| **v2.6.0** | Account workflows | Local groups, multi-select actions with reviewed targets and per-account results, cancellable remaining work, and searchable paginated session history. |
 | **v2.5.1** | Session reliability | Cancel pending launches on closing/Stop all, retry failed Windows policies, release completed-session join tracking and preserve unfinished forms during refresh. |
 | **v2.5.0** | Account & Session Center | Accepted saved-account launch and CPU/GPU/FPS telemetry, Fast Folder distribution, startup improvements and reliability fixes; see release notes for optional-feature limits. |
 | **v2.4.1** | Disable all Player FastFlags | Removes every Player override, including locked keys, saves a restorable copy, and switches off pre-launch auto-apply. Restore brings back the complete set; restart Roblox for changes to take effect. |
@@ -120,7 +131,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.5.1`
+`2.6.0`
 
 ## Project links
 

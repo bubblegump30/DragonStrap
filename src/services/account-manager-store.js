@@ -15,13 +15,16 @@ function policy(input={}) {
 class AccountManagerStore {
   constructor(userData,{fsImpl=fs,now=()=>Date.now()}={}) {
     this.fs=fsImpl;this.now=now;this.file=path.join(userData,'account-manager.json');
-    this.data={schema:1,accounts:[],schedules:[],history:[],skins:[],totals:{seconds:0,launches:0},options:{...DEFAULT_OPTIONS}};
+    this.data={schema:1,accounts:[],groups:[],schedules:[],history:[],skins:[],totals:{seconds:0,launches:0},options:{...DEFAULT_OPTIONS}};
     if(this.fs.existsSync(this.file)) {
       const data=JSON.parse(this.fs.readFileSync(this.file,'utf8'));
       if(data?.schema!==1||!Array.isArray(data.accounts)||!Array.isArray(data.schedules)||!Array.isArray(data.history)) throw new Error('Account manager data is invalid; restore the file before continuing.');
       const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       if(data.accounts.length>100||data.schedules.length>200||data.history.length>1000||data.accounts.some(a=>!uuid.test(a.id)||!(/^[1-9]\d{0,19}$/.test(a.userId))||typeof a.username!=='string'||!Array.isArray(a.tags)||!Array.isArray(a.games)||a.games.some(g=>!uuid.test(g.id))))throw new Error('Account manager records are invalid.');
-      this.data={...data,skins:Array.isArray(data.skins)?data.skins:[],totals:data.totals||{seconds:data.history.reduce((n,s)=>n+(s.durationSeconds||0),0),launches:data.history.length},accounts:data.accounts.map(a=>({...a,policy:policy(a.policy)})),options:{...DEFAULT_OPTIONS,...data.options}};
+      const groups=data.groups===undefined?[]:data.groups;
+      if(!Array.isArray(groups)||groups.length>32||groups.some(g=>!g||!uuid.test(g.id)||!text(g.name,40))||new Set(groups.map(g=>g.id)).size!==groups.length||new Set(groups.map(g=>text(g.name,40).toLowerCase())).size!==groups.length)throw new Error('Account groups are invalid.');
+      if(data.accounts.some(a=>a.groupId!=null&&!groups.some(g=>g.id===a.groupId)))throw new Error('Account group membership is invalid.');
+      this.data={...data,groups:groups.map(g=>({id:g.id,name:text(g.name,40)})),skins:Array.isArray(data.skins)?data.skins:[],totals:data.totals||{seconds:data.history.reduce((n,s)=>n+(s.durationSeconds||0),0),launches:data.history.length},accounts:data.accounts.map(a=>({...a,groupId:a.groupId??null,policy:policy(a.policy)})),options:{...DEFAULT_OPTIONS,...data.options}};
     }
   }
   commit(task) {
@@ -33,11 +36,25 @@ class AccountManagerStore {
   state(){return structuredClone(this.data);}
   getOptions(){return {...this.data.options};}
   account(id){return this.data.accounts.find(a=>a.id===id)||null;}
+  accountIds(ids){
+    if(!Array.isArray(ids)||ids.length<1||ids.length>100||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!this.account(id)))throw new Error('Select 1–100 distinct saved accounts.');
+    return [...ids];
+  }
+  saveGroup(input={}){
+    const name=text(input.name,40);if(!name)throw new Error('Choose a group name.');
+    return this.commit(data=>{let group=input.id?data.groups.find(g=>g.id===input.id):null;if(input.id&&!group)throw new Error('Group not found.');if(data.groups.some(g=>g.id!==group?.id&&g.name.toLowerCase()===name.toLowerCase()))throw new Error('A group with that name already exists.');if(!group){if(data.groups.length>=32)throw new Error('The group limit is 32.');group={id:crypto.randomUUID()};data.groups.push(group);}group.name=name;return {...group};});
+  }
+  removeGroup(id){return this.commit(data=>{if(!data.groups.some(g=>g.id===id))throw new Error('Group not found.');data.groups=data.groups.filter(g=>g.id!==id);for(const account of data.accounts)if(account.groupId===id)account.groupId=null;});}
+  bulkEditAccounts(ids,patch={}){
+    const selected=this.accountIds(ids);if(!('groupId' in patch)&&typeof patch.favorite!=='boolean')throw new Error('Choose a supported account change.');
+    if('groupId'in patch&&patch.groupId!==null&&!this.data.groups.some(g=>g.id===patch.groupId))throw new Error('Group not found.');
+    return this.commit(data=>{for(const id of selected){const account=data.accounts.find(a=>a.id===id);if('groupId'in patch)account.groupId=patch.groupId;if(typeof patch.favorite==='boolean')account.favorite=patch.favorite;}return selected;});
+  }
   saveAccount(input) {
     if(!input||!/^[1-9]\d{0,19}$/.test(String(input.userId||''))||!text(input.username,20)) throw new Error('A verified Roblox account is required.');
     return this.commit(data=>{
       let account=data.accounts.find(a=>a.userId===String(input.userId));
-      if(!account){if(data.accounts.length>=100) throw new Error('The account limit is 100.');account={id:crypto.randomUUID(),userId:String(input.userId),alias:'',tags:[],favorite:false,games:[],policy:{...DEFAULT_POLICY},createdAt:this.now()};data.accounts.push(account);}
+      if(!account){if(data.accounts.length>=100) throw new Error('The account limit is 100.');account={id:crypto.randomUUID(),userId:String(input.userId),alias:'',tags:[],groupId:null,favorite:false,games:[],policy:{...DEFAULT_POLICY},createdAt:this.now()};data.accounts.push(account);}
       if(typeof input.avatarUrl==='string'&&/^https:\/\/[^/]+\.rbxcdn\.com\//i.test(input.avatarUrl))account.avatarUrl=input.avatarUrl;
       if(input.robux===null||Number.isSafeInteger(input.robux)&&input.robux>=0)account.robux=input.robux;
       if(Number.isSafeInteger(input.refreshedAt))account.refreshedAt=input.refreshedAt;
