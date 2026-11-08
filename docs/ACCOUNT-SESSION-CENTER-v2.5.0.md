@@ -1,8 +1,8 @@
 # DragonStrap Account & Session Center — v2.5.0 development
 
-Build version: **2.5.0-preview.3**.
+Build version: **2.5.0-preview.6**.
 
-This is a local, unreleased source milestone based on GitHub main 08d7fd4cc92097d186d66c0c013c2719c667feba plus the maintenance fixes from this chat. The published release remains v2.4.1. New code is isolated in renderer/manager.js, renderer/manager.css, account/session services, a Windows helper and typed preload calls.
+This accepted preview extends the v2.4.1 baseline with account/session features, startup improvements and maintenance fixes. The latest stable release remains v2.4.1; preview.6 is distributed separately as a prerelease. New code is isolated in renderer/manager.js, renderer/manager.css, account/session services, a Windows helper and typed preload calls.
 
 ## Feature matrix
 
@@ -27,7 +27,7 @@ This is a local, unreleased source milestone based on GitHub main 08d7fd4cc92097
 | Old version cleanup | Opt-in, allowlisted old version directories only. Keeps current Player/Studio, running versions, newest two, all folders with ClientSettings, and anything newer than seven days. |
 | Crash dumps | Opt-in .dmp cleanup in allowlisted Roblox log/crash directories, preserving the latest 24 h. |
 | Windows multi-instance tuning | Reads GDI quota and page-file status. Optional GDI quota increase to at least 20,000 requires a separate confirmation and Windows UAC; original quota is saved and restorable. A reboot is required. Page-file settings are not changed. |
-| Actual FPS, CPU/GPU temperatures | No measurement provider is bundled, so these are shown as unavailable. |
+| Actual FPS, CPU/GPU temperatures | Bundled PresentMon measures presentation FPS; NVIDIA driver supplies GPU temperature; bundled LibreHardwareMonitor uses an existing PawnIO driver for CPU sensors. Direct CPU/FPS access required administrator rights on the verified PC. Actual integrated readings were verified; inaccessible providers show explicit status. No driver is installed automatically. |
 | Discord | A sidebar label in the reference does not specify a Discord integration. No bot, server changes or Discord-account actions were invented. |
 
 ## Credentials and boundaries
@@ -42,7 +42,7 @@ Cleanup refuses links/junctions along target paths and paths outside its Roblox 
 
 ## Verification and acceptance
 
-- Automated source, service and UI checks are recorded in the delivery report.
+- 216 local tests passed. Source/release checks and Windows layout checks passed during preview development. The integrated service returned CPU 84.6 C, GPU 77.25 C and Roblox 84.1 FPS in a live administrator sample. See PREVIEW-DEVELOPMENT.md and the hosted CI run for publication verification.
 - Windows helper policy/restore/trim/identity-refusal/stop were exercised against a disposable Node process renamed RobloxPlayerBeta.exe, not the real game.
 - Windows safeStorage encryption/decryption was exercised using a synthetic secret.
 - UI checks use synthetic accounts and sessions; preview screenshots are layout evidence, not live account or game evidence.
