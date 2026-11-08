@@ -33,7 +33,7 @@ jobs:
         run: |
           $version = (Get-Content VERSION -Raw).Trim()
           if ($version -ne '2.5.0-preview.6') { throw "Unexpected release version: $version" }
-          foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe")) {
+          foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe", "DragonStrap-FastFolder-$version-x64.zip", "DragonStrap-v$version-Source.zip")) {
             $file = Join-Path dist $name
             if (-not (Test-Path $file)) { throw "Missing $file" }
             $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -48,6 +48,8 @@ jobs:
           path: |
             dist/DragonStrap-Portable-2.5.0-preview.6-x64.exe
             dist/DragonStrap-Setup-2.5.0-preview.6-x64.exe
+            dist/DragonStrap-FastFolder-2.5.0-preview.6-x64.zip
+            dist/DragonStrap-v2.5.0-preview.6-Source.zip
             dist/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
@@ -62,6 +64,8 @@ jobs:
           gh release create v2.5.0-preview.6 `
             dist/DragonStrap-Portable-2.5.0-preview.6-x64.exe `
             dist/DragonStrap-Setup-2.5.0-preview.6-x64.exe `
+            dist/DragonStrap-FastFolder-2.5.0-preview.6-x64.zip `
+            dist/DragonStrap-v2.5.0-preview.6-Source.zip `
             dist/SHA256SUMS.txt `
             --repo ${{ github.repository }} `
             --target ${{ github.sha }} `
