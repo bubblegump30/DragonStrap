@@ -1,6 +1,6 @@
 # DragonStrap
 
-**v2.5.0 — Account & Session Center · Windows stable release**
+**v2.5.1 — Account & Session Center reliability · Windows stable release**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
@@ -14,7 +14,7 @@ See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md) a
 
 The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sampling runs only while Monitoring is open.
 
-For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.5.0 is available on that channel.
+For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.5.1 is available on that channel.
 
 ## DragonStrap 2.0 architecture
 
@@ -51,11 +51,11 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest stable Windows release | v2.5.0 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0) |
+| Latest stable Windows release | v2.5.1 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.1) |
 | Previous accepted prerelease | v2.5.0-preview.6 | [Preview archive](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0-preview.6) |
-| Current repository source | v2.5.0 | GitHub main; optional features retain documented limitations |
+| Current repository source | v2.5.1 | GitHub main; optional features retain documented limitations |
 
-Download the desired package from the v2.5.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+Download the desired package from the v2.5.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
 The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1, v2.5.0, or any v2.5.0 preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
@@ -63,6 +63,7 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 
 | Version | Milestone | Improvements |
 | --- | --- | --- |
+| **v2.5.1** | Session reliability | Cancel pending launches on closing/Stop all, retry failed Windows policies, release completed-session join tracking and preserve unfinished forms during refresh. |
 | **v2.5.0** | Account & Session Center | Accepted saved-account launch and CPU/GPU/FPS telemetry, Fast Folder distribution, startup improvements and reliability fixes; see release notes for optional-feature limits. |
 | **v2.4.1** | Disable all Player FastFlags | Removes every Player override, including locked keys, saves a restorable copy, and switches off pre-launch auto-apply. Restore brings back the complete set; restart Roblox for changes to take effect. |
 | **v2.4.0** | **Everyday QoL** | Clearer Player and optional Studio detection, last successful scan time, selected launch preset and automatic Performance setting context, and a persistent pending FastFlag review action with a sidebar count. |
@@ -119,7 +120,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.5.0`
+`2.5.1`
 
 ## Project links
 

@@ -57,3 +57,33 @@ test('version cleanup keeps selected, newest and configured folders',t=>{
 test('cleanup refuses a linked log directory',t=>{const f=fixture(t),root=path.join(f.dir,'Roblox'),outside=path.join(f.dir,'outside');fs.mkdirSync(root);fs.mkdirSync(outside);const file=path.join(outside,'old.log');fs.writeFileSync(file,'keep');fs.utimesSync(file,new Date(0),new Date(0));fs.symlinkSync(outside,path.join(root,'logs'),process.platform==='win32'?'junction':'dir');const cleanup=new ManagerCleanupService({root});assert.equal(cleanup.plan({autoCleanLogs:true},{}).items.length,0);assert.ok(fs.existsSync(file));});
 
 test('manager monitoring starts only once and cannot restart after disposal',async t=>{const f=fixture(t);f.service.start();f.service.start();await new Promise(r=>setImmediate(r));assert.equal(f.calls.filter(c=>c.action==='probe').length,1);f.service.dispose();f.service.start();assert.equal(f.calls.filter(c=>c.action==='probe').length,1);});
+
+test('closing during credential verification prevents a late Roblox launch',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET),g=await f.service.saveGame(a.id,{target:'123'});let resume,entered;const waiting=new Promise(r=>entered=r);f.provider.identity=async()=>{entered();return new Promise(r=>resume=r);};let handoffs=0;f.service.launchProtocol=async()=>{handoffs++;throw new Error('Unexpected handoff after close');};
+ const launch=f.service.launch(a.id,g.id);await waiting;f.service.dispose();resume({userId:'123'});await assert.rejects(launch,/closing|cancelled/i);assert.equal(handoffs,0);assert.equal(f.service.sessions.size,0);
+});
+test('failed policy changes retry until applied and then stop retrying',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET);const oldPolicy={...a.policy};f.store.editAccount(a.id,{policy:{lowPriority:true}});const s={id:'policy-session',accountId:a.id,status:'running',pid:321,start:'policy-start',path:'player',startedAt:1999999900000,policy:oldPolicy,lastNativeWindows:true,lastSample:2000000000000,lastCpu:0,joinState:'joined'};f.service.sessions.set(s.id,s);let attempts=0;
+ f.native.run=async r=>r.action==='probe'?{ok:true,logicalCores:4,processes:[{pid:321,start:'policy-start',path:'player',cpuSeconds:1,memoryBytes:1}]}:(++attempts===1?{ok:false,message:'Windows refused policy'}:{ok:true});
+ await f.service.tick();assert.equal(s.policy.lowPriority,false);assert.match(s.message,/refused/);await f.service.tick();assert.equal(attempts,2);assert.equal(s.policy.lowPriority,true);assert.equal(s.message,'');await f.service.tick();assert.equal(attempts,2);
+});
+test('ending a managed session releases its private join snapshot exactly once',t=>{
+ const f=fixture(t),s={id:'ending',status:'running',startedAt:1999999900000};f.service.sessions.set(s.id,s);f.service.joinSnapshots.set(s.id,{log:'snapshot'});f.service.finish(s,'exited');f.service.finish(s,'exited');assert.equal(f.service.joinSnapshots.has(s.id),false);assert.equal(f.store.state().history.length,1);
+});
+
+test('closing while protocol handoff is pending never attaches a new managed session',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET),g=await f.service.saveGame(a.id,{target:'123'});let entered,resume;const waiting=new Promise(r=>entered=r);f.service.launchProtocol=async()=>{entered();await new Promise(r=>resume=r);};const launch=f.service.launch(a.id,g.id);await waiting;f.service.dispose();resume();await assert.rejects(launch,/closing|cancelled/i);assert.equal(f.service.sessions.size,0);assert.equal(f.service.joinSnapshots.size,0);
+});
+test('failed initial launch policy is retried on the next monitoring tick',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET),g=await f.service.saveGame(a.id,{target:'123'});f.store.editAccount(a.id,{policy:{lowPriority:true}});let launched=false,attempts=0;f.service.launchProtocol=async()=>{launched=true;};f.native.run=async r=>r.action==='probe'?{ok:true,logicalCores:4,processes:launched?[{pid:400,start:'new',path:'C:\\Roblox\\RobloxPlayerBeta.exe',cpuSeconds:1,memoryBytes:1}]:[]}:(++attempts===1?{ok:false,message:'temporary policy denial'}:{ok:true});
+ const result=await f.service.launch(a.id,g.id);assert.equal(result.ok,true);const session=f.service.sessions.get(result.sessionId);assert.equal(session.policyApplied,false);await f.service.tick();assert.equal(attempts,2);assert.equal(session.policyApplied,true);
+});
+
+test('Stop all cancels a launch waiting for an authentication ticket',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET),g=await f.service.saveGame(a.id,{target:'123'});let entered,resume;const waiting=new Promise(r=>entered=r);f.provider.ticket=async()=>{entered();return new Promise(r=>resume=r);};let handoffs=0;f.service.launchProtocol=async()=>{handoffs++;};const launch=f.service.launch(a.id,g.id);await waiting;await f.service.stopAll();resume('test-ticket');await assert.rejects(launch,/cancelled by Stop all/);assert.equal(handoffs,0);
+});
+
+test('a replacement session created during an exit scan is not evaluated against the old process snapshot',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET);f.store.editAccount(a.id,{policy:{autoRestart:true}});const old={id:'old-session',accountId:a.id,status:'running',pid:123,start:'old',path:'player',startedAt:1999999900000,restartCount:0,gameId:'game'};f.service.sessions.set(old.id,old);
+ const replacement={...old,id:'replacement',pid:456,start:'new',startedAt:2000000000000,restartCount:1};f.service.launch=async()=>{f.service.sessions.set(replacement.id,replacement);return {ok:true};};await f.service.tick();assert.equal(old.status,'exited');assert.equal(replacement.status,'running');assert.equal(f.store.state().history.length,1);
+});

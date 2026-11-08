@@ -1,6 +1,6 @@
 # DragonStrap Account & Session Center — v2.5.0 development
 
-Build version: **2.5.0** (accepted preview.6 implementation).
+Build version: **2.5.1** (accepted preview.6 functionality plus reliability fixes).
 
 This accepted preview extends the v2.4.1 baseline with account/session features, startup improvements and maintenance fixes. Stable v2.5.0 uses the accepted preview.6 implementation; the earlier preview remains available separately. New code is isolated in renderer/manager.js, renderer/manager.css, account/session services, a Windows helper and typed preload calls.
 
@@ -59,3 +59,7 @@ Cleanup refuses links/junctions along target paths and paths outside its Roblox 
 - [Roblox account endpoints](https://create.roblox.com/docs/cloud/reference/features/accounts), [user data](https://create.roblox.com/docs/cloud/reference/features/users), and [thumbnails](https://create.roblox.com/docs/cloud/reference/features/thumbnails).
 
 Account launches honor the global Performance auto-apply switch. Disable all Player flags continues to keep launch-time FPS/MSAA overrides off.
+
+## v2.5.1 reliability
+
+Closing or Stop all invalidates pending launch work before it can dispatch a later protocol handoff. A handoff already sent to Windows cannot be recalled; unidentified Players are never killed. Closing detaches identified sessions. Failed process policy requests remain pending for retry on subsequent monitoring ticks. Ended sessions release private join snapshots. Background refresh updates cached state without replacing an open schedule, appearance or settings form.

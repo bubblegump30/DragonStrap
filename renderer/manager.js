@@ -85,5 +85,5 @@
  const observer=new MutationObserver(()=>{if(isVisible())refresh();});observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-view']});
  if(isVisible())refresh();else api.getAccountManagerOptions?.().then(r=>{if(r.ok)applyAppearance(r.options);}).catch(e=>status(e.message,true));
  setInterval(()=>{if(isVisible()&&pane==='monitor')updateTelemetry();},10000);
- setInterval(()=>{if(!isVisible())return;const focused=document.activeElement?.closest('.manager-form');refresh(!focused);},15000);
+ setInterval(()=>{if(!isVisible())return;const editingForm=root.querySelector('.manager-form');refresh(!editingForm);},15000);
 })();
