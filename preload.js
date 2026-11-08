@@ -4,6 +4,16 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
   apiVersion: '2.0.0',
+  onAccountConnected: callback => {
+    if (typeof callback !== 'function') return () => {};
+    const listener = (_event, id) => callback(id);
+    ipcRenderer.on('dragonstrap:manager-account-connected', listener);
+    return () => ipcRenderer.removeListener('dragonstrap:manager-account-connected', listener);
+  },
+  getAccountManagerOptions: () => ipcRenderer.invoke('dragonstrap:manager-options'),
+  getAccountManager: () => ipcRenderer.invoke('dragonstrap:manager-state'),
+  accountManagerAction: (action, input) => ipcRenderer.invoke('dragonstrap:manager-action', action, input),
+  signInRobloxAccount: () => ipcRenderer.invoke('dragonstrap:manager-sign-in'),
   getCoreState: () => ipcRenderer.invoke('dragonstrap:core-state'),
   getAppInfo: () => ipcRenderer.invoke('dragonstrap:app-info'),
   openProjectWebsite: () => ipcRenderer.invoke('dragonstrap:open-project-website'),

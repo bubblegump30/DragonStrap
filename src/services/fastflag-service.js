@@ -252,6 +252,20 @@ class FastFlagService {
     }
   }
 
+  // Internal profile-transaction rollback: retain the exact pre-apply values,
+  // including absent or disabled Performance Center keys.
+  restoreConfigurationState(status, flags) {
+    const filePath = this.getClientSettingsPath(status);
+    if (!filePath) return { ok:false, code:'ROBLOX_NOT_FOUND', message:'Roblox Player was not detected.' };
+    if (!flags || typeof flags !== 'object' || Array.isArray(flags)) return { ok:false, code:'INVALID_CONFIGURATION_STATE', message:'Invalid configuration rollback state.' };
+    try {
+      this.#write(filePath, flags);
+      return { ok:true, path:filePath };
+    } catch (error) {
+      return { ok:false, code:'CONFIGURATION_ROLLBACK_FAILED', message:error.message };
+    }
+  }
+
   restoreBackup(status) {
     const filePath=this.getClientSettingsPath(status);
     const backupPath=this.getBackupPath(status);
@@ -326,7 +340,7 @@ class FastFlagService {
     }
     if (mode === 'float') {
       const number=Number(raw);
-      if (!Number.isFinite(number)) throw new Error('Float flags require a finite number.');
+      if (!raw || !Number.isFinite(number)) throw new Error('Float flags require a finite number.');
       return String(number);
     }
     if (!['string','auto'].includes(mode)) throw new Error('Unsupported FastFlag value type.');

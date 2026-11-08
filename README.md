@@ -1,14 +1,20 @@
 # DragonStrap
 
-**v2.4.1 — Disable all Player FastFlags · Windows release**
+**v2.5.0-preview.6 — Account & Session Center · Windows prerelease**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
-## v2.5.0 preview development — 7 November 2026
+## Account & Session Center (v2.5.0 development)
 
-Local development has reached **v2.5.0-preview.4** with an Account & Session Center, a corrected registered game-launch handoff, an extract-once Folder Portable build, and independent GPU/CPU/FPS telemetry providers.
+The Accounts sidebar entry opens saved accounts, per-account games and servers, session controls, monitoring, schedules, local levels/achievements, appearance presets and Windows optimization settings. Roblox sign-in uses an isolated official login window. Optional cookie import verifies the account and stores the session using asynchronous Windows-backed encryption; passwords are not stored.
 
-The application source on main and published Windows downloads remain **v2.4.1**. Preview implementation and packages have not been published to GitHub. See the [preview development and verification report](docs/PREVIEW-DEVELOPMENT.md) for tested behavior, startup measurements, telemetry permission requirements and remaining acceptance work.
+See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md) and [preview verification report](docs/PREVIEW-DEVELOPMENT.md). Normal saved-account game launching and live CPU/GPU/FPS readings were verified on the test PC, and the user accepted preview.6. Private/specific-server joins, concurrency, anti-AFK, restart recovery and administrator tuning remain acceptance items. FPS targets remain legacy overrides; measured FPS is separate.
+
+## Monitoring requirements
+
+The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sampling runs only while Monitoring is open.
+
+For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; choose prereleases explicitly.
 
 ## DragonStrap 2.0 architecture
 
@@ -45,12 +51,13 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest published Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
-| Current repository source | v2.4.1 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
+| Latest stable Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
+| Windows prerelease | v2.5.0-preview.6 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0-preview.6) |
+| Current repository source | v2.5.0-preview.6 | GitHub main; preview features retain documented limitations |
 
 Download the Setup or Portable x64 executable from the v2.4.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1 or any v2.5.0 preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 
@@ -64,7 +71,7 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 | **v2.0.10–v2.0.12** | Verification, backups, and project links | Electron layout checks across window sizes and display scaling, reliable Studio backup ordering and metadata writes, protected restore destinations, and the [Purple Dragon Foundation website](https://www.purpledragonfoundationltd.xyz/) in About and the product menu. |
 | **v2.0.5–v2.0.9** | UI, dashboard, and Settings polish | More consistent spacing and responsive layouts, clearer scan states and tooltips, scoped Settings resets with save feedback, a compact status bar, and fixes for clipped Installation Status content and the Help/About dropdown. |
 
-**Latest release and repository updates:** [v2.4.1 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) are published with SHA-256 checksums. GitHub workflows use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned. The linked v2.4.0 VirusTotal report above applies to the previous installer.
+**Stable release history:** [v2.4.1 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) are published with SHA-256 checksums. GitHub workflows use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned. The linked v2.4.0 VirusTotal report above applies to the previous installer.
 
 See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for the full history.
 
@@ -77,7 +84,7 @@ Follow the [step-by-step guide](docs/USER-GUIDE.md) for installing, launching, c
 Requirements: Windows 10/11, Node.js, npm, and the Windows `tar.exe` utility used by the Roblox package engine.
 
 ```powershell
-npm install
+npm ci
 npm start
 ```
 
@@ -111,7 +118,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.4.1`
+`2.5.0-preview.6`
 
 ## Project links
 
@@ -121,3 +128,11 @@ Official releases should upload both Windows executables and the generated `dist
 ## Architecture and notices
 
 See `docs/ARCHITECTURE.md`, `docs/CORE-API-v2.md`, and `THIRD_PARTY_NOTICES.md`.
+
+Account launches honor the global Performance auto-apply switch. Disable all Player flags continues to keep launch-time FPS/MSAA overrides off.
+
+## Faster portable startup
+
+The Folder Portable preview is an extract-once ZIP. Extract the entire folder and run DragonStrap.exe directly; it avoids the single-file Portable's per-launch runtime extraction. Keep the runtime files together. Folder Portable updates use a new complete ZIP folder; your normal DragonStrap user-data folder is retained.
+
+Preview.3 launches saved games through the Windows registered roblox-player handler and tracks Player executables in that handler's managed installation. Fresh completed join events must match both the requested Place ID and saved account before the UI reports a confirmed join. A live verification joined the requested saved game through the registered handler.

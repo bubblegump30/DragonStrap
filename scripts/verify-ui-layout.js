@@ -16,7 +16,7 @@ const sizes = [
 ];
 const source = fs.readFileSync(path.join(renderer, 'index.html'), 'utf8');
 if (!source.includes('<script src="app.js"></script>')) throw new Error('Renderer entry changed; update visual fixture.');
-fs.writeFileSync(fixture, source.replace('<script src="app.js"></script>', ''), 'utf8');
+fs.writeFileSync(fixture, source.replace('<script src="app.js"></script>', '').replace('<script src="manager.js"></script>', ''), 'utf8');
 let failures = 0;
 function inspect() {
   const $ = selector => document.querySelector(selector);
@@ -90,8 +90,17 @@ function inspectSecondaryViews() {
     await win.loadFile(fixture);
     for (const size of sizes) {
       win.setContentSize(size.width, size.height);
+      // Resize and zoom updates reach the renderer asynchronously. Wait for paint
+      // before measuring, otherwise the next case can inspect the previous viewport.
+      await win.webContents.executeJavaScript('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
       win.webContents.setZoomFactor(size.zoom);
+      await win.webContents.executeJavaScript('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
       const result = await win.webContents.executeJavaScript(`(${inspect.toString()})()`);
+      const actual = await win.webContents.executeJavaScript('({width:innerWidth,height:innerHeight})');
+      const [contentWidth, contentHeight] = win.getContentSize();
+      if (Math.abs(actual.width - contentWidth / size.zoom) > 3 || Math.abs(actual.height - contentHeight / size.zoom) > 3) {
+        result.issues.push(`viewport did not settle at requested zoom ${size.zoom}`);
+      }
       const secondaryIssues = await win.webContents.executeJavaScript(`(${inspectSecondaryViews.toString()})()`);
       result.issues.push(...secondaryIssues);
       const label = `${size.width}×${size.height} @ ${Math.round(size.zoom * 100)}% (${result.viewport} CSS)`;

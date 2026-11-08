@@ -83,6 +83,8 @@ class ConfigurationProfileService {
     const beforeSettings = this.settingsStore.getAll();
     const beforeFlagsResult = this.fastFlagService.getEditableObject(status);
     if (!beforeFlagsResult.ok) return beforeFlagsResult;
+    const beforeAllFlags = this.fastFlagService.exportObject(status);
+    if (!beforeAllFlags.ok) return beforeAllFlags;
     const settingsPatch = {
       launchProfile:cfg.performance.launchProfile,
       fpsCap:cfg.performance.fpsCap,
@@ -108,28 +110,20 @@ class ConfigurationProfileService {
       this.store.setActive(id);
       return { ok:true, profile:this.store.get(id), settings:this.settingsStore.getAll(), fastFlags:ff, performance, settingsChanges:preview.settingsChanges };
     } catch (error) {
-      this.settingsStore.update({
-        launchProfile:beforeSettings.launchProfile,
-        fpsCap:beforeSettings.fpsCap,
-        renderMode:beforeSettings.renderMode,
-        msaaMode:beforeSettings.msaaMode,
-        performanceAutoApply:beforeSettings.performanceAutoApply,
-        channel:beforeSettings.channel,
-        minimizeOnLaunch:beforeSettings.minimizeOnLaunch,
-        serverSort:beforeSettings.serverSort,
-        serverOccupancy:beforeSettings.serverOccupancy,
-        serverFavoritesOnly:beforeSettings.serverFavoritesOnly,
-        serverHideFull:beforeSettings.serverHideFull
-      });
-      const currentFlags = this.fastFlagService.getEditableObject(status);
-      if (currentFlags.ok) {
-        this.fastFlagService.applyPatch(status, {
-          set:Object.entries(beforeFlagsResult.data).map(([key,value]) => ({key,value,type:'auto'})),
-          remove:Object.keys(currentFlags.data).filter(key => !Object.hasOwn(beforeFlagsResult.data,key))
-        });
-      }
-      this.performanceService.apply(status, beforeSettings);
-      return { ok:false, code:error.result?.code || 'PROFILE_APPLY_FAILED', message:error.message };
+      // Attempt both rollback domains even if either fails, and report partial recovery.
+      const rollbackErrors = [];
+      try { this.settingsStore.update(beforeSettings); }
+      catch (rollbackError) { rollbackErrors.push(`Settings: ${rollbackError.message}`); }
+      try {
+        const restored = this.fastFlagService.restoreConfigurationState(status, beforeAllFlags.data);
+        if (!restored.ok) rollbackErrors.push(`FastFlags: ${restored.message || restored.code}`);
+      } catch (rollbackError) { rollbackErrors.push(`FastFlags: ${rollbackError.message}`); }
+      return {
+        ok:false,
+        code:rollbackErrors.length ? 'PROFILE_ROLLBACK_INCOMPLETE' : (error.result?.code || 'PROFILE_APPLY_FAILED'),
+        message:rollbackErrors.length ? `${error.message} Recovery was incomplete: ${rollbackErrors.join('; ')}` : error.message,
+        rollbackErrors
+      };
     }
   }
 }

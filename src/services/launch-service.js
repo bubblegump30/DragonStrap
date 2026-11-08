@@ -8,7 +8,7 @@ class LaunchService {
     this.spawn = spawnImpl;
   }
 
-  launchPlayer(status, options = {}) {
+  async launchPlayer(status, options = {}) {
     if (!status?.playerPath) {
       return { ok: false, code: 'ROBLOX_NOT_FOUND', message: 'Roblox Player was not detected.' };
     }
@@ -29,6 +29,11 @@ class LaunchService {
         stdio: 'ignore',
         windowsHide: false
       });
+      await new Promise((resolve, reject) => {
+        if (typeof child.once !== 'function') { resolve(); return; }
+        child.once('error', reject);
+        child.once('spawn', resolve);
+      });
       child.unref();
       return { ok: true, pid: child.pid || null };
     } catch (error) {
@@ -36,7 +41,7 @@ class LaunchService {
     }
   }
 
-  launchStudio(status, options = {}) {
+  async launchStudio(status, options = {}) {
     if (!status?.studioPath) {
       return { ok: false, code: 'STUDIO_NOT_FOUND', message: 'Roblox Studio was not detected.' };
     }
@@ -57,6 +62,11 @@ class LaunchService {
         detached: true,
         stdio: 'ignore',
         windowsHide: false
+      });
+      await new Promise((resolve, reject) => {
+        if (typeof child.once !== 'function') { resolve(); return; }
+        child.once('error', reject);
+        child.once('spawn', resolve);
       });
       child.unref();
       return { ok: true, pid: child.pid || null, projectPath: options.projectPath || null };

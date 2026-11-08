@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, safeStorage } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const { AppKernel } = require('./src/core/app-kernel');
@@ -564,7 +564,7 @@ function registerIpc() {
     const preparation = prepareStudioProjectLaunch(picked.filePaths[0], status);
     if (!preparation.ok) return preparation.validation?.ok === false ? preparation.validation : (preparation.backup || { ok:false, code:'STUDIO_PREPARE_FAILED', message:'Studio project preparation failed.' });
     const validation=preparation.validation;
-    const result = launchService.launchStudio(status, { projectPath:validation.path });
+    const result = await launchService.launchStudio(status, { projectPath:validation.path });
     const profile = preparation.profile.name;
     const historyItem = launchHistoryStore.add({
       type:'studio-project', label:validation.name, target:validation.path, profile, ok:result.ok,
@@ -582,7 +582,7 @@ function registerIpc() {
     const preparation=prepareStudioProjectLaunch(stored.path,status);
     if (!preparation.ok) return preparation.validation?.ok === false ? preparation.validation : (preparation.backup || { ok:false, code:'STUDIO_PREPARE_FAILED', message:'Studio project preparation failed.' });
     const validation=preparation.validation;
-    const result = launchService.launchStudio(status, { projectPath:validation.path });
+    const result = await launchService.launchStudio(status, { projectPath:validation.path });
     const profile=preparation.profile.name;
     const historyItem = launchHistoryStore.add({
       type:'studio-project', label:validation.name, target:validation.path, profile, ok:result.ok,
@@ -674,7 +674,7 @@ function registerIpc() {
     const performance = currentSettings.performanceAutoApply
       ? performanceService.apply(status, performanceSelection.settings)
       : { ok: true, skipped: true };
-    const result = launchService.launchPlayer(status, { uri: normalized.uri });
+    const result = await launchService.launchPlayer(status, { uri: normalized.uri });
     const profile = performanceSelection.source === 'experience'
       ? performanceSelection.profile.name
       : (currentSettings.launchProfile || 'default');
@@ -694,7 +694,7 @@ function registerIpc() {
   ipcMain.handle('dragonstrap:launch-studio', async event => {
     const status = await getRobloxStatus();
     const studioProfile=studioSettingsStore.getProfile();
-    const result = launchService.launchStudio(status);
+    const result = await launchService.launchStudio(status);
     const historyItem = launchHistoryStore.add({
       type: 'studio', label: 'Roblox Studio', target: null, profile:studioProfile.name, ok: result.ok,
       message: result.ok ? null : result.message
@@ -733,7 +733,11 @@ function createWindow() {
   win.on('closed', () => { if (mainWindow === win) mainWindow = null; });
 
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-  win.once('ready-to-show', () => win.show());
+  win.once('ready-to-show', () => {
+    win.show();
+    const monitoring = setTimeout(() => kernel?.get('accounts.manager')?.start(), 1500);
+    monitoring.unref();
+  });
   return win;
 }
 
@@ -754,6 +758,8 @@ if (!hasSingleInstanceLock) {
     const userData = app.getPath('userData');
     kernel = new AppKernel({
       userData,
+      credentialEncryption:safeStorage,
+      launchProtocol:uri=>shell.openExternal(uri),
       currentVersion:app.getVersion(),
       isPackaged:app.isPackaged,
       execPath:process.execPath,
@@ -807,12 +813,13 @@ if (!hasSingleInstanceLock) {
       if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('dragonstrap:update-download-progress', progress);
     });
     registerIpc();
+    require('./src/core/account-manager-ipc').installAccountManagerIpc({ kernel, electron:require('electron'), getWindow:()=>mainWindow });
     createWindow();
     reliabilityService.log('info','app-ready',{packaged:app.isPackaged,electron:process.versions.electron,arch:process.arch});
     app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
   });
 
-  app.on('before-quit', () => reliabilityService?.markCleanExit());
+  app.on('before-quit', () => { kernel?.get('accounts.manager')?.dispose(); reliabilityService?.markCleanExit(); });
   app.on('child-process-gone', (_event, details) => reliabilityService?.log('error','child-process-gone',details));
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 }

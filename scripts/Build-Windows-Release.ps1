@@ -1,14 +1,19 @@
 param([switch]$SkipInstall)
 $ErrorActionPreference = 'Stop'
+# Native command failures must stop packaging on Windows PowerShell as well as pwsh.
+function Invoke-Npm {
+    & npm @args
+    if ($LASTEXITCODE -ne 0) { throw "npm failed with exit code $LASTEXITCODE" }
+}
 Set-Location (Split-Path -Parent $PSScriptRoot)
-Write-Host '== DragonStrap Windows Stable Release Build ==' -ForegroundColor Magenta
+Write-Host '== DragonStrap Windows Release Build ==' -ForegroundColor Magenta
 
-if (-not $SkipInstall) { npm install }
+if (-not $SkipInstall) { Invoke-Npm ci }
 
-npm run check
-npm test
-npm run release:verify
-npm run release:prepare
+Invoke-Npm run check
+Invoke-Npm test
+Invoke-Npm run release:verify
+Invoke-Npm run release:prepare
 
 if ($env:CSC_LINK) {
     Write-Host 'Windows code-signing input detected. electron-builder will attempt signing.' -ForegroundColor Green
@@ -16,7 +21,7 @@ if ($env:CSC_LINK) {
     Write-Host 'Unsigned Windows release selected; no CSC_LINK code-signing input configured.' -ForegroundColor Cyan
 }
 
-npm run dist:win
+Invoke-Npm run dist:win
 
 $version = (Get-Content '.\VERSION' -Raw).Trim()
 $portable = Join-Path $PWD "dist\DragonStrap-Portable-$version-x64.exe"
@@ -25,6 +30,14 @@ foreach ($artifact in @($portable, $setup)) {
     if (-not (Test-Path $artifact)) { throw "Required Update Center artifact was not produced: $artifact" }
 }
 
+& node scripts/prepare-folder-portable.js
+if ($LASTEXITCODE -ne 0) { throw 'Folder Portable preparation failed' }
+$folder = Join-Path $PWD "dist\DragonStrap-Folder-$version-x64"
+$folderZip = Join-Path $PWD "dist\DragonStrap-FastFolder-$version-x64.zip"
+Compress-Archive -LiteralPath $folder -DestinationPath $folderZip -CompressionLevel Fastest
+$sourceZip = Join-Path $PWD "dist\DragonStrap-v$version-Source.zip"
+& git archive --format=zip --output=$sourceZip HEAD
+if ($LASTEXITCODE -ne 0) { throw 'Source archive creation failed' }
 $hashFile = Join-Path $PWD 'dist\SHA256SUMS.txt'
 Get-ChildItem 'dist' -File | Where-Object { $_.Extension -in '.exe','.zip','.blockmap','.yml' } | ForEach-Object {
     $hash=(Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()

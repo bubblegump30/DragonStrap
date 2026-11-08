@@ -11,7 +11,7 @@ function fixture(result, confirmed = true) {
   const state = { settings:{performanceAutoApply:true}, fastFlags:{pendingSet:new Map([['FFlagPending',{}]]),pendingRemove:new Set(['FFlagOld']),selectedKeys:new Set(['FFlagOld']),preview:{ok:true}} };
   let calls = 0;
   const c = vm.createContext({ state, q:id => { if (!buttons.has(id)) buttons.set(id,{}); return buttons.get(id); },
-    window:{confirm:() => confirmed,dragonStrap:{disableAllFastFlags:async()=>{calls++;return result;},getSettings:async()=>({performanceAutoApply:false})}},
+    window:{confirm:() => confirmed,dragonStrap:{disableAllFastFlags:async()=>{calls++;return result;},restoreDisabledFastFlags:async()=>{calls++;return result;},getSettings:async()=>({performanceAutoApply:false})}},
     clearFastFlagEditor(){},renderPerformanceSettings(){},refreshPerformanceState:async()=>{},refreshFastFlagPreview:async()=>{},
     refreshFastFlags:async()=>{ for (const button of buttons.values()) button.disabled=false; },showToast(){} });
   vm.runInContext(app.slice(app.indexOf('async function changeAllFastFlags('), app.indexOf('async function restoreFastFlagSnapshot(')), c);
@@ -40,4 +40,22 @@ test('disable-all failure preserves pending edits and reenables actions', async 
   assert.equal(f.state.fastFlags.pendingSet.size,1);
   assert.equal(f.state.settings.performanceAutoApply,true);
   assert.equal(f.buttons.get('#fastFlagDisableAll').disabled,false);
+});
+
+test('restore-disabled success clears pending changes through the restore backend', async () => {
+  const f = fixture({ok:true,total:3});
+  await f.c.changeAllFastFlags(true);
+  assert.equal(f.calls(), 1);
+  assert.equal(f.state.fastFlags.pendingSet.size, 0);
+  assert.equal(f.state.fastFlags.pendingRemove.size, 0);
+  assert.equal(f.state.fastFlags.selectedKeys.size, 0);
+  assert.equal(f.state.fastFlags.preview, null);
+});
+
+test('restore-disabled failure preserves pending changes for retry', async () => {
+  const f = fixture({ok:false,message:'backup unreadable'});
+  await f.c.changeAllFastFlags(true);
+  assert.equal(f.state.fastFlags.pendingSet.size, 1);
+  assert.equal(f.state.fastFlags.pendingRemove.size, 1);
+  assert.equal(f.buttons.get('#fastFlagRestoreDisabled').disabled, false);
 });

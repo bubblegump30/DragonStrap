@@ -1,12 +1,55 @@
-## Local preview development — v2.5.0-preview.4 (not published)
+## v2.5.0-preview.6 — Integrated CPU temperature
 
-- Added an Account & Session Center in the local preview, including isolated Roblox sign-in and optional encrypted session-cookie import.
-- Corrected saved-game launch handoff through the registered Windows protocol handler; one normal saved-account join was verified live.
-- Added an extract-once Folder Portable build and deferred secondary startup work.
-- Replaced the combined telemetry placeholder with independent NVIDIA GPU temperature, WMI CPU sensors and PresentMon FPS providers.
-- Verified a live GPU sensor reading. FPS capture requires Windows ETW permissions; CPU temperature requires a supported WMI provider. Both remain unverified live on the test PC.
-- Local preview verification: 212 tests plus Windows layout checks passed. Preview implementation has not been pushed or release-published.
-- Full scope, evidence and remaining acceptance: [preview development report](docs/PREVIEW-DEVELOPMENT.md).
+- Bundle the official LibreHardwareMonitor CPU reader; a separate monitor application is no longer required.
+- Use existing PawnIO access, prefer package/Tctl-Tdie readings, reject zero/invalid values, and explain permission or driver requirements.
+- Live integrated verification: Ryzen CPU 84.6 C, GPU 77.25 C and Roblox presentation rate 84.1 FPS.
+- 216 tests passed. No driver installation or system permission changes are performed automatically.
+
+## v2.5.0-preview.5 — FPS CSV compatibility
+
+- Fix case-sensitive lookup of PresentMon legacy msBetweenPresents headers that discarded valid frames.
+- Parse quoted CSV fields, BOMs and executable paths correctly.
+- 214 regression tests passed; live FPS capture remains unverified under the current restricted ETW token.
+
+## v2.5.0-preview.3 — Registered game handoff and faster startup
+
+- Replaced direct account Player launches with the registered Windows roblox-player protocol handler.
+- Track the handler's managed Player path, with PID/start-time/executable identity guards.
+- Confirm game joins only from fresh load events matching the selected game and account; report home-only or unconfirmed launches separately.
+- Defer process monitoring until the window has painted, avoid hidden account/history IPC during startup, and defer secondary panel loading.
+- Added an extract-once Folder Portable distribution with explicit manual folder updates.
+- Live verification recorded the requested saved account and game joining through the registered handler.
+
+## v2.5.0-preview.2 — Saved-game launch correction
+
+- Corrected native Player arguments: -a negotiation URL, -t ticket, -j saved target and separate --launchtime.
+- Included the same browser tracker ID in the Player arguments and PlaceLauncher query.
+- Added exact regression coverage for normal, specific-server and private-server launch targets and stored-target mismatches.
+- Clarified that a running Player process does not confirm the game joined.
+
+## v2.5.0-preview.1 — Account & Session Center (unreleased preview)
+
+- Added saved Roblox accounts, isolated Roblox sign-in, optional encrypted session-cookie import, aliases, tags, favorites, avatar/balance refresh, and per-account games/private-server targets.
+- Added authenticated launch attempts, identified managed sessions, focus/minimize/stop/trim controls, opt-in exit recovery, foreground-only idle input, and real Windows memory/CPU monitoring.
+- Added persistent launch/stop schedules, a managed-session stop timer, local statistics, levels and achievements.
+- Added appearance presets, named custom palettes, Gaming/Light/Low GPU effects, per-account FPS/MSAA targets, process priority, CPU efficiency/core affinity, memory priority and soft working-set targets.
+- Added opt-in allowlisted log/dump/version cleanup and Windows GDI diagnostics with administrator-gated apply/restore. Page-file configuration remains diagnostic-only.
+- Added regression tests, Windows helper smoke verification against a disposable process, and responsive checks for every manager panel and account dialog.
+- Live authenticated launches, concurrency, actual in-game idle behavior and administrator tuning remain acceptance requirements. No client patching or singleton-handle bypass is included.
+
+## Unreleased — Reliability and dependency maintenance
+
+- Update Electron to 45.2.3 and electron-builder to 26.18.0, pin the dependency tree, and override vulnerable minimatch versions with 11.0.1 or later.
+- Wait for Windows process creation before reporting Player or Studio launch success; return asynchronous launch errors safely.
+- Validate complete semantic versions and use correct prerelease ordering in Update Center.
+- Restore the exact previous Player flag set after failed profile application, including disabled or unusual locked values, and report incomplete rollback.
+- Prevent slow installation scans from overwriting newer results or repopulating an invalidated status cache.
+- Reject blank floating-point FastFlag values in Player and Studio editors.
+- Stop Windows release builds when npm commands fail and use reproducible CI dependency installs.
+- Wait for renderer resize and zoom updates before checking layouts, and validate the measured viewport.
+- Compile JavaScript during source checks so syntax regressions cannot pass a presence-only check.
+
+These maintenance changes are included in the v2.5.0-preview.6 prerelease. The latest stable Windows release remains v2.4.1. No previous VirusTotal report applies to a newly built executable.
 
 ## v2.4.1 — Disable all Player FastFlags
 
@@ -528,6 +571,11 @@ This is a presentation release. Installation, launch, update, and configuration 
 - Preserved the opaque Installation Status card so background bleed does not return.
 
 # Changelog
+
+
+## 2.5.0-preview.4
+- Replace combined telemetry placeholder with independent NVIDIA GPU temperature, WMI CPU sensors and PresentMon measured FPS.
+- Report sensor and ETW permission requirements; sample asynchronously only on Monitoring.
 
 ## 0.1.5 — Centered Dragon Watermark
 - Added the supplied DragonStrap dragon artwork as the actual application watermark.

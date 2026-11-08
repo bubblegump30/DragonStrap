@@ -39,3 +39,31 @@ test('ConfigurationProfileService rolls settings and editable flags back when th
   const json=JSON.parse(fs.readFileSync(f.settingsPath,'utf8'));assert.equal(json.FFlagOld,'True');assert.equal(Object.hasOwn(json,'FFlagReplacement'),false);assert.equal(f.store.getActiveId(),null);
   fs.rmSync(f.root,{recursive:true,force:true});
 });
+
+test('failed profile apply preserves disabled and unusual locked values exactly', () => {
+  const f = fixture();
+  try {
+    const original = { FFlagOld:'True', [MANAGED_FLAGS.fps]:'73' };
+    fs.writeFileSync(f.settingsPath, JSON.stringify(original));
+    const target = f.store.saveProfile('Failure', { performance:{fpsCap:200}, fastFlags:{FFlagNew:'True'} }).profile;
+    f.service.performanceService = { apply() { return {ok:false, message:'failed'}; } };
+    assert.equal(f.service.apply({playerPath:f.playerPath}, target.id).ok, false);
+    assert.deepEqual(JSON.parse(fs.readFileSync(f.settingsPath, 'utf8')), original);
+  } finally { fs.rmSync(f.root, {recursive:true, force:true}); }
+});
+
+test('profile rollback attempts flags even when settings recovery fails and reports incomplete recovery', () => {
+  const f = fixture();
+  try {
+    const original = fs.readFileSync(f.settingsPath, 'utf8');
+    const target = f.store.saveProfile('Failure', {fastFlags:{FFlagNew:'True'}}).profile;
+    const update = f.settingsStore.update.bind(f.settingsStore);
+    let calls = 0;
+    f.settingsStore.update = patch => { if (++calls > 1) throw new Error('disk unavailable'); return update(patch); };
+    f.service.performanceService = { apply() { return {ok:false, message:'performance failed'}; } };
+    const result = f.service.apply({playerPath:f.playerPath}, target.id);
+    assert.equal(result.code, 'PROFILE_ROLLBACK_INCOMPLETE');
+    assert.match(result.message, /disk unavailable/);
+    assert.deepEqual(JSON.parse(fs.readFileSync(f.settingsPath, 'utf8')), JSON.parse(original));
+  } finally { fs.rmSync(f.root, {recursive:true, force:true}); }
+});

@@ -3,7 +3,7 @@ name: DragonStrap Windows release
 on:
   push:
     branches:
-      - release/v2.4.1-windows
+      - release/v2.5.0-preview.6-windows
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Verify desktop layouts
         run: npm run ui:verify
       - name: Build and hash Windows packages
@@ -32,8 +32,8 @@ jobs:
         shell: pwsh
         run: |
           $version = (Get-Content VERSION -Raw).Trim()
-          if ($version -ne '2.4.1') { throw "Unexpected release version: $version" }
-          foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe")) {
+          if ($version -ne '2.5.0-preview.6') { throw "Unexpected release version: $version" }
+          foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe", "DragonStrap-FastFolder-$version-x64.zip", "DragonStrap-v$version-Source.zip")) {
             $file = Join-Path dist $name
             if (-not (Test-Path $file)) { throw "Missing $file" }
             $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -44,10 +44,12 @@ jobs:
       - name: Preserve release packages
         uses: actions/upload-artifact@v6
         with:
-          name: DragonStrap-v2.4.1-Windows-x64
+          name: DragonStrap-v2.5.0-preview.6-Windows-x64
           path: |
-            dist/DragonStrap-Portable-2.4.1-x64.exe
-            dist/DragonStrap-Setup-2.4.1-x64.exe
+            dist/DragonStrap-Portable-2.5.0-preview.6-x64.exe
+            dist/DragonStrap-Setup-2.5.0-preview.6-x64.exe
+            dist/DragonStrap-FastFolder-2.5.0-preview.6-x64.zip
+            dist/DragonStrap-v2.5.0-preview.6-Source.zip
             dist/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
@@ -56,15 +58,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if (gh release view v2.4.1 --repo ${{ github.repository }} *> $null) {
-            throw 'v2.4.1 already exists; refusing to overwrite it'
+          if (gh release view v2.5.0-preview.6 --repo ${{ github.repository }} *> $null) {
+            throw 'v2.5.0-preview.6 already exists; refusing to overwrite it'
           }
-          gh release create v2.4.1 `
-            dist/DragonStrap-Portable-2.4.1-x64.exe `
-            dist/DragonStrap-Setup-2.4.1-x64.exe `
+          gh release create v2.5.0-preview.6 `
+            dist/DragonStrap-Portable-2.5.0-preview.6-x64.exe `
+            dist/DragonStrap-Setup-2.5.0-preview.6-x64.exe `
+            dist/DragonStrap-FastFolder-2.5.0-preview.6-x64.zip `
+            dist/DragonStrap-v2.5.0-preview.6-Source.zip `
             dist/SHA256SUMS.txt `
             --repo ${{ github.repository }} `
             --target ${{ github.sha }} `
-            --title 'DragonStrap v2.4.1' `
-            --notes-file docs/RELEASE-v2.4.1.md `
-            --latest
+            --title 'DragonStrap v2.5.0-preview.6' `
+            --notes-file docs/RELEASE-v2.5.0-preview.6.md `
+            --prerelease

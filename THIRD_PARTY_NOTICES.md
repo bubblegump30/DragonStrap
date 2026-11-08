@@ -37,3 +37,9 @@ DragonStrap v2.0.0 does not bundle Fishstrap, Bloxstrap, or RoValra source code 
 ## Roblox deployment package interoperability
 
 DragonStrap v2.0.0 independently implements interoperability with Roblox public deployment metadata and package manifests. Bloxstrap documentation/source was consulted to confirm public package-manifest format and known extraction-directory behavior. No Bloxstrap/Fishstrap source code is bundled in DragonStrap.
+
+## PresentMon 2.6.0
+Official Intel/GameTechDev console application, MIT licensed. Bundled executable and complete license are in assets/telemetry. Source: https://github.com/GameTechDev/PresentMon/tree/v2.6.0. Used for read-only ETW frame timing; no game injection.
+
+## CPU sensor provider: LibreHardwareMonitor 0.9.6
+Unmodified official release libraries are bundled in assets/telemetry/cpu. LibreHardwareMonitor is MPL-2.0 licensed; its full license is included. Corresponding source: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/tree/v0.9.6 . Supporting libraries retain their upstream licenses. No PawnIO driver installer is bundled or run.
