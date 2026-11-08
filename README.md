@@ -1,6 +1,6 @@
 # DragonStrap
 
-**Source v2.5.0-preview.6 — Account & Session Center (unreleased)**
+**v2.5.0-preview.6 — Account & Session Center · Windows prerelease**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
@@ -8,7 +8,13 @@ DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple D
 
 The Accounts sidebar entry opens saved accounts, per-account games and servers, session controls, monitoring, schedules, local levels/achievements, appearance presets and Windows optimization settings. Roblox sign-in uses an isolated official login window. Optional cookie import verifies the account and stores the session using asynchronous Windows-backed encryption; passwords are not stored.
 
-See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md). Account-specific authenticated launches, Roblox concurrency behavior and anti-AFK still require live acceptance. FPS targets remain legacy overrides; actual FPS and temperature readings are not fabricated. These source changes are not a published Windows release.
+See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md) and [preview verification report](docs/PREVIEW-DEVELOPMENT.md). Normal saved-account game launching and live CPU/GPU/FPS readings were verified on the test PC, and the user accepted preview.6. Private/specific-server joins, concurrency, anti-AFK, restart recovery and administrator tuning remain acceptance items. FPS targets remain legacy overrides; measured FPS is separate.
+
+## Monitoring requirements
+
+The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sampling runs only while Monitoring is open.
+
+For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; choose prereleases explicitly.
 
 ## DragonStrap 2.0 architecture
 
@@ -45,12 +51,13 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest published Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
-| Local development source | v2.5.0-preview.6 (unreleased) | This source package; published GitHub main may still be v2.4.1 |
+| Latest stable Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
+| Windows prerelease | v2.5.0-preview.6 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0-preview.6) |
+| Current repository source | v2.5.0-preview.6 | GitHub main; preview features retain documented limitations |
 
 Download the Setup or Portable x64 executable from the v2.4.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1 or any v2.5.0 preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
 
 ## What changed since v2.0.4
 

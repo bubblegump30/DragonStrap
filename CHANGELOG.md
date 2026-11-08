@@ -49,7 +49,7 @@
 - Wait for renderer resize and zoom updates before checking layouts, and validate the measured viewport.
 - Compile JavaScript during source checks so syntax regressions cannot pass a presence-only check.
 
-These are local development changes; the latest published Windows release remains v2.4.1. No previous VirusTotal report applies to a newly built executable.
+These maintenance changes are included in the v2.5.0-preview.6 prerelease. The latest stable Windows release remains v2.4.1. No previous VirusTotal report applies to a newly built executable.
 
 ## v2.4.1 — Disable all Player FastFlags
 
