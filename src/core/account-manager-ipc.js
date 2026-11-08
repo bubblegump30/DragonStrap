@@ -25,6 +25,11 @@ function installAccountManagerIpc({kernel,electron,getWindow}){
  ipcMain.handle('dragonstrap:manager-action',guard(async(action,input={})=>{
   if(!input||typeof input!=='object'||Array.isArray(input))throw new Error('Invalid manager request.');
   switch(action){
+   case 'group-save':service.store.saveGroup(input);break;
+   case 'group-remove':service.store.removeGroup(input.id);break;
+   case 'accounts-edit':service.store.bulkEditAccounts(input.ids,input.patch);break;
+   case 'accounts-bulk-cancel':service.cancelBulk();break;
+   case 'accounts-bulk':{const bulkResults=await service.bulkAccounts(input.action,input.ids,input.expectedFavorites,input.expectedSessions);return {data:service.state(),bulkResults};}
    case 'account-import':await service.connect(input.cookie);break;
    case 'account-edit':service.store.editAccount(input.id,input.patch);break;
    case 'account-refresh':await service.refreshAccount(input.id);break;

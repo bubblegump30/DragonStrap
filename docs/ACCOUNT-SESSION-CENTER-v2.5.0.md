@@ -1,6 +1,6 @@
 # DragonStrap Account & Session Center — v2.5.0 development
 
-Build version: **2.5.1** (accepted preview.6 functionality plus reliability fixes).
+Build version: **2.6.0**. See ACCOUNT-WORKFLOWS-v2.6.0.md for groups, bulk actions and session history.
 
 This accepted preview extends the v2.4.1 baseline with account/session features, startup improvements and maintenance fixes. Stable v2.5.0 uses the accepted preview.6 implementation; the earlier preview remains available separately. New code is isolated in renderer/manager.js, renderer/manager.css, account/session services, a Windows helper and typed preload calls.
 
