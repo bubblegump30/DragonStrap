@@ -67,7 +67,19 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 Download the desired package from the v2.6.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.com/gui/file/3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930?nocache=1) corresponds to SHA-256 `3f016485826eb77591e8a616b27dbaa5706f4f59f2d25e4e84e546299e373930`. This report describes the previous v2.4.0 Setup file and does not cover v2.4.1, v2.5.x, v2.6.0, or any preview executable. Portable is a different file with a different hash. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries. The Windows packages are unsigned, so Windows may display a SmartScreen warning.
+### VirusTotal reports for v2.6.1
+
+Reports retrieved directly through VirusTotal via VTAI on **2026-11-08**. Each link identifies the exact published file by SHA-256.
+
+| Package | Malicious / suspicious | Undetected | Other engine results | Report |
+| --- | --- | --- | --- | --- |
+| Setup executable | **0 / 0** | 67 | 2 timed out; 6 unsupported | [View report](https://www.virustotal.com/gui/file/b319408ef5d0dc075e52875f4aa4f5a721f72d0e58c958a7fe48f750c518f04d/detection) |
+| Portable executable | **0 / 0** | 64 | 5 timed out; 6 unsupported | [View report](https://www.virustotal.com/gui/file/1e798ea8fb42785da0aee476df650f9b1175c3c60b5a2506d9033b9cbc3fdcab/detection) |
+| Fast Folder ZIP | **0 / 0** | 64 | 2 timed out; 2 failed; 7 unsupported | [View report](https://www.virustotal.com/gui/file/5e763200be63ebd0a7f19f64df34b400243a6b800bbc7f7777659848aed5f5b5/detection) |
+
+Each report contains 75 engine entries overall. Timed-out, failed and unsupported entries did not provide a detection verdict. Zero detections do not guarantee safety. These reports apply only to the linked v2.6.1 files; they do not cover future builds or the source archive. Full hashes and analysis timestamps: [v2.6.1 scan evidence](docs/VIRUSTOTAL-v2.6.1.md).
+
+Windows packages remain unsigned, so Windows may display a SmartScreen warning. Source ZIPs and repository code are for development; they are not Windows installers or Update Center binaries.
 
 ## What changed since v2.0.4
 
@@ -85,7 +97,7 @@ The [VirusTotal report for the v2.4.0 Setup executable](https://www.virustotal.c
 | **v2.0.10–v2.0.12** | Verification, backups, and project links | Electron layout checks across window sizes and display scaling, reliable Studio backup ordering and metadata writes, protected restore destinations, and the [Purple Dragon Foundation website](https://www.purpledragonfoundationltd.xyz/) in About and the product menu. |
 | **v2.0.5–v2.0.9** | UI, dashboard, and Settings polish | More consistent spacing and responsive layouts, clearer scan states and tooltips, scoped Settings resets with save feedback, a compact status bar, and fixes for clipped Installation Status content and the Help/About dropdown. |
 
-**Stable release history:** [v2.4.1 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) are published with SHA-256 checksums. GitHub workflows use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned. The linked v2.4.0 VirusTotal report above applies to the previous installer.
+**Stable release history:** [v2.4.1 Windows Setup and Portable x64 packages](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) are published with SHA-256 checksums. GitHub workflows use actions that run on Node.js 24, and unsigned Windows builds display an informational message. Releases remain unsigned. Current v2.6.1 VirusTotal reports are linked in Download status above.
 
 See [CHANGELOG.md](CHANGELOG.md) and the versioned notes in [docs](docs) for the full history.
 
