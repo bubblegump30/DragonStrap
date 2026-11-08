@@ -49,7 +49,7 @@ class RobloxAccountProvider {
 class AccountSessionService {
  constructor({userData,safeStorage,status,settingsStore,launchService,performanceService,recoveryService,configurationProfileStore,operations,provider=new RobloxAccountProvider(),native=new WindowsSessionControl(),launchProtocol=null,joinObserver=new RobloxJoinObserver(),now=()=>Date.now(),store=null}={}){
   this.store=store||new AccountManagerStore(userData,{now});this.userData=userData;this.safeStorage=safeStorage;this.status=status;this.settingsStore=settingsStore;this.launchService=launchService;this.performance=performanceService;this.recovery=recoveryService;this.configurationProfiles=configurationProfileStore;this.operations=operations;this.provider=provider;this.native=native;this.launchProtocol=launchProtocol;this.joinObserver=joinObserver;this.joinSnapshots=new Map();this.now=now;
-  this.sessions=new Map();this.busy=new Set();this.tickBusy=false;this.lastProbe=null;this.lastError='';this.timer=null;this.stopping=false;this.vaultFile=path.join(userData,'account-vault.json');this.vault={};this.shutdownAt=0;
+  this.sessions=new Map();this.launchEpoch=0;this.busy=new Set();this.tickBusy=false;this.lastProbe=null;this.lastError='';this.timer=null;this.stopping=false;this.vaultFile=path.join(userData,'account-vault.json');this.vault={};this.shutdownAt=0;
   if(fs.existsSync(this.vaultFile)){const data=JSON.parse(fs.readFileSync(this.vaultFile,'utf8'));if(data?.schema!==1||!data.secrets||typeof data.secrets!=='object'||Array.isArray(data.secrets))throw new Error('Account vault is invalid.');this.vault=data.secrets;}
   // Jobs which were in progress when the app exited are not replayed automatically.
   for(const job of this.store.state().schedules)if(job.status==='running')this.store.updateSchedule(job.id,'interrupted','DragonStrap closed during this job.');
@@ -72,34 +72,36 @@ class AccountSessionService {
   const launches=(data.totals?.launches||0)+sessions.filter(s=>s.status==='running').length;
   return {...data,accounts:data.accounts.map(a=>({...a,connected:Boolean(this.vault[a.id])})),sessions,probe:this.lastProbe,capabilities:{encryptedStorage:Boolean(this.safeStorage),native:process.platform==='win32',multiInstance:'Roblox decides whether concurrent clients remain open; no client patching or singleton-handle removal is performed.',antiAfk:'Foreground managed window only, after 60 seconds of Windows inactivity. Games may ignore synthetic input.',fps:'Legacy ClientSettings target; current Roblox builds may ignore it.'},stats:{seconds,launches,level:1+Math.floor(seconds/36000),achievements:[{name:'First launch',earned:launches>=1},{name:'Ten sessions',earned:launches>=10},{name:'One hour',earned:seconds>=3600},{name:'Ten hours',earned:seconds>=36000}]},shutdownAt:this.shutdownAt,lastError:this.lastError};
  }
+ ensureOpen(){if(this.stopping)throw new Error('DragonStrap is closing; account launch cancelled.');}
  async launch(accountId,gameId,{restartCount=0}={}){
   if(this.stopping)throw new Error('DragonStrap is closing.');const account=this.store.account(accountId);if(!account)throw new Error('Account not found.');
   const game=account.games.find(g=>g.id===gameId);if(!game)throw new Error('Choose a saved game.');
   if(this.busy.has(accountId))throw new Error('This account is already launching.');
   if([...this.sessions.values()].some(s=>s.accountId===accountId&&s.status==='running'))throw new Error('This account already has a managed session.');
   if(!this.store.state().options.multiInstance&&[...this.sessions.values()].some(s=>s.status==='running'))throw new Error('Enable concurrent launch attempts in Manager settings before launching another account.');
+  const launchEpoch=this.launchEpoch;const ensureCurrent=()=>{this.ensureOpen();if(launchEpoch!==this.launchEpoch)throw new Error('Account launch cancelled by Stop all.');};
   this.busy.add(accountId);
   try{return await this.operations.run('accounts.launch',{label:'Account launch'},async()=>{
-   const status=await this.status();if(!status?.playerPath)throw new Error('Roblox Player was not detected.');
-   const before=await this.native.run({action:'probe'});if(!before.ok)throw new Error(before.message);
+   const status=await this.status();ensureCurrent();if(!status?.playerPath)throw new Error('Roblox Player was not detected.');
+   const before=await this.native.run({action:'probe'});ensureCurrent();if(!before.ok)throw new Error(before.message);
    if(!this.store.state().options.multiInstance&&before.processes?.length)throw new Error('Roblox is already running. Close it or enable concurrent launch attempts.');
-   const secret=await this.cookie(accountId);const identity=await this.provider.identity(secret);if(identity.userId!==account.userId)throw new Error('Saved account identity changed. Sign in again.');
-   const ticket=await this.provider.ticket(secret);
+   const secret=await this.cookie(accountId);ensureCurrent();const identity=await this.provider.identity(secret);ensureCurrent();if(identity.userId!==account.userId)throw new Error('Saved account identity changed. Sign in again.');
+   const ticket=await this.provider.ticket(secret);ensureCurrent();
    const launchUri=buildAuthenticatedProtocol({ticket,uri:game.uri,placeId:game.placeId,trackerId:crypto.randomInt(100000000,999999999),launchedAt:this.now()});
    const policy=account.policy;const globalSettings=this.settingsStore?.getAll()||{performanceAutoApply:true,renderMode:'default'};const externalHandler=before.protocolHandlerPath&&!trustedPlayerPath(status.playerPath,null,before.protocolHandlerPath);if(globalSettings.performanceAutoApply&&!externalHandler){if(this.recovery){const saved=this.recovery.createRestorePoint('Before account session launch',status);if(!saved.ok)throw new Error(saved.message||'A safety restore point could not be created.');}const perf=this.performance.apply(status,{fpsCap:policy.fpsCap,renderMode:globalSettings.renderMode||'default',msaaMode:policy.potato?'1':'default'});if(!perf.ok)throw new Error(perf.message);this.configurationProfiles?.setActive(null);}
    if(!this.launchProtocol)throw new Error('The registered Roblox protocol launcher is unavailable.');
    const logSnapshot=this.joinObserver.snapshot();
-   await this.launchProtocol(launchUri);
+   ensureCurrent();await this.launchProtocol(launchUri);ensureCurrent();
    // A URI handoff can exit or spawn a different PID. Only attach when identity is unambiguous.
    let process=null;
    for(let attempt=0;attempt<12;attempt++){
-    const probe=await this.native.run({action:'probe'});if(probe.ok){const candidates=(probe.processes||[]).filter(p=>trustedPlayerPath(p.path,status.playerPath,probe.protocolHandlerPath||before.protocolHandlerPath)&&!before.processes?.some(old=>old.pid===p.pid&&old.start===p.start));process=candidates.length===1?candidates[0]:null;if(process)break;}
+    const probe=await this.native.run({action:'probe'});ensureCurrent();if(probe.ok){const candidates=(probe.processes||[]).filter(p=>trustedPlayerPath(p.path,status.playerPath,probe.protocolHandlerPath||before.protocolHandlerPath)&&!before.processes?.some(old=>old.pid===p.pid&&old.start===p.start));process=candidates.length===1?candidates[0]:null;if(process)break;}
     await new Promise(r=>setTimeout(r,500));
    }
    if(!process)throw new Error('Roblox started but its session could not be identified. It will not be controlled or automatically restarted.');
    const session={id:crypto.randomUUID(),accountId,gameId,placeId:game.placeId,gameName:game.name,pid:process.pid,start:process.start,path:process.path,startedAt:this.now(),status:'running',joinState:this.joinObserver.inspect(logSnapshot,game.placeId,account.userId).state,restartCount,policy:{...policy},memoryBytes:process.memoryBytes,cpuPercent:null,lastCpu:process.cpuSeconds,lastSample:this.now(),lastTrim:this.now()-35*60000+30000,lastAntiAfk:this.now(),message:externalHandler?'The registered launcher manages this Player installation; DragonStrap left its graphics configuration unchanged.':globalSettings.performanceAutoApply?'':'Performance auto-apply is off; FPS and MSAA overrides were not applied.',originalMaxWorkingSet:process.maxWorkingSet,originalAffinity:process.affinity,originalStyle:process.windowStyle,lastNativeWindows:this.store.state().options.nativeWindows,coreIndex:[...this.sessions.values()].filter(s=>s.status==='running').length};
    this.joinSnapshots.set(session.id,logSnapshot);
-   this.sessions.set(session.id,session);if(policy.lowPriority||policy.ecoCpu||policy.isolateCpu||policy.memoryPriority||policy.workingSetMb||!this.store.state().options.nativeWindows){const result=await this.native.run({action:'policy',...this.identity(session),policy});if(!result.ok)session.message=result.message;}
+   this.sessions.set(session.id,session);if(policy.lowPriority||policy.ecoCpu||policy.isolateCpu||policy.memoryPriority||policy.workingSetMb||!this.store.state().options.nativeWindows){const result=await this.native.run({action:'policy',...this.identity(session),policy});if(!result.ok){session.message=result.message;session.policyApplied=false;}}
    return {ok:true,sessionId:session.id};
   });}finally{this.busy.delete(accountId);}
  }
@@ -109,25 +111,26 @@ class AccountSessionService {
   const result=await this.native.run({action,...this.identity(s),policy:this.store.account(s.accountId)?.policy,delayMs:this.store.state().options.antiAfkDelayMs});
   if(!result.ok){if(action==='stop')s.stopRequested=false;throw new Error(result.message);}if(action==='stop')this.finish(s,'stopped');return result;
  }
- finish(s,status){if(s.status!=='running')return;s.status=status;s.endedAt=this.now();this.store.history({accountId:s.accountId,gameId:s.gameId,gameName:s.gameName,startedAt:s.startedAt,endedAt:s.endedAt,durationSeconds:Math.max(0,Math.floor((s.endedAt-s.startedAt)/1000)),status});}
+ finish(s,status){if(s.status!=='running')return;s.status=status;this.joinSnapshots.delete(s.id);s.endedAt=this.now();this.store.history({accountId:s.accountId,gameId:s.gameId,gameName:s.gameName,startedAt:s.startedAt,endedAt:s.endedAt,durationSeconds:Math.max(0,Math.floor((s.endedAt-s.startedAt)/1000)),status});}
  async tick(){if(this.tickBusy||this.stopping)return;this.tickBusy=true;try{
-  const probe=await this.native.run({action:'probe'});if(probe.ok){this.lastProbe=probe;for(const s of this.sessions.values())if(s.status==='running'){
+  const probe=await this.native.run({action:'probe'});if(this.stopping)return;if(probe.ok){this.lastProbe=probe;for(const s of this.sessions.values())if(s.status==='running'){
    const p=probe.processes.find(p=>p.pid===s.pid&&p.start===s.start&&p.path===s.path);
    if(!p){this.finish(s,s.stopRequested?'stopped':'exited');const account=this.store.account(s.accountId);if(!s.stopRequested&&account?.policy.autoRestart&&s.restartCount<3&&this.now()-s.startedAt>=30000){try{await this.launch(s.accountId,s.gameId,{restartCount:s.restartCount+1});}catch(e){s.message=e.message;}}continue;}
    const elapsed=(this.now()-s.lastSample)/1000;s.cpuPercent=elapsed>0?Math.max(0,Math.min(100,100*(p.cpuSeconds-s.lastCpu)/elapsed/(probe.logicalCores||1))):0;s.lastCpu=p.cpuSeconds;s.lastSample=this.now();s.memoryBytes=p.memoryBytes;s.responding=p.responding;
    if(['pending','joining','home','unconfirmed'].includes(s.joinState)){const account=this.store.account(s.accountId);const evidence=this.joinObserver.inspect(this.joinSnapshots.get(s.id)||{},s.placeId,account?.userId);s.joinState=evidence.state;if(s.joinState==='joined'&&s.message?.startsWith('Roblox opened, but'))s.message='';if(s.joinState!=='joined'&&this.now()-s.startedAt>90000){s.joinState='unconfirmed';s.message='Roblox opened, but joining the saved game was not confirmed. Try launching again or check the Roblox error screen.';}}
    const policy=this.store.account(s.accountId)?.policy||s.policy;
-   if(JSON.stringify(policy)!==JSON.stringify(s.policy)||s.lastNativeWindows!==this.store.state().options.nativeWindows){const r=await this.native.run({action:'policy',...this.identity(s),policy});s.message=r.ok?'':r.message;s.policy={...policy};s.lastNativeWindows=this.store.state().options.nativeWindows;}
+   if(s.policyApplied===false||JSON.stringify(policy)!==JSON.stringify(s.policy)||s.lastNativeWindows!==this.store.state().options.nativeWindows){const r=await this.native.run({action:'policy',...this.identity(s),policy});s.message=r.ok?'':r.message;if(r.ok){s.policy={...policy};s.policyApplied=true;s.lastNativeWindows=this.store.state().options.nativeWindows;}else s.policyApplied=false;}
    if(policy.autoTrim&&this.now()-s.lastTrim>=35*60000){s.lastTrim=this.now();try{await this.control(s.id,'trim');}catch(e){s.message=e.message;}}
    if(policy.antiAfk&&this.now()-s.lastAntiAfk>=this.store.state().options.antiAfkMinutes*60000){s.lastAntiAfk=this.now();try{const r=await this.control(s.id,'antiAfk');s.message=r.message||'Idle input cycle sent.';}catch(e){s.message=e.message;}}
   }}else this.lastError=probe.message;
+  if(this.stopping)return;
   for(const job of this.store.state().schedules.filter(j=>j.status==='pending'&&j.at<=this.now())){
    if(this.now()-job.at>5*60000){this.store.updateSchedule(job.id,'missed','Scheduled time passed while DragonStrap was closed or suspended.');continue;}
    this.store.updateSchedule(job.id,'running');try{if(job.action==='launch'){const r=await this.launch(job.accountId,job.gameId);if(!r.ok)throw new Error(r.message);}else{for(const s of this.sessions.values())if(s.accountId===job.accountId&&s.status==='running')await this.control(s.id,'stop');}this.store.updateSchedule(job.id,'completed');}catch(e){this.store.updateSchedule(job.id,'failed',e.message);}
   }
   if(this.shutdownAt&&this.now()>=this.shutdownAt){this.shutdownAt=0;await this.stopAll();}
  }catch(e){this.lastError=e.message;}finally{this.tickBusy=false;}}
- async stopAll(){const failures=[];for(const s of this.sessions.values())if(s.status==='running')try{await this.control(s.id,'stop');}catch(e){failures.push(e.message);}if(failures.length)throw new Error(failures.join('; '));return {ok:true};}
+ async stopAll(){this.launchEpoch++;const failures=[];for(const s of this.sessions.values())if(s.status==='running')try{await this.control(s.id,'stop');}catch(e){failures.push(e.message);}if(failures.length)throw new Error(failures.join('; '));return {ok:true};}
  setShutdown(minutes){if(!Number.isInteger(minutes)||minutes<0||minutes>1440)throw new Error('Choose 0–1440 minutes.');this.shutdownAt=minutes?this.now()+minutes*60000:0;}
  start(){if(this.stopping||this.timer)return;this.timer=setInterval(()=>this.tick(),15000);this.timer.unref();this.tick();}
  dispose(){if(this.stopping)return;this.stopping=true;clearInterval(this.timer);for(const s of this.sessions.values())if(s.status==='running')try{this.finish(s,'detached');}catch{this.lastError='Session statistics could not be saved on exit.';}}

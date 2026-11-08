@@ -1,3 +1,11 @@
+## v2.5.1 — Account & Session Center reliability
+
+- Cancel pending account authentication/launch work when closing or using Stop all. Do not attach/control a session after the manager closes. Already dispatched Roblox protocol requests cannot be recalled.
+- Retry failed initial or edited Windows process policies on later monitoring ticks; do not record failed requests as successfully applied.
+- Release private join-log snapshots when a session ends.
+- Preserve unsaved schedule, appearance and manager settings forms across background refresh even after they lose focus.
+- Add backend regressions and actual renderer draft-preservation checks.
+
 ## v2.5.0 — Stable Account & Session Center
 
 - Promote the user-accepted preview.6 implementation to stable v2.5.0, with synchronized package/UI versions and release assets.
