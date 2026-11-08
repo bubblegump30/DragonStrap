@@ -1,6 +1,6 @@
 # DragonStrap preview verification and publication
 
-Updated 8 November 2026. Accepted preview: **2.5.0-preview.6**. The implementation is published with this revision; Windows packages are distributed as a GitHub prerelease. Stable v2.4.1 remains available separately.
+Updated 8 November 2026. Accepted preview: **2.5.0-preview.6**. The implementation is published with this revision; Windows packages are distributed as a GitHub prerelease. This accepted implementation is promoted to stable [v2.5.0](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0); preview.6 and v2.4.1 remain historical downloads.
 
 ## Verified
 

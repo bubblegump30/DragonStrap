@@ -1,3 +1,10 @@
+## v2.5.0 — Stable Account & Session Center
+
+- Promote the user-accepted preview.6 implementation to stable v2.5.0, with synchronized package/UI versions and release assets.
+- Publish Setup, single-file Portable, Fast Folder and source archives with SHA-256 checksums.
+- Mark v2.5.0 as GitHub Latest and make it discoverable by the stable update channel.
+- Preserve documented optional-feature acceptance limits and CPU/FPS permission requirements. Application behavior is unchanged from accepted preview.6.
+
 ## v2.5.0-preview.6 — Integrated CPU temperature
 
 - Bundle the official LibreHardwareMonitor CPU reader; a separate monitor application is no longer required.
