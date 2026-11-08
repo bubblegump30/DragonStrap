@@ -22,7 +22,7 @@ if ($env:CSC_LINK) {
     Write-Host 'Unsigned Windows release selected; no CSC_LINK code-signing input configured.' -ForegroundColor Cyan
 }
 
-if ($ElectronDist) { Invoke-Npm run dist:win -- "--config.electronDist=$ElectronDist" }
+if ($ElectronDist) { Invoke-Npm -NpmArguments @('run', 'dist:win', '--', "--config.electronDist=$ElectronDist") }
 else { Invoke-Npm run dist:win }
 
 $version = (Get-Content '.\VERSION' -Raw).Trim()
