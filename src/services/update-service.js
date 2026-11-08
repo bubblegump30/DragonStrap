@@ -3,9 +3,11 @@
 const fs = require('fs');
 
 function normalizeVersion(value) {
-  const match = String(value || '').trim().replace(/^v/i, '').match(/^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?/);
+  const match = String(value || '').trim().replace(/^v/i, '').match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/);
   if (!match) return null;
-  return { raw: `${match[1]}.${match[2]}.${match[3]}${match[4] ? `-${match[4]}` : ''}`, major:Number(match[1]), minor:Number(match[2]), patch:Number(match[3]), pre:match[4] || '' };
+  if (match[4]?.split('.').some(id => /^\d+$/.test(id) && id.length > 1 && id.startsWith('0'))) return null;
+  if (match.slice(1, 4).some(part => !Number.isSafeInteger(Number(part)))) return null;
+  return { raw: `${match[1]}.${match[2]}.${match[3]}${match[4] ? `-${match[4]}` : ''}${match[5] ? `+${match[5]}` : ''}`, major:Number(match[1]), minor:Number(match[2]), patch:Number(match[3]), pre:match[4] || '' };
 }
 
 function compareVersions(a, b) {
@@ -17,7 +19,17 @@ function compareVersions(a, b) {
   if (av.pre === bv.pre) return 0;
   if (!av.pre) return 1;
   if (!bv.pre) return -1;
-  return av.pre.localeCompare(bv.pre, undefined, { numeric:true, sensitivity:'base' });
+  const left = av.pre.split('.'), right = bv.pre.split('.');
+  for (let i = 0; i < Math.max(left.length, right.length); i++) {
+    if (left[i] === undefined) return -1;
+    if (right[i] === undefined) return 1;
+    if (left[i] === right[i]) continue;
+    const ln = /^\d+$/.test(left[i]), rn = /^\d+$/.test(right[i]);
+    if (ln && rn) return BigInt(left[i]) > BigInt(right[i]) ? 1 : -1;
+    if (ln !== rn) return ln ? -1 : 1;
+    return left[i] > right[i] ? 1 : -1;
+  }
+  return 0;
 }
 
 class UpdateService {

@@ -67,3 +67,12 @@ test('UpdateService prerelease channel selects the highest semantic version from
   assert.equal(result.prerelease,true);
   assert.equal(result.updateAvailable,true);
 });
+
+test('semantic version ordering follows numeric identifiers, ASCII case and identifier count', () => {
+  const ordered = ['1.0.0-alpha', '1.0.0-alpha.1', '1.0.0-alpha.beta', '1.0.0-beta', '1.0.0-beta.2', '1.0.0-beta.11', '1.0.0-rc.1', '1.0.0'];
+  for (let i = 1; i < ordered.length; i++) assert.equal(compareVersions(ordered[i - 1], ordered[i]), -1);
+  assert.equal(compareVersions('1.0.0-1', '1.0.0-alpha'), -1);
+  assert.equal(compareVersions('1.0.0-BETA', '1.0.0-beta'), -1);
+  assert.equal(compareVersions('1.0.0+build.1', '1.0.0+build.2'), 0);
+  for (const invalid of ['1.0.0garbage', '1.0.0-', '01.0.0', '1.0.0-beta..1', '1.0.0-01', '99999999999999999.0.0']) assert.equal(compareVersions(invalid, '1.0.0'), null);
+});

@@ -170,3 +170,5 @@ test('SelfUpdateService recovery cleans interrupted leftovers and malformed upda
   assert.equal(fs.existsSync(path.join(service.root,'orphan.exe.part')),false);
   fs.rmSync(dir,{recursive:true,force:true});
 });
+
+test('extract-once folder portable is identified and cannot replace its runtime with a single-file updater',t=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'dragon-folder-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));const executable=path.join(dir,'DragonStrap.exe');fs.writeFileSync(executable,'fixture');fs.writeFileSync(path.join(dir,'.dragonstrap-folder-portable'),'1');assert.equal(detectBuildMode({isPackaged:true,env:{},execPath:executable}).mode,'folder');const service=new SelfUpdateService({userData:dir,currentVersion:'2.5.0-preview.3',repository:REPO,isPackaged:true,execPath:executable,env:{},platform:'win32'});assert.equal(service.getState().supported,false);});

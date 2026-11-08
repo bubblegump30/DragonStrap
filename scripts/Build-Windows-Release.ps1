@@ -1,14 +1,19 @@
 param([switch]$SkipInstall)
 $ErrorActionPreference = 'Stop'
+# Native command failures must stop packaging on Windows PowerShell as well as pwsh.
+function Invoke-Npm {
+    & npm @args
+    if ($LASTEXITCODE -ne 0) { throw "npm failed with exit code $LASTEXITCODE" }
+}
 Set-Location (Split-Path -Parent $PSScriptRoot)
 Write-Host '== DragonStrap Windows Stable Release Build ==' -ForegroundColor Magenta
 
-if (-not $SkipInstall) { npm install }
+if (-not $SkipInstall) { Invoke-Npm ci }
 
-npm run check
-npm test
-npm run release:verify
-npm run release:prepare
+Invoke-Npm run check
+Invoke-Npm test
+Invoke-Npm run release:verify
+Invoke-Npm run release:prepare
 
 if ($env:CSC_LINK) {
     Write-Host 'Windows code-signing input detected. electron-builder will attempt signing.' -ForegroundColor Green
@@ -16,7 +21,7 @@ if ($env:CSC_LINK) {
     Write-Host 'Unsigned Windows release selected; no CSC_LINK code-signing input configured.' -ForegroundColor Cyan
 }
 
-npm run dist:win
+Invoke-Npm run dist:win
 
 $version = (Get-Content '.\VERSION' -Raw).Trim()
 $portable = Join-Path $PWD "dist\DragonStrap-Portable-$version-x64.exe"

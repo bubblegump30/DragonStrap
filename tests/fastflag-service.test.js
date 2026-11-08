@@ -214,3 +214,13 @@ test('disable all does not change malformed settings or clear flags if preferenc
     assert.equal(service.restoreDisabled({}).code, 'ROBLOX_NOT_FOUND');
   } finally { fs.rmSync(root, { recursive:true, force:true }); }
 });
+
+test('empty floating point inputs are rejected instead of silently becoming zero', () => {
+  const service = new FastFlagService();
+  assert.equal(service.validateEntry('DFFloatExample', '  ').ok, false);
+  assert.equal(service.validateEntry('DFFloatExample', '0').value, '0');
+  const { StudioFastFlagService } = require('../src/services/studio-fastflag-service');
+  const studio = new StudioFastFlagService('unused');
+  assert.equal(studio.validateEntry('DFFloatExample', '').ok, false);
+  assert.equal(studio.validateEntry('DFFloatExample', '0').value, '0');
+});

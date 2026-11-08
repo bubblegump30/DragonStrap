@@ -97,6 +97,13 @@ function switchView(name, options = {}) {
   localStorage.setItem('dragonstrap.activeView', name);
   active.scrollIntoView({ block: 'nearest' });
 
+  if (options.deferLoad) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (document.documentElement.dataset.view === name) switchView(name);
+    }));
+    return;
+  }
+
   if (name === 'maintenance') refreshMaintenance(false);
   if (name === 'servers') refreshServerSavedState().catch(console.error);
   if (name === 'studio') refreshStudioCenter(false).catch(console.error);
@@ -1468,6 +1475,7 @@ function renderUpdateState(result) {
 
   if (message) {
     if (!result?.configured) message.textContent='The official DragonStrap GitHub release feed is not configured.';
+    else if (updateAvailable && self.buildMode === 'folder') message.textContent=`DragonStrap ${result.latestVersion} is available. Folder Portable updates use an extract-once ZIP. Open the release and extract the new folder; your saved settings stay in place.`;
     else if (updateAvailable && self.buildMode === 'source') message.textContent=`DragonStrap ${result.latestVersion} is available. Source/dev sessions do not self-update; run a packaged Portable or Setup build to use verified downloads.`;
     else if (staged) message.textContent=`DragonStrap ${result.latestVersion} is downloaded and SHA-256 verified. INSTALL UPDATE will ${self.buildMode === 'portable' ? 'perform a safe portable handoff and relaunch DragonStrap' : 'launch the verified Setup package and close DragonStrap'}.`;
     else if (updateAvailable && result?.deferred) message.textContent=`DragonStrap ${result.latestVersion} is available, but this notification is deferred until ${formatUpdateDate(result.deferredUntil)}.`;
@@ -3076,7 +3084,7 @@ window.dragonStrap.onRobloxStatusChanged(status => {
 });
 
 const restoredView = localStorage.getItem('dragonstrap.activeView');
-if (restoredView && q(`.nav-item[data-tab="${restoredView}"]`)) switchView(restoredView);
+if (restoredView && q(`.nav-item[data-tab="${restoredView}"]`)) switchView(restoredView, { deferLoad:true });
 else switchView('home');
 
 window.dragonStrap.onUpdateDownloadProgress(progress => {
@@ -3092,10 +3100,15 @@ window.dragonStrap.onUpdateDownloadProgress(progress => {
 
 (async function initialize() {
   // DragonStrap 2.0 keeps startup lean: load only shell/home state, then lazy-load feature centers on navigation.
-  await Promise.all([getAppInfo(), loadSettings(), loadLaunchHistory(), refreshConfigurationProfiles(false)]);
+  await Promise.all([getAppInfo(), loadSettings()]);
   await refreshRobloxStatus(false);
   if (state.settings?.firstRunComplete === false) openFirstRunGuide();
-  await Promise.all([refreshCoreState(false), refreshUpdateState(false,false), refreshReliabilityState(), restorePlayerInstallState()]);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    Promise.all([loadLaunchHistory(), refreshConfigurationProfiles(false), restorePlayerInstallState()]).catch(console.error);
+    if (document.documentElement.dataset.view === 'settings') {
+      Promise.all([refreshCoreState(false), refreshUpdateState(false,false), refreshReliabilityState()]).catch(console.error);
+    }
+  }));
   if (state.settings?.checkForUpdates !== false) {
     setTimeout(() => refreshUpdateState(true,false), 2200);
   }

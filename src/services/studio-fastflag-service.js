@@ -122,7 +122,7 @@ class StudioFastFlagService {
     }
     if (mode === 'float') {
       const number=Number(raw);
-      if (!Number.isFinite(number)) throw new Error('Float flags require a finite number.');
+      if (!raw || !Number.isFinite(number)) throw new Error('Float flags require a finite number.');
       return String(number);
     }
     if (!['string','auto'].includes(mode)) throw new Error('Unsupported FastFlag value type.');

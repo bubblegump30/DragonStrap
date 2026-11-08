@@ -1,8 +1,14 @@
 # DragonStrap
 
-**v2.4.1 — Disable all Player FastFlags · Windows release**
+**Source v2.5.0-preview.6 — Account & Session Center (unreleased)**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
+
+## Account & Session Center (v2.5.0 development)
+
+The Accounts sidebar entry opens saved accounts, per-account games and servers, session controls, monitoring, schedules, local levels/achievements, appearance presets and Windows optimization settings. Roblox sign-in uses an isolated official login window. Optional cookie import verifies the account and stores the session using asynchronous Windows-backed encryption; passwords are not stored.
+
+See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md). Account-specific authenticated launches, Roblox concurrency behavior and anti-AFK still require live acceptance. FPS targets remain legacy overrides; actual FPS and temperature readings are not fabricated. These source changes are not a published Windows release.
 
 ## DragonStrap 2.0 architecture
 
@@ -40,7 +46,7 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 | Item | Version | Where |
 | --- | --- | --- |
 | Latest published Windows installer and portable app | v2.4.1 | [Download Setup or Portable](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.4.1) |
-| Current repository source | v2.4.1 | [GitHub main](https://github.com/bubblegump30/DragonStrap) |
+| Local development source | v2.5.0-preview.6 (unreleased) | This source package; published GitHub main may still be v2.4.1 |
 
 Download the Setup or Portable x64 executable from the v2.4.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
@@ -71,7 +77,7 @@ Follow the [step-by-step guide](docs/USER-GUIDE.md) for installing, launching, c
 Requirements: Windows 10/11, Node.js, npm, and the Windows `tar.exe` utility used by the Roblox package engine.
 
 ```powershell
-npm install
+npm ci
 npm start
 ```
 
@@ -105,7 +111,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.4.1`
+`2.5.0-preview.6`
 
 ## Project links
 
@@ -115,3 +121,11 @@ Official releases should upload both Windows executables and the generated `dist
 ## Architecture and notices
 
 See `docs/ARCHITECTURE.md`, `docs/CORE-API-v2.md`, and `THIRD_PARTY_NOTICES.md`.
+
+Account launches honor the global Performance auto-apply switch. Disable all Player flags continues to keep launch-time FPS/MSAA overrides off.
+
+## Faster portable startup
+
+The Folder Portable preview is an extract-once ZIP. Extract the entire folder and run DragonStrap.exe directly; it avoids the single-file Portable's per-launch runtime extraction. Keep the runtime files together. Folder Portable updates use a new complete ZIP folder; your normal DragonStrap user-data folder is retained.
+
+Preview.3 launches saved games through the Windows registered roblox-player handler and tracks Player executables in that handler's managed installation. Fresh completed join events must match both the requested Place ID and saved account before the UI reports a confirmed join. A live verification joined the requested saved game through the registered handler.

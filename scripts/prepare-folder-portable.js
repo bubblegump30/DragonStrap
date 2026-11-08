@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs');const path=require('node:path');
+const root=path.resolve(__dirname,'..');const version=require('../package.json').version;
+const source=path.join(root,'dist','win-unpacked');const target=path.join(root,'dist',`DragonStrap-Folder-${version}-x64`);
+if(!fs.existsSync(path.join(source,'DragonStrap.exe')))throw new Error('Build the unpacked Windows app first.');
+if(fs.existsSync(target))throw new Error('Folder Portable already exists. Preserve/remove the previous build explicitly before preparing another.');
+fs.cpSync(source,target,{recursive:true,errorOnExist:true,force:false});
+fs.writeFileSync(path.join(target,'.dragonstrap-folder-portable'),'1\n');
+fs.writeFileSync(path.join(target,'README-FIRST.txt'),'DragonStrap Folder Portable '+version+'\r\nExtract the entire ZIP once, then run DragonStrap.exe from this folder. Keep all files together.\r\nThis distribution does not unpack Electron at each launch. Saved settings use the normal DragonStrap user-data folder.\r\nUpdate by extracting a new complete folder; in-app executable replacement is disabled for this distribution.\r\nUnsigned preview. No VirusTotal scan was performed for this build.\r\n');
+console.log(target);

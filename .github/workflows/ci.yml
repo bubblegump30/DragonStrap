@@ -31,7 +31,7 @@ jobs:
         run: npm run release:verify
 
       - name: Install desktop test dependencies
-        run: npm install
+        run: npm ci
 
       - name: Verify desktop layouts
         run: npm run ui:verify

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://*.rbxcdn.com; style-src 'self' 'unsafe-inline'; script-src 'self';" />
   <title>DragonStrap</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="purple-dragon.css" />
@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="reliability.css" />
   <link rel="stylesheet" href="update-center.css" />
   <link rel="stylesheet" href="dragon-2.css" />
+  <link rel="stylesheet" href="manager.css">
 </head>
 <body>
   <div class="app-shell">
@@ -40,7 +41,7 @@
         <div class="product-menu" id="productMenu">
           <button class="product-menu-trigger" id="productMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="productMenuPopup">
             <span class="avatar dragon-avatar" aria-hidden="true"><img src="assets/dragon-app-icon.png" alt="" /></span>
-            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.4.1</span></span>
+            <span class="operator"><strong>DragonStrap</strong><span id="topVersion">v2.5.0-preview.6</span></span>
             <span class="product-menu-chevron" aria-hidden="true">⌄</span>
           </button>
           <div class="product-menu-popup" id="productMenuPopup" role="menu" aria-label="DragonStrap menu" hidden>
@@ -56,6 +57,7 @@
       <aside class="sidebar panel-edge">
         <nav>
           <button class="nav-item active" data-tab="home" aria-label="Home" title="Home">⌂ <span>Home</span></button>
+          <button class="nav-item" data-tab="accounts" aria-label="Accounts and sessions" title="Accounts and sessions">♧ <span>Accounts</span></button>
           <button class="nav-item" data-tab="launch" aria-label="Launch" title="Launch">▷ <span>Launch</span></button>
           <button class="nav-item" data-tab="instances" aria-label="Instances" title="Instances">▣ <span>Instances</span></button>
           <button class="nav-item" data-tab="performance" aria-label="Performance Center" title="Performance Center">◴ <span>Performance Center</span></button>
@@ -160,7 +162,7 @@
               <div class="card-head"><div><h2>DRAGONSTRAP</h2><p>Stable Roblox bootstrapper</p></div></div>
               <button class="secondary-action" data-tab-jump="maintenance" title="Open integrity checks, restore points, and repair tools">RELIABILITY &amp; RECOVERY</button>
               <div class="power-stats">
-                <div><span>Version</span><strong id="appVersion">2.4.1</strong></div>
+                <div><span>Version</span><strong id="appVersion">2.5.0-preview.6</strong></div>
                 <div><span>Roblox</span><strong id="robloxSummary">Checking</strong></div>
                 <div><span>Release channel</span><strong>Stable</strong></div>
               </div>
@@ -768,7 +770,7 @@
             <section class="card feature-card update-center-card">
               <div class="card-head"><div><h2>UPDATE CENTER 2.0</h2><p>Download, verify, defer, and apply official DragonStrap releases</p></div><span class="status-dot" id="updateStatusDot"></span></div>
               <div class="update-state-grid update-state-grid-wide">
-                <div><span>Current</span><strong id="updateCurrentVersion">2.4.1</strong></div>
+                <div><span>Current</span><strong id="updateCurrentVersion">2.5.0-preview.6</strong></div>
                 <div><span>Latest</span><strong id="updateLatestVersion">—</strong></div>
                 <div><span>Build</span><strong id="updateBuildMode">Detecting…</strong></div>
                 <div><span>Feed</span><strong id="updateFeedStatus">Checking…</strong></div>
@@ -836,10 +838,14 @@
 
             <section class="card feature-card settings-about-card" id="aboutCard" tabindex="-1">
               <div class="card-head"><div><h2>ABOUT</h2><p>DragonStrap 2.0 stable architecture release</p></div></div>
-              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.4.1</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
+              <div class="data-list"><div><span>Product</span><strong>DragonStrap</strong></div><div><span>Version</span><strong id="aboutVersion">2.5.0-preview.6</strong></div><div><span>UI</span><strong>Purple Dragon UI/UX 2.0</strong></div><div><span>Platform</span><strong>Windows</strong></div><div><span>Core API</span><strong id="aboutCoreApi">2.0.0</strong></div><div><span>Electron</span><strong id="aboutElectron">—</strong></div><div><span>Build</span><strong id="aboutBuildType">—</strong></div></div>
               <div class="about-website"><div><strong>Purple Dragon Foundation</strong><small>www.purpledragonfoundationltd.xyz</small></div><button class="secondary-action" id="aboutWebsiteBtn" type="button">OPEN WEBSITE ↗</button></div>
             </section>
           </div>
+        </section>
+        <section class="view" data-view="accounts">
+          <div class="page-heading"><div><h1>ACCOUNT &amp; SESSION CENTER</h1><p>Saved Roblox accounts, sessions and automation</p></div></div>
+          <div id="managerRoot"><p class="manager-empty">Loading account manager…</p></div>
         </section>
       </main>
     </div>
@@ -877,5 +883,6 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
   <script src="app.js"></script>
+  <script src="manager.js"></script>
 </body>
 </html>

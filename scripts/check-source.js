@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const required = [
-  'main.js', 'preload.js', 'package.json',
+  'main.js', 'preload.js', 'package.json', 'renderer/manager.js', 'renderer/manager.css', 'src/services/account-session-service.js', 'src/services/account-manager-store.js', 'src/services/windows-session-control.js', 'src/services/manager-cleanup-service.js', 'src/core/account-manager-ipc.js', 'src/native/session-control.ps1',
   'renderer/index.html', 'renderer/styles.css', 'renderer/purple-dragon.css', 'renderer/dragon-2.css', 'renderer/reliability.css', 'renderer/update-center.css', 'renderer/fastflags.css', 'renderer/performance-center.css', 'renderer/servers.css', 'renderer/studio.css', 'renderer/profiles.css', 'renderer/channels.css', 'renderer/maintenance.css', 'renderer/app.js',
   'renderer/assets/logo.svg', 'renderer/assets/dragon-app-icon.png', 'assets/DragonStrap.ico', 'assets/DragonStrap.png', 'src/core/app-kernel.js', 'src/core/service-registry.js', 'src/core/operation-coordinator.js', 'src/core/bootstrap-pipeline.js', 'src/core/plugin-host.js', 'src/core/roblox-status-cache.js', 'src/core/api-contract.js', 'src/services/settings-store.js',
   'src/services/roblox-installation.js', 'src/services/launch-service.js', 'src/services/self-update-service.js', 'src/services/recovery-service.js',
@@ -17,4 +17,20 @@ if (missing.length) {
   console.error(`Missing required files:\n${missing.join('\n')}`);
   process.exit(1);
 }
-console.log('DragonStrap source check passed.');
+// Compile every shipped JavaScript file and validation script without executing it.
+// Presence checks alone miss broken imports, duplicate lexical declarations and syntax.
+const { spawnSync } = require('child_process');
+function javascriptFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes:true }).flatMap(entry => {
+    const full = path.join(directory, entry.name);
+    return entry.isDirectory() ? javascriptFiles(full) : (entry.name.endsWith('.js') ? [full] : []);
+  });
+}
+for (const file of [path.join(root, 'main.js'), path.join(root, 'preload.js'), ...['src','renderer','scripts'].flatMap(dir => javascriptFiles(path.join(root, dir)))]) {
+  const result = spawnSync(process.execPath, ['--check', file], { encoding:'utf8' });
+  if (result.error || result.status !== 0) {
+    console.error(result.error?.message || result.stderr || `Syntax check failed: ${file}`);
+    process.exit(1);
+  }
+}
+console.log('DragonStrap source and JavaScript syntax checks passed.');

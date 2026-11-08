@@ -1,7 +1,7 @@
 {
   "name": "dragonstrap",
   "productName": "DragonStrap",
-  "version": "2.4.1",
+  "version": "2.5.0-preview.6",
   "private": true,
   "description": "DragonStrap 2.0 Windows Roblox bootstrapper with consolidated service architecture, coordinated bootstrap/update pipeline, plugin-ready contracts, lazy-loaded UI centers, recovery, profiles, and verified updates",
   "main": "main.js",
@@ -13,13 +13,13 @@
     "test": "node --test tests/*.test.js",
     "release:prepare": "node scripts/prepare-release.js",
     "release:verify": "node scripts/verify-release.js",
-    "ui:verify": "electron scripts/verify-ui-layout.js",
+    "ui:verify": "electron scripts/verify-ui-layout.js && electron scripts/verify-manager-ui.js",
     "pack:win": "npm run release:verify && electron-builder --win --x64 --dir",
     "dist:win": "npm run release:verify && electron-builder --win --x64 --publish never"
   },
   "devDependencies": {
-    "electron": "44.3.0",
-    "electron-builder": "26.15.3"
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0"
   },
   "build": {
     "appId": "com.dragonstrap.app",
@@ -37,7 +37,8 @@
       "THIRD_PARTY_NOTICES.md",
       "renderer/**/*",
       "src/**/*",
-      "assets/**/*"
+      "assets/**/*",
+      "!renderer/.*verification.html"
     ],
     "win": {
       "icon": "assets/DragonStrap.ico",
@@ -65,7 +66,10 @@
     },
     "portable": {
       "artifactName": "DragonStrap-Portable-${version}-${arch}.${ext}"
-    }
+    },
+    "asarUnpack": [
+      "assets/telemetry/**/*"
+    ]
   },
   "repository": {
     "type": "git",
@@ -74,5 +78,8 @@
   "homepage": "https://github.com/bubblegump30/DragonStrap",
   "bugs": {
     "url": "https://github.com/bubblegump30/DragonStrap/issues"
+  },
+  "overrides": {
+    "minimatch@>=7 <11.0.1": "^11.0.1"
   }
 }

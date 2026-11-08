@@ -34,12 +34,15 @@ const { OperationCoordinator } = require('./operation-coordinator');
 const { PluginHost } = require('./plugin-host');
 const { RobloxStatusCache } = require('./roblox-status-cache');
 const { BootstrapPipeline } = require('./bootstrap-pipeline');
+const { AccountSessionService } = require('../services/account-session-service');
 const { CORE_API_VERSION } = require('./api-contract');
 
 class AppKernel {
-  constructor({ userData, currentVersion, isPackaged, execPath, env = process.env, platform = process.platform, arch = process.arch } = {}) {
+  constructor({ userData, currentVersion, isPackaged, execPath, env = process.env, platform = process.platform, arch = process.arch, credentialEncryption = null, launchProtocol = null } = {}) {
     if (!userData) throw new TypeError('AppKernel requires userData.');
     this.userData = userData;
+    this.credentialEncryption = credentialEncryption;
+    this.launchProtocol = launchProtocol;
     this.currentVersion = String(currentVersion || '0.0.0');
     this.runtime = { isPackaged:Boolean(isPackaged), execPath, env, platform, arch };
     this.registry = new ServiceRegistry({ apiVersion:CORE_API_VERSION });
@@ -99,6 +102,15 @@ class AppKernel {
     this.plugins.registerBuiltin({ id:'dragonstrap.server-core', name:'DragonStrap Server Intelligence', version:this.currentVersion, extensionPoints:['server.enrichment'], serviceCapabilities:['servers.lookup','servers.enrichment'] });
     this.plugins.registerBuiltin({ id:'dragonstrap.recovery-core', name:'DragonStrap Recovery Diagnostics', version:this.currentVersion, extensionPoints:['diagnostics.contributor'], serviceCapabilities:['recovery.inspect','maintenance.inspect'] });
     this.plugins.registerBuiltin({ id:'dragonstrap.profile-core', name:'DragonStrap Profile Core', version:this.currentVersion, extensionPoints:['profile.section'], serviceCapabilities:['profiles.capture','profiles.apply'] });
+
+    let accountManager;
+    try {
+      accountManager = new AccountSessionService({ userData, safeStorage:this.credentialEncryption, launchProtocol:this.launchProtocol, status:()=>statusCache.get(), settingsStore, launchService, performanceService, recoveryService, configurationProfileStore, operations:this.operations });
+    } catch {
+      // Preserve damaged files and keep unrelated launcher/recovery features available.
+      accountManager = { initializationError:'Account manager data could not be read. Existing files were preserved. Open the DragonStrap data folder and restore account-manager.json or account-vault.json.', store:{state:()=>({options:{}})}, start(){}, dispose(){} };
+    }
+    this.register('accounts.manager', accountManager, ['accounts.manage','sessions.control','sessions.schedule']);
 
     this.registry.seal();
     this.initialized = true;

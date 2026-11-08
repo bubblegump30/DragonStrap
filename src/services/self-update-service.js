@@ -26,6 +26,7 @@ function parseSha256Sums(text) {
 
 function detectBuildMode({ isPackaged = false, env = process.env, execPath = process.execPath } = {}) {
   if (!isPackaged) return { mode:'source', label:'Source / Dev', executablePath:null };
+  if (fs.existsSync(path.join(path.dirname(execPath), '.dragonstrap-folder-portable'))) return { mode:'folder', label:'Folder Portable', executablePath:path.resolve(execPath) };
   const portableDir = typeof env.PORTABLE_EXECUTABLE_DIR === 'string' ? env.PORTABLE_EXECUTABLE_DIR.trim() : '';
   const portableFile = typeof env.PORTABLE_EXECUTABLE_FILE === 'string' ? env.PORTABLE_EXECUTABLE_FILE.trim() : '';
   if (portableDir || portableFile) {
@@ -215,6 +216,7 @@ class SelfUpdateService extends EventEmitter {
   #prepare(release) {
     if (this.platform !== 'win32') return { ok:false, code:'UNSUPPORTED_PLATFORM', message:'DragonStrap self-update is currently available on Windows only.' };
     if (!release?.ok || !release.updateAvailable || !release.latestVersion) return { ok:false, code:'NO_UPDATE_AVAILABLE', message:'No newer DragonStrap release is currently selected.' };
+    if (this.runtime.mode === 'folder') return { ok:false, code:'FOLDER_UPDATE_MANUAL', message:'Folder Portable updates are installed by extracting the new folder ZIP. Use Open Release to get the next version.' };
     if (!['portable','installer'].includes(this.runtime.mode)) return { ok:false, code:'SOURCE_MODE', message:'Self-update is disabled while DragonStrap is running from source. Build or run a packaged release to use the updater.' };
     const asset = selectReleaseAsset(release.assets, this.runtime.mode, release.latestVersion, this.arch);
     if (!asset) return { ok:false, code:'UPDATE_ASSET_NOT_FOUND', message:`The release does not contain a ${this.runtime.label} ${this.arch} update artifact.` };
