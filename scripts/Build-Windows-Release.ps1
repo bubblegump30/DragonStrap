@@ -1,4 +1,4 @@
-param([switch]$SkipInstall)
+param([switch]$SkipInstall, [string]$ElectronDist)
 $ErrorActionPreference = 'Stop'
 # Native command failures must stop packaging on Windows PowerShell as well as pwsh.
 function Invoke-Npm {
@@ -22,7 +22,8 @@ if ($env:CSC_LINK) {
     Write-Host 'Unsigned Windows release selected; no CSC_LINK code-signing input configured.' -ForegroundColor Cyan
 }
 
-Invoke-Npm run dist:win
+if ($ElectronDist) { Invoke-Npm run dist:win -- "--config.electronDist=$ElectronDist" }
+else { Invoke-Npm run dist:win }
 
 $version = (Get-Content '.\VERSION' -Raw).Trim()
 $portable = Join-Path $PWD "dist\DragonStrap-Portable-$version-x64.exe"

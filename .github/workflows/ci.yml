@@ -33,5 +33,11 @@ jobs:
       - name: Install desktop test dependencies
         run: npm ci
 
+      - name: Prepare checksum-verified Electron runtime
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .\scripts\Prepare-Electron-Windows.ps1
+
       - name: Verify desktop layouts
         run: npm run ui:verify

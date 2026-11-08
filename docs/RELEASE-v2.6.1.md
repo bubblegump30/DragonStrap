@@ -9,3 +9,5 @@ Verification: source/release checks, existing Windows layout checks across 1600Ã
 Setup, single-file Portable, Fast Folder and source archives include SHA256SUMS.txt. Extract the entire Fast Folder archive and retain all runtime files; existing settings/accounts remain in the normal user-data location.
 
 Unsigned Windows builds. No VirusTotal scan was performed for these newly built files; reports for older executables do not apply. Existing sensor/Windows permission requirements and optional-feature limits remain documented.
+
+Build verification now downloads the pinned official Electron runtime through GitHub release assets, verifies it against the npm package checksum, and reuses that verified runtime for packaging. This avoids a repeated upstream browser-download timeout; a corrupt-archive test confirmed rejection before extraction. No runtime dependency version changed.
