@@ -2,7 +2,8 @@ param([switch]$SkipInstall)
 $ErrorActionPreference = 'Stop'
 # Native command failures must stop packaging on Windows PowerShell as well as pwsh.
 function Invoke-Npm {
-    & npm @args
+    param([Parameter(ValueFromRemainingArguments = $true)][string[]]$NpmArguments)
+    & npm.cmd @NpmArguments
     if ($LASTEXITCODE -ne 0) { throw "npm failed with exit code $LASTEXITCODE" }
 }
 Set-Location (Split-Path -Parent $PSScriptRoot)
