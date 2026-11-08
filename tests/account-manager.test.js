@@ -82,3 +82,8 @@ test('failed initial launch policy is retried on the next monitoring tick',async
 test('Stop all cancels a launch waiting for an authentication ticket',async t=>{
  const f=fixture(t),a=await f.service.connect(SECRET),g=await f.service.saveGame(a.id,{target:'123'});let entered,resume;const waiting=new Promise(r=>entered=r);f.provider.ticket=async()=>{entered();return new Promise(r=>resume=r);};let handoffs=0;f.service.launchProtocol=async()=>{handoffs++;};const launch=f.service.launch(a.id,g.id);await waiting;await f.service.stopAll();resume('test-ticket');await assert.rejects(launch,/cancelled by Stop all/);assert.equal(handoffs,0);
 });
+
+test('a replacement session created during an exit scan is not evaluated against the old process snapshot',async t=>{
+ const f=fixture(t),a=await f.service.connect(SECRET);f.store.editAccount(a.id,{policy:{autoRestart:true}});const old={id:'old-session',accountId:a.id,status:'running',pid:123,start:'old',path:'player',startedAt:1999999900000,restartCount:0,gameId:'game'};f.service.sessions.set(old.id,old);
+ const replacement={...old,id:'replacement',pid:456,start:'new',startedAt:2000000000000,restartCount:1};f.service.launch=async()=>{f.service.sessions.set(replacement.id,replacement);return {ok:true};};await f.service.tick();assert.equal(old.status,'exited');assert.equal(replacement.status,'running');assert.equal(f.store.state().history.length,1);
+});

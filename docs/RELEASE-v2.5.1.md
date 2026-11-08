@@ -4,6 +4,8 @@ This stable maintenance release preserves the Neo Purple interface and v2.5.0 fu
 
 ## Fixes
 
+- Evaluate only sessions present when a process scan begins, so a newly restarted session is not falsely ended against an older process snapshot.
+
 - Pending account launches stop when the manager closes or Stop all is used. Async authentication must not dispatch a later launch after cancellation. Requests already handed to Windows cannot be recalled; unidentified Roblox Players are never killed.
 - Failed initial and edited Windows process policy requests are retried on later monitoring ticks instead of being incorrectly recorded as applied.
 - Completed sessions release their private join-log tracking snapshots.
@@ -11,7 +13,7 @@ This stable maintenance release preserves the Neo Purple interface and v2.5.0 fu
 
 ## Verification
 
-222 automated tests cover the existing features plus closure during authentication/handoff, Stop all during ticket acquisition, policy retry, initial-policy retry and join-snapshot cleanup. Actual renderer checks exercise unsaved fields with focus moved outside the form and run the background timer before checking that the same input/value remains. Windows layout checks run across main screens and account-center panes/dialogs.
+223 automated tests cover the existing features plus closure during authentication/handoff, Stop all during ticket acquisition, policy retry, initial-policy retry and join-snapshot cleanup. Actual renderer checks exercise unsaved fields with focus moved outside the form and run the background timer before checking that the same input/value remains. Windows layout checks run across main screens and account-center panes/dialogs.
 
 Regression tests first reproduced the original backend failures before the fixes. No real Roblox process was terminated, no real account credentials were used, and no Windows policy/registry settings were changed by these synthetic verification cases. Existing real-game launch and telemetry evidence remains documented from v2.5.0; it is not a new live acceptance claim for optional automation.
 

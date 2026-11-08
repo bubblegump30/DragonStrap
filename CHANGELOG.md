@@ -1,5 +1,7 @@
 ## v2.5.1 — Account & Session Center reliability
 
+- Keep newly restarted sessions out of the previous process snapshot scan, preventing false immediate exit reports.
+
 - Cancel pending account authentication/launch work when closing or using Stop all. Do not attach/control a session after the manager closes. Already dispatched Roblox protocol requests cannot be recalled.
 - Retry failed initial or edited Windows process policies on later monitoring ticks; do not record failed requests as successfully applied.
 - Release private join-log snapshots when a session ends.

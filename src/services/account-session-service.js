@@ -113,7 +113,7 @@ class AccountSessionService {
  }
  finish(s,status){if(s.status!=='running')return;s.status=status;this.joinSnapshots.delete(s.id);s.endedAt=this.now();this.store.history({accountId:s.accountId,gameId:s.gameId,gameName:s.gameName,startedAt:s.startedAt,endedAt:s.endedAt,durationSeconds:Math.max(0,Math.floor((s.endedAt-s.startedAt)/1000)),status});}
  async tick(){if(this.tickBusy||this.stopping)return;this.tickBusy=true;try{
-  const probe=await this.native.run({action:'probe'});if(this.stopping)return;if(probe.ok){this.lastProbe=probe;for(const s of this.sessions.values())if(s.status==='running'){
+  const scanning=[...this.sessions.values()];const probe=await this.native.run({action:'probe'});if(this.stopping)return;if(probe.ok){this.lastProbe=probe;for(const s of scanning)if(s.status==='running'){
    const p=probe.processes.find(p=>p.pid===s.pid&&p.start===s.start&&p.path===s.path);
    if(!p){this.finish(s,s.stopRequested?'stopped':'exited');const account=this.store.account(s.accountId);if(!s.stopRequested&&account?.policy.autoRestart&&s.restartCount<3&&this.now()-s.startedAt>=30000){try{await this.launch(s.accountId,s.gameId,{restartCount:s.restartCount+1});}catch(e){s.message=e.message;}}continue;}
    const elapsed=(this.now()-s.lastSample)/1000;s.cpuPercent=elapsed>0?Math.max(0,Math.min(100,100*(p.cpuSeconds-s.lastCpu)/elapsed/(probe.logicalCores||1))):0;s.lastCpu=p.cpuSeconds;s.lastSample=this.now();s.memoryBytes=p.memoryBytes;s.responding=p.responding;
