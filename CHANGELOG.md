@@ -1,3 +1,11 @@
+## v2.6.1 — Professional workspace shortcuts
+
+- Replace oversized Settings workspace buttons with compact icon-and-description navigation rows.
+- Remove the equal-height stretching rule at its source, retaining card alignment without stretching the buttons.
+- Add subtle hover/press effects, keyboard focus styling and reduced-motion support.
+- Preserve the existing Launch, Profiles and Repair/Recovery navigation targets.
+- Extend existing layout verification to catch oversized shortcut rows.
+
 ## v2.6.0 — Account groups, bulk actions and session history
 
 - Add optional local account groups with atomic create/rename/assignment/removal. Existing accounts load ungrouped; credentials remain in the separate encrypted vault.

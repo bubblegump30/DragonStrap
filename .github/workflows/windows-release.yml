@@ -3,7 +3,7 @@ name: DragonStrap Windows release
 on:
   push:
     branches:
-      - release/v2.6.0-windows
+      - release/v2.6.1-windows
 
 permissions:
   contents: write
@@ -32,7 +32,7 @@ jobs:
         shell: pwsh
         run: |
           $version = (Get-Content VERSION -Raw).Trim()
-          if ($version -ne '2.6.0') { throw "Unexpected release version: $version" }
+          if ($version -ne '2.6.1') { throw "Unexpected release version: $version" }
           foreach ($name in @("DragonStrap-Portable-$version-x64.exe", "DragonStrap-Setup-$version-x64.exe", "DragonStrap-FastFolder-$version-x64.zip", "DragonStrap-v$version-Source.zip")) {
             $file = Join-Path dist $name
             if (-not (Test-Path $file)) { throw "Missing $file" }
@@ -44,12 +44,12 @@ jobs:
       - name: Preserve release packages
         uses: actions/upload-artifact@v6
         with:
-          name: DragonStrap-v2.6.0-Windows-x64
+          name: DragonStrap-v2.6.1-Windows-x64
           path: |
-            dist/DragonStrap-Portable-2.6.0-x64.exe
-            dist/DragonStrap-Setup-2.6.0-x64.exe
-            dist/DragonStrap-FastFolder-2.6.0-x64.zip
-            dist/DragonStrap-v2.6.0-Source.zip
+            dist/DragonStrap-Portable-2.6.1-x64.exe
+            dist/DragonStrap-Setup-2.6.1-x64.exe
+            dist/DragonStrap-FastFolder-2.6.1-x64.zip
+            dist/DragonStrap-v2.6.1-Source.zip
             dist/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
@@ -58,17 +58,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if (gh release view v2.6.0 --repo ${{ github.repository }} *> $null) {
-            throw 'v2.6.0 already exists; refusing to overwrite it'
+          if (gh release view v2.6.1 --repo ${{ github.repository }} *> $null) {
+            throw 'v2.6.1 already exists; refusing to overwrite it'
           }
-          gh release create v2.6.0 `
-            dist/DragonStrap-Portable-2.6.0-x64.exe `
-            dist/DragonStrap-Setup-2.6.0-x64.exe `
-            dist/DragonStrap-FastFolder-2.6.0-x64.zip `
-            dist/DragonStrap-v2.6.0-Source.zip `
+          gh release create v2.6.1 `
+            dist/DragonStrap-Portable-2.6.1-x64.exe `
+            dist/DragonStrap-Setup-2.6.1-x64.exe `
+            dist/DragonStrap-FastFolder-2.6.1-x64.zip `
+            dist/DragonStrap-v2.6.1-Source.zip `
             dist/SHA256SUMS.txt `
             --repo ${{ github.repository }} `
             --target ${{ github.sha }} `
-            --title 'DragonStrap v2.6.0' `
-            --notes-file docs/RELEASE-v2.6.0.md `
+            --title 'DragonStrap v2.6.1' `
+            --notes-file docs/RELEASE-v2.6.1.md `
             --latest
