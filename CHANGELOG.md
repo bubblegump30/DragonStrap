@@ -1,3 +1,15 @@
+## v2.7.0 — Compact Accounts, SYSTEM meters and Mods
+
+- Replace the former Home dashboard with Accounts as the default landing page; migrate a saved Home view to Accounts.
+- Add the flat dark account-table layout, retaining DragonStrap branding and purple accents. Include avatar/game thumbnails, account aliases/tags, policy shortcuts and available session metrics.
+- Add sidebar CPU, RAM and CPU/GPU temperature meters, with explicit unavailable states; share temperature probes without background FPS capture.
+- Add direct Sessions/Appearance navigation, Session Viewer and a confirmed Stop all managed action.
+- Remove local levels and achievements while preserving tracked sessions/time.
+- Add an experimental local Mods library for one reviewed media replacement at a time, with bounded imports, checksums, original-file backups, interrupted-write recovery and conflict-safe restoration. Studio, scripts and executables are excluded.
+- Fix Anti-AFK skipped attempts incorrectly resetting the entire cycle. Retry after 30 seconds, require explicit sent-input confirmation, recheck focus/activity, validate idle information and release the short-held key in a finally block.
+- Verify 259 tests, real isolated startup and Windows layout/workflow checks. Mods appearance and per-game Anti-AFK acceptance still require live testing.
+- Keep builds unsigned. v2.6.1 VirusTotal reports do not cover newly built v2.7.0 files.
+
 ## v2.6.1 — Professional workspace shortcuts
 
 - Replace oversized Settings workspace buttons with compact icon-and-description navigation rows.

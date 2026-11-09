@@ -30,7 +30,7 @@ class WindowsSessionControl {
    child.stdout.on('data',chunk=>{output+=chunk;if(output.length>2*1024*1024){child.kill();finish({ok:false,message:'Windows process response exceeded its limit.'});}});
    child.stderr.on('data',chunk=>{error+=chunk.toString().slice(0,1000);});
    child.on('close',()=>{try{finish(JSON.parse(output.trim()));}catch{finish({ok:false,message:error?'Windows process control failed.':'Windows process control returned no data.'});}});
-   child.stdin.on('error',()=>{});child.stdin.end(JSON.stringify(request));
+   child.stdin.on('error',()=>{});child.stdin.end(JSON.stringify({...request,controllerPid:process.pid}));
   });
  }
 }

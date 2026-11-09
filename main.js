@@ -814,6 +814,7 @@ if (!hasSingleInstanceLock) {
     });
     registerIpc();
     require('./src/core/account-manager-ipc').installAccountManagerIpc({ kernel, electron:require('electron'), getWindow:()=>mainWindow });
+    require('./src/core/mods-ipc').installModsIpc({ kernel, electron:require('electron'), getWindow:()=>mainWindow });
     createWindow();
     reliabilityService.log('info','app-ready',{packaged:app.isPackaged,electron:process.versions.electron,arch:process.arch});
     app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });

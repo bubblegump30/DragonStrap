@@ -19,11 +19,11 @@ test('dashboard shares an in-flight scan and reenables refresh after success', a
   let resolve, calls = 0;
   const { context: c, q } = fixture(() => { calls++; return new Promise(r => { resolve = r; }); });
   const first = c.refreshRobloxStatus();
-  assert.equal(q('#homeRefresh').disabled, true);
+  assert.equal(q('#accountStatusRefresh').disabled, true);
   assert.equal(c.refreshRobloxStatus(), first);
   assert.equal(calls, 1);
   resolve({ installed: true }); await first;
-  assert.equal(q('#homeRefresh').disabled, false);
+  assert.equal(q('#accountStatusRefresh').disabled, false);
   assert.equal(q('#dashboardScanStatus').dataset.state, 'ready');
   assert.equal(q('#dashboardScanStatus').textContent, 'Roblox Player ready · Studio optional');
   assert.match(q('#dashboardCheckedAt').textContent, /^Checked /);
@@ -33,11 +33,9 @@ test('failed scans expose unknown status, preserve check time, and allow retry',
   const { context: c, q } = fixture(async () => { if (fail) throw Error('scan failed'); return { installed: false }; });
   c.state.lastSuccessfulScanAt = new Date('2026-09-28T10:00:00Z');
   await c.refreshRobloxStatus();
-  assert.equal(q('#installGauge').textContent, 'UNKNOWN');
-  assert.equal(q('#studioStatus').textContent, 'Unknown');
   assert.equal(q('#dashboardScanStatus').dataset.state, 'error');
   assert.match(q('#dashboardCheckedAt').textContent, /^Last successful check /);
-  assert.equal(q('#homeRefresh').disabled, false);
+  assert.equal(q('#accountStatusRefresh').disabled, false);
   fail = false; await c.refreshRobloxStatus();
   assert.equal(q('#dashboardScanStatus').dataset.state, 'missing');
   assert.equal(q('#dashboardScanStatus').textContent, 'Roblox Player not detected · Install from Channels');

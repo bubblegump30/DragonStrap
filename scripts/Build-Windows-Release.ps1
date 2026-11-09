@@ -8,6 +8,9 @@ function Invoke-Npm {
 }
 Set-Location (Split-Path -Parent $PSScriptRoot)
 Write-Host '== DragonStrap Windows Release Build ==' -ForegroundColor Magenta
+$taskDirty=@(& git status --porcelain --untracked-files=normal | Where-Object { $_ -notmatch '^\?\? dist-meta/' })
+if ($LASTEXITCODE -ne 0 -or $taskDirty.Count) { throw 'Commit release source before packaging so the source ZIP matches the application.' }
+
 
 if (-not $SkipInstall) { Invoke-Npm ci }
 
@@ -41,9 +44,9 @@ $sourceZip = Join-Path $PWD "dist\DragonStrap-v$version-Source.zip"
 & git archive --format=zip --output=$sourceZip HEAD
 if ($LASTEXITCODE -ne 0) { throw 'Source archive creation failed' }
 $hashFile = Join-Path $PWD 'dist\SHA256SUMS.txt'
-Get-ChildItem 'dist' -File | Where-Object { $_.Extension -in '.exe','.zip','.blockmap','.yml' } | ForEach-Object {
-    $hash=(Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    "$hash  $($_.Name)"
+@($portable,$setup,$folderZip,$sourceZip) | ForEach-Object {
+    $hash=(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant()
+    "$hash  $([IO.Path]::GetFileName($_))"
 } | Set-Content -Encoding ascii $hashFile
 
 Write-Host "Release hashes written to $hashFile" -ForegroundColor Green

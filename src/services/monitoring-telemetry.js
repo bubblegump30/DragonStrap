@@ -28,20 +28,26 @@ function parseFrames(csv){
 }
 
 class MonitoringTelemetry {
- constructor({exec=execFile,now=()=>Date.now()}={}){this.exec=exec;this.now=now;this.cached=null;this.pending=null;}
+ constructor({exec=execFile,now=()=>Date.now()}={}){this.exec=exec;this.now=now;this.cached=null;this.pending=null;this.sensorCache=null;this.sensorPending=null;}
  run(file,args,timeout=8000){return new Promise(resolve=>this.exec(file,args,{windowsHide:true,timeout,maxBuffer:4*1024*1024},(error,stdout,stderr)=>resolve({error,stdout:String(stdout||''),stderr:String(stderr||'')})));}
  async sample(){if(this.pending)return this.pending;if(this.cached&&this.now()-this.cached.sampledAt<8000)return this.cached;this.pending=this.collect();try{return this.cached=await this.pending;}finally{this.pending=null;}}
- async collect(){
- const sensorScript=`$ErrorActionPreference='SilentlyContinue';$gpu=@();$smi=Join-Path $env:WINDIR 'System32\\nvidia-smi.exe';if(Test-Path -LiteralPath $smi){$gpu=@(& $smi --query-gpu=temperature.gpu --format=csv,noheader,nounits | ForEach-Object { $v=0.0;if([double]::TryParse($_,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$v) -and $v -ge 0 -and $v -le 150){$v} })};$cpu=@();$source='';foreach($ns in @('root/LibreHardwareMonitor','root/OpenHardwareMonitor')){$s=@(Get-CimInstance -Namespace $ns -ClassName Sensor | Where-Object {$_.SensorType -eq 'Temperature' -and $_.Identifier -match '/(intelcpu|amdcpu)/' -and $_.Value -ge 0 -and $_.Value -le 150});if($s.Count){$cpu=@($s|ForEach-Object {[double]$_.Value});$source=$ns;break}};@{gpu=$gpu;cpu=$cpu;cpuSource=$source}|ConvertTo-Json -Compress`;
- const binary=path.join(__dirname,'../../assets/telemetry/PresentMon.exe').replace('app.asar'+path.sep,'app.asar.unpacked'+path.sep);
- const cpuLibrary=path.join(__dirname,'../../assets/telemetry/cpu/LibreHardwareMonitorLib.dll').replace('app.asar'+path.sep,'app.asar.unpacked'+path.sep);
- const cpuScript=fs.readFileSync(path.join(__dirname,'../native/cpu-sensors.ps1'),'utf8');
- const cpuCommand='& { '+cpuScript+' } '+"'"+cpuLibrary.replaceAll("'","''")+"'";
- const [sensors,frames,directCpu]=await Promise.all([this.run('powershell.exe',['-NoProfile','-NonInteractive','-EncodedCommand',Buffer.from(sensorScript,'utf16le').toString('base64')]),this.run(binary,['--process_name','RobloxPlayerBeta.exe','--output_stdout','--no_console_stats','--v1_metrics','--timed','3','--terminate_after_timed','--session_name','DragonStrap-'+process.pid],7000),this.run('powershell.exe',['-NoProfile','-NonInteractive','-EncodedCommand',Buffer.from(cpuCommand,'utf16le').toString('base64')],10000)]);
+ async sampleSensors(){if(this.sensorPending)return this.sensorPending;if(this.sensorCache&&this.now()-this.sensorCache.sampledAt<10000)return this.sensorCache;this.sensorPending=this.collectSensors();try{return this.sensorCache=await this.sensorPending;}finally{this.sensorPending=null;}}
+ async collectSensors(){
+const sensorScript=`$ErrorActionPreference='SilentlyContinue';$gpu=@();$smi=Join-Path $env:WINDIR 'System32\\nvidia-smi.exe';if(Test-Path -LiteralPath $smi){$gpu=@(& $smi --query-gpu=temperature.gpu --format=csv,noheader,nounits | ForEach-Object { $v=0.0;if([double]::TryParse($_,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$v) -and $v -ge 0 -and $v -le 150){$v} })};$cpu=@();$source='';foreach($ns in @('root/LibreHardwareMonitor','root/OpenHardwareMonitor')){$s=@(Get-CimInstance -Namespace $ns -ClassName Sensor | Where-Object {$_.SensorType -eq 'Temperature' -and $_.Identifier -match '/(intelcpu|amdcpu)/' -and $_.Value -ge 0 -and $_.Value -le 150});if($s.Count){$cpu=@($s|ForEach-Object {[double]$_.Value});$source=$ns;break}};@{gpu=$gpu;cpu=$cpu;cpuSource=$source}|ConvertTo-Json -Compress`;
+const cpuLibrary=path.join(__dirname,'../../assets/telemetry/cpu/LibreHardwareMonitorLib.dll').replace('app.asar'+path.sep,'app.asar.unpacked'+path.sep);
+const cpuScript=fs.readFileSync(path.join(__dirname,'../native/cpu-sensors.ps1'),'utf8');
+const cpuCommand='& { '+cpuScript+' } '+"'"+cpuLibrary.replaceAll("'","''")+"'";
+ const [sensors,directCpu]=await Promise.all([this.run('powershell.exe',['-NoProfile','-NonInteractive','-EncodedCommand',Buffer.from(sensorScript,'utf16le').toString('base64')]),this.run('powershell.exe',['-NoProfile','-NonInteractive','-EncodedCommand',Buffer.from(cpuCommand,'utf16le').toString('base64')],10000)]);
  let values={};try{values=JSON.parse(sensors.stdout);}catch{}
  const valid=a=>Array.isArray(a)?a.filter(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=150):[];
- const gpu=valid(values.gpu),cpu=valid(values.cpu).filter(n=>n>0),fps=parseFrames(frames.stdout);
- return {sampledAt:this.now(),gpu:{celsius:gpu.length?Math.max(...gpu):null,source:'NVIDIA driver',status:gpu.length?'Live sensor':'NVIDIA temperature provider not detected'},cpu:cpu.length?{celsius:Math.max(...cpu),source:values.cpuSource||'',status:'Live CPU sensor (hottest)'}:cpuReading(directCpu),fps:{readings:fps,status:fps.length?'Measured presentation rate (3-second sample)':/access denied|administrative privileges/i.test(frames.stderr+frames.stdout)?'Windows permission required: run DragonStrap as administrator for FPS capture':frames.error?'FPS provider could not start':'Waiting for Roblox frames — keep the game rendering'}};
+ const gpu=valid(values.gpu),cpu=valid(values.cpu).filter(n=>n>0);
+ return {sampledAt:this.now(),gpu:{celsius:gpu.length?Math.max(...gpu):null,source:'NVIDIA driver',status:gpu.length?'Live sensor':'NVIDIA temperature provider not detected'},cpu:cpu.length?{celsius:Math.max(...cpu),source:values.cpuSource||'',status:'Live CPU sensor (hottest)'}:cpuReading(directCpu)};
+ }
+ async collect(){
+ const binary=path.join(__dirname,'../../assets/telemetry/PresentMon.exe').replace('app.asar'+path.sep,'app.asar.unpacked'+path.sep);
+ const [sensors,frames]=await Promise.all([this.sampleSensors(),this.run(binary,['--process_name','RobloxPlayerBeta.exe','--output_stdout','--no_console_stats','--v1_metrics','--timed','3','--terminate_after_timed','--session_name','DragonStrap-'+process.pid],7000)]);
+ const fps=parseFrames(frames.stdout);
+ return {...sensors,sampledAt:this.now(),fps:{readings:fps,status:fps.length?'Measured presentation rate (3-second sample)':/access denied|administrative privileges/i.test(frames.stderr+frames.stdout)?'Windows permission required: run DragonStrap as administrator for FPS capture':frames.error?'FPS provider could not start':'Waiting for Roblox frames — keep the game rendering'}};
  }
 }
 module.exports={MonitoringTelemetry,parseFrames,cpuReading};
