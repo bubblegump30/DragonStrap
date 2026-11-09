@@ -25,7 +25,15 @@ public class DragonNative {
  [StructLayout(LayoutKind.Sequential)] public struct KEY { public ushort vk,scan; public uint flags,time; public UIntPtr extra; }
  [StructLayout(LayoutKind.Sequential)] public struct MOUSE { public int x,y; public uint data,flags,time; public UIntPtr extra; }
  [DllImport("user32.dll",SetLastError=true)] public static extern uint SendInput(uint count,INPUT[] inputs,int size);
- public static bool Tap() { var events=new INPUT[2]; events[0].type=1; events[0].data.key.vk=0x20; events[1].type=1; events[1].data.key.vk=0x20; events[1].data.key.flags=2; return SendInput(2,events,Marshal.SizeOf(typeof(INPUT)))==2; }
+ public static bool Tap() {
+  var down=new INPUT[1]; down[0].type=1; down[0].data.key.vk=0x20;
+  var up=new INPUT[1]; up[0].type=1; up[0].data.key.vk=0x20; up[0].data.key.flags=2;
+  if(SendInput(1,down,Marshal.SizeOf(typeof(INPUT)))!=1)return false;
+  bool released=false;
+  try { System.Threading.Thread.Sleep(80); }
+  finally { released=SendInput(1,up,Marshal.SizeOf(typeof(INPUT)))==1; if(!released)released=SendInput(1,up,Marshal.SizeOf(typeof(INPUT)))==1; }
+  return released;
+ }
 }
 "@
 function Describe($p) {
@@ -67,16 +75,29 @@ switch ($request.action) {
  'focus' { [DragonNative]::ShowWindow($p.MainWindowHandle,9)|Out-Null;if(-not [DragonNative]::SetForegroundWindow($p.MainWindowHandle)){throw 'Windows did not grant foreground focus.'} }
  'minimize' { [DragonNative]::ShowWindow($p.MainWindowHandle,6)|Out-Null }
  'antiAfk' {
+  $controller=Get-Process -Id ([int]$request.controllerPid) -ErrorAction Stop
+  if($controller.HasExited){throw 'DragonStrap is no longer running.'}
   $last=New-Object DragonNative+LASTINPUT; $last.Size=8
-  [DragonNative]::GetLastInputInfo([ref]$last)|Out-Null
+  if(-not [DragonNative]::GetLastInputInfo([ref]$last)){throw 'Windows idle time could not be read.'}
   $idle=([long][Environment]::TickCount - [long]$last.Time) -band 0xffffffffL
   [uint32]$front=0;[DragonNative]::GetWindowThreadProcessId([DragonNative]::GetForegroundWindow(),[ref]$front)|Out-Null
-  if($front -ne $p.Id -or $idle -lt 60000){@{ok=$true;skipped=$true;message='Waiting for an idle, foreground managed Roblox window.'}|ConvertTo-Json -Compress;exit}
-  for($key=1;$key -le 255;$key++){if(([DragonNative]::GetAsyncKeyState($key) -band 0x8000) -ne 0){@{ok=$true;skipped=$true;message='A key or mouse button is held; input skipped.'}|ConvertTo-Json -Compress;exit}}
-  if(-not [DragonNative]::Tap()){throw 'Windows refused the input event.'}
-  Start-Sleep -Milliseconds ([Math]::Max(250,[Math]::Min(10000,[int]$request.delayMs)))
+  if($front -ne $p.Id -or $idle -lt 60000){@{ok=$true;skipped=$true;sent=0;message='Waiting for an idle, foreground managed Roblox window.'}|ConvertTo-Json -Compress;exit}
+  for($key=1;$key -le 255;$key++){if(([DragonNative]::GetAsyncKeyState($key) -band 0x8000) -ne 0){@{ok=$true;skipped=$true;sent=0;message='A key or mouse button is held; input skipped.'}|ConvertTo-Json -Compress;exit}}
+  # Recheck focus immediately before input. Never bring a window to the foreground.
   [uint32]$front=0;[DragonNative]::GetWindowThreadProcessId([DragonNative]::GetForegroundWindow(),[ref]$front)|Out-Null
-  if($front -eq $p.Id){if(-not [DragonNative]::Tap()){throw 'Windows refused the second input event.'}}
+  if($front -ne $p.Id -or $controller.HasExited){@{ok=$true;skipped=$true;sent=0;message='Window focus changed; input skipped.'}|ConvertTo-Json -Compress;exit}
+  if(-not [DragonNative]::Tap()){throw 'Windows refused the input event or key release.'}
+  if(-not [DragonNative]::GetLastInputInfo([ref]$last)){@{ok=$true;sent=1;message='One Anti-AFK tap sent; second tap skipped because idle time was unavailable.'}|ConvertTo-Json -Compress;exit}
+  $afterFirst=$last.Time
+  Start-Sleep -Milliseconds ([Math]::Max(250,[Math]::Min(10000,[int]$request.delayMs)))
+  $p.Refresh()
+  if($controller.HasExited -or $p.HasExited){@{ok=$true;sent=1;message='One Anti-AFK tap sent; session or manager closed before the second tap.'}|ConvertTo-Json -Compress;exit}
+  [uint32]$front=0;[DragonNative]::GetWindowThreadProcessId([DragonNative]::GetForegroundWindow(),[ref]$front)|Out-Null
+  $canRead=[DragonNative]::GetLastInputInfo([ref]$last)
+  $held=$false;for($key=1;$key -le 255;$key++){if(([DragonNative]::GetAsyncKeyState($key) -band 0x8000) -ne 0){$held=$true;break}}
+  if($front -ne $p.Id -or -not $canRead -or $last.Time -ne $afterFirst -or $held){@{ok=$true;sent=1;message='One Anti-AFK tap sent; activity or focus changed, so the second tap was skipped.'}|ConvertTo-Json -Compress;exit}
+  if(-not [DragonNative]::Tap()){throw 'Windows refused the second input event or key release.'}
+  @{ok=$true;sent=2;message='Anti-AFK cycle sent to the idle, foreground Roblox window.'}|ConvertTo-Json -Compress;exit
  }
 }
 @{ok=$true}|ConvertTo-Json -Compress

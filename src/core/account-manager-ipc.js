@@ -4,6 +4,7 @@ const {ManagerCleanupService}=require('../services/manager-cleanup-service');
 function officialUrl(value){try{const u=new URL(value);return u.protocol==='https:'&&(u.hostname==='roblox.com'||u.hostname.endsWith('.roblox.com'));}catch{return false;}}
 function installAccountManagerIpc({kernel,electron,getWindow}){
  const telemetry=new (require('../services/monitoring-telemetry').MonitoringTelemetry)();
+ require('./system-monitor-ipc').installSystemMonitorIpc({ipcMain:electron.ipcMain,getWindow,telemetry});
  const {ipcMain,BrowserWindow,session,dialog}=electron;const service=kernel.get('accounts.manager');let login=null,loginBusy=false;const cleanup=new ManagerCleanupService();let lastCleanup=0,cleanupBusy=false;
  const guard=fn=>async(event,...args)=>{if(event.sender!==getWindow()?.webContents)throw new Error('Untrusted manager caller.');try{if(service.initializationError)throw new Error(service.initializationError);return {ok:true,...await fn(...args)};}catch(e){return {ok:false,message:e.message};}};
  ipcMain.handle('dragonstrap:manager-options',guard(async()=>({options:service.store.getOptions()})));

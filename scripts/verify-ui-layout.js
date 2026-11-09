@@ -29,12 +29,6 @@ function inspect() {
     const box = rect(selector);
     if (box.right > viewport.right + 2 || box.left < -2) issues.push(`${selector} extends past viewport`);
   }
-  const temp = rect('.temp-card');
-  const channel = rect('.temp-card .temp-row:last-child');
-  if (!inside(channel, temp)) issues.push('Channel row clipped by Installation Status card');
-  const first = rect('.master-card');
-  const next = rect('.audio-card');
-  if (next.top < first.bottom - 2) issues.push('dashboard rows overlap');
   const popup = $('#productMenuPopup');
   popup.hidden = false;
   $('#productMenu').classList.add('open');

@@ -6,6 +6,36 @@ const {ManagerCleanupService}=require('../src/services/manager-cleanup-service')
 const {WindowsSessionControl}=require('../src/services/windows-session-control');
 const {OperationCoordinator}=require('../src/core/operation-coordinator');
 const SECRET='test-only-session-value-1234567890';
+async function antiAfkFixture(t){
+ const f=fixture(t),a=await f.service.connect(SECRET);f.store.editAccount(a.id,{policy:{antiAfk:true}});
+ const s={id:'afk-session',accountId:a.id,status:'running',pid:123,start:'afk-start',path:'player',startedAt:1999998800000,policy:{...f.store.account(a.id).policy},lastNativeWindows:true,lastSample:2000000000000,lastCpu:0,lastAntiAfk:1999998800000,joinState:'joined'};
+ f.service.sessions.set(s.id,s);let result={ok:true,skipped:true,sent:0,message:'Waiting for foreground'};
+ f.native.run=async request=>{f.calls.push(request);return request.action==='probe'?{ok:true,processes:[{pid:s.pid,start:s.start,path:s.path,cpuSeconds:1,memoryBytes:1}],logicalCores:4}:request.action==='antiAfk'?result:{ok:true};};
+ return {...f,a,s,setResult:r=>result=r};
+}
+test('Anti-AFK retries a skipped cycle after 30 seconds instead of waiting another full interval',async t=>{
+ const f=await antiAfkFixture(t);const before=f.s.lastAntiAfk;await f.service.tick();assert.equal(f.s.lastAntiAfk,before);
+ assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,1);f.setTime(2000000015000);await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,1);
+ f.setResult({ok:true,sent:1});f.setTime(2000000030000);await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,2);assert.equal(f.s.lastAntiAfk,2000000030000);
+ f.setTime(2000000060000);await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,2);
+});
+test('Anti-AFK failures and unconfirmed helper responses do not count as successful input',async t=>{
+ const f=await antiAfkFixture(t),before=f.s.lastAntiAfk;f.setResult({ok:false,message:'Windows refused input'});await f.service.tick();assert.equal(f.s.lastAntiAfk,before);assert.match(f.s.message,/Windows refused/);
+ f.setResult({ok:true});f.setTime(2000000030000);await f.service.tick();assert.equal(f.s.lastAntiAfk,before);assert.match(f.s.message,/no input was confirmed/);
+});
+test('Anti-AFK honors configured interval and passes the selected action delay with process identity',async t=>{
+ const f=await antiAfkFixture(t);f.store.options({antiAfkMinutes:5,antiAfkDelayMs:750});f.s.lastAntiAfk=2000000000000;
+ f.setTime(2000000299999);await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,0);
+ f.setTime(2000000300000);f.setResult({ok:true,sent:2});await f.service.tick();const request=f.calls.find(r=>r.action==='antiAfk');assert.equal(request.delayMs,750);assert.equal(request.pid,123);assert.equal(request.start,'afk-start');assert.equal(request.path,'player');
+});
+test('Anti-AFK is opt-in, stops when disabled and cannot target unmanaged or finished sessions',async t=>{
+ const f=await antiAfkFixture(t);f.store.editAccount(f.a.id,{policy:{antiAfk:false}});await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,0);
+ await assert.rejects(f.service.control(f.s.id,'antiAfk'),/disabled/);await assert.rejects(f.service.control('other','antiAfk'),/managed/);
+ f.store.editAccount(f.a.id,{policy:{antiAfk:true}});f.s.status='stopped';await assert.rejects(f.service.control(f.s.id,'antiAfk'),/running managed/);
+});
+test('Closing the manager prevents another Anti-AFK request',async t=>{
+ const f=await antiAfkFixture(t);f.service.dispose();await f.service.tick();assert.equal(f.calls.filter(r=>r.action==='antiAfk').length,0);await assert.rejects(f.service.control(f.s.id,'antiAfk'),/running managed/);
+});
 const reviewedSessions=(f,ids)=>Object.fromEntries(ids.map(id=>[id,[...f.service.sessions.values()].filter(s=>s.accountId===id&&s.status==='running').map(s=>s.id)]));
 const reviewedFavorites=(f,ids)=>Object.fromEntries(ids.map(id=>[id,f.store.account(id).games.find(g=>g.favorite)?.id??null]));
 function fixture(t){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'dragon-manager-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));let time=2000000000000;

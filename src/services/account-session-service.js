@@ -123,6 +123,7 @@ class AccountSessionService {
  }
  identity(s){return {pid:s.pid,start:s.start,path:s.path,originalMaxWorkingSet:s.originalMaxWorkingSet,originalAffinity:s.originalAffinity,originalStyle:s.originalStyle,coreIndex:s.coreIndex,nativeWindows:this.store.state().options.nativeWindows};}
  async control(id,action){const s=this.sessions.get(id);if(!s||s.status!=='running')throw new Error('A running managed session is required.');if(!['stop','trim','focus','minimize','policy','antiAfk'].includes(action))throw new Error('Unsupported session action.');
+  if(action==='antiAfk'&&(this.stopping||!this.store.account(s.accountId)?.policy.antiAfk))throw new Error('Anti-AFK is disabled or the manager is closing.');
   if(action==='stop')s.stopRequested=true;
   const result=await this.native.run({action,...this.identity(s),policy:this.store.account(s.accountId)?.policy,delayMs:this.store.state().options.antiAfkDelayMs});
   if(!result.ok){if(action==='stop')s.stopRequested=false;throw new Error(result.message);}if(action==='stop')this.finish(s,'stopped');return result;
@@ -137,7 +138,7 @@ class AccountSessionService {
    const policy=this.store.account(s.accountId)?.policy||s.policy;
    if(s.policyApplied===false||JSON.stringify(policy)!==JSON.stringify(s.policy)||s.lastNativeWindows!==this.store.state().options.nativeWindows){const r=await this.native.run({action:'policy',...this.identity(s),policy});s.message=r.ok?'':r.message;if(r.ok){s.policy={...policy};s.policyApplied=true;s.lastNativeWindows=this.store.state().options.nativeWindows;}else s.policyApplied=false;}
    if(policy.autoTrim&&this.now()-s.lastTrim>=35*60000){s.lastTrim=this.now();try{await this.control(s.id,'trim');}catch(e){s.message=e.message;}}
-   if(policy.antiAfk&&this.now()-s.lastAntiAfk>=this.store.state().options.antiAfkMinutes*60000){s.lastAntiAfk=this.now();try{const r=await this.control(s.id,'antiAfk');s.message=r.message||'Idle input cycle sent.';}catch(e){s.message=e.message;}}
+   if(policy.antiAfk&&this.now()-s.lastAntiAfk>=this.store.state().options.antiAfkMinutes*60000&&(!s.lastAntiAfkAttempt||this.now()-s.lastAntiAfkAttempt>=30000)){s.lastAntiAfkAttempt=this.now();try{const r=await this.control(s.id,'antiAfk');if(Number.isInteger(r.sent)&&r.sent>0){s.lastAntiAfk=this.now();s.message=r.message||'Anti-AFK input sent.';}else s.message=r.message||'Anti-AFK waiting; no input was confirmed.';}catch(e){s.message='Anti-AFK: '+e.message;}}
   }}else this.lastError=probe.message;
   if(this.stopping)return;
   for(const job of this.store.state().schedules.filter(j=>j.status==='pending'&&j.at<=this.now())){

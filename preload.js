@@ -4,6 +4,12 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('dragonStrap', Object.freeze({
   apiVersion: '2.0.0',
+  getSystemStats: () => ipcRenderer.invoke('dragonstrap:system-stats'),
+  getSystemSensors: () => ipcRenderer.invoke('dragonstrap:system-sensors'),
+  getMods: () => ipcRenderer.invoke('dragonstrap:mods-state'),
+  importMod: (target, name) => ipcRenderer.invoke('dragonstrap:mods-import', target, name),
+  previewMod: id => ipcRenderer.invoke('dragonstrap:mods-preview', id),
+  changeMod: (action, value) => ipcRenderer.invoke('dragonstrap:mods-change', action, value),
   onAccountConnected: callback => {
     if (typeof callback !== 'function') return () => {};
     const listener = (_event, id) => callback(id);

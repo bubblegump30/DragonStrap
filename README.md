@@ -1,12 +1,12 @@
 # DragonStrap
 
-**v2.6.1 — Refined workspace shortcuts · Windows stable release**
+**v2.7.0 — Compact Accounts, SYSTEM meters and Mods · Windows stable release**
 
 DragonStrap is a Windows Roblox bootstrapper and launcher with a custom Purple Dragon UI/UX. v2.4.1 adds Disable all flags, including locked Performance Center overrides, and Restore disabled flags. Disabling also turns off pre-launch auto-apply. Windows Setup and Portable x64 packages are available on GitHub Releases.
 
-## Account & Session Center (v2.5.0 development)
+## Account & Session Center
 
-The Accounts sidebar entry opens saved accounts, per-account games and servers, session controls, monitoring, schedules, local levels/achievements, appearance presets and Windows optimization settings. Roblox sign-in uses an isolated official login window. Optional cookie import verifies the account and stores the session using asynchronous Windows-backed encryption; passwords are not stored.
+The Accounts sidebar entry opens saved accounts, per-account games and servers, session controls, monitoring, schedules, local session statistics, appearance presets and Windows optimization settings. Roblox sign-in uses an isolated official login window. Optional cookie import verifies the account and stores the session using asynchronous Windows-backed encryption; passwords are not stored.
 
 See [the feature and acceptance matrix](docs/ACCOUNT-SESSION-CENTER-v2.5.0.md) and [preview verification report](docs/PREVIEW-DEVELOPMENT.md). Normal saved-account game launching and live CPU/GPU/FPS readings were verified on the test PC, and the user accepted preview.6 as the baseline for stable v2.5.0. Private/specific-server joins, concurrency, anti-AFK, restart recovery and administrator tuning remain acceptance items. FPS targets remain legacy overrides; measured FPS is separate.
 
@@ -22,9 +22,9 @@ See [the v2.6 workflow guide](docs/ACCOUNT-WORKFLOWS-v2.6.0.md) for details.
 
 ## Monitoring requirements
 
-The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sampling runs only while Monitoring is open.
+The integrated CPU reader uses the bundled LibreHardwareMonitor library and an existing PawnIO driver. On the verified Ryzen PC, run DragonStrap as administrator for CPU sensor and PresentMon FPS access. No sensor driver is installed automatically. NVIDIA GPU temperature uses the driver sensor. Unsupported or inaccessible sensors show an explicit status. Sidebar CPU/RAM readings refresh while DragonStrap is visible. CPU/GPU temperature probes are shared with Monitoring; FPS capture starts only when Monitoring is open.
 
-For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.6.1 is available on that channel.
+For fastest portable startup, extract the complete Fast Folder ZIP and run DragonStrap.exe. Keep all files together. Folder updates replace the complete extracted folder and retain the normal user-data directory. Stable update preferences remain the default; v2.7.0 is available on that channel.
 
 ## DragonStrap 2.0 architecture
 
@@ -51,6 +51,24 @@ For fastest portable startup, extract the complete Fast Folder ZIP and run Drago
 - Profiles & Configuration Center
 - Reliability & Recovery 2.0
 
+## Compact account layout and SYSTEM panel
+
+DragonStrap now uses a flatter dark layout with purple accents, a compact header, dense account rows, avatar/game thumbnails, policy shortcuts, a stop timer and scrollable sidebar navigation. Sessions and Appearance are directly accessible in the sidebar; Account tools retains the remaining manager sections. Home remains removed.
+
+The sidebar SYSTEM panel displays system-wide CPU usage, physical RAM use and CPU/GPU temperatures from the existing hardware providers. CPU/RAM refresh about every two seconds; temperature sampling runs about every fifteen seconds, shares cached probes with Monitoring and does not start PresentMon/FPS capture. Unavailable readings show a dash with an explanatory tooltip. Network status reflects Windows connectivity, not a measured internet latency. Stop all managed only controls sessions owned by DragonStrap, with confirmation.
+
+The v2.7.0 layout preserves account workflows and includes the experimental Mods feature and Statistics cleanup. The historical v2.6.1 scan reports apply only to their exact old files.
+
+## Accounts landing page
+
+The redundant Home section is removed. Accounts is the default opening workspace, including for a saved Home preference from older versions. Installation detection remains available through Instances and header refresh; version information remains in Settings/About. Launch, performance, installation and configuration controls stay in their dedicated sidebar workspaces. Mods and the Statistics cleanup are preserved. These changes ship in v2.7.0.
+
+## Experimental Mods
+
+v2.7.0 includes an experimental Mods workspace for manually reviewed Player asset replacements. Import a sound, texture or font into the local library, enter its existing relative `content/...` target, preview the exact destination, then back up and apply with Player closed. Restore puts the saved original bytes back. One asset can be active at a time; up to 16 library entries, 8 MB per file and 16 MB total. No bundled assets, downloads, script execution or automatic reapplication are included.
+
+See [the Mods preview guide](docs/MODS-PREVIEW.md) for supported paths, backup/conflict behavior and verification limits. Mods is a manual preview: fixture verification does not establish in-game compatibility. The v2.6.1 VirusTotal reports do not cover v2.7.0 binaries.
+
 ## Safety model
 
 DragonStrap keeps privileged process/filesystem work in the main process. The renderer remains sandboxed with `contextIsolation` enabled and `nodeIntegration` disabled. Renderer calls are restricted to typed preload methods; arbitrary executable paths, shell commands, configuration paths, and third-party plugin code are not accepted.
@@ -61,13 +79,15 @@ Installation/update/recovery operations use one coordinated destructive-operatio
 
 | Item | Version | Where |
 | --- | --- | --- |
-| Latest stable Windows release | v2.6.1 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.6.1) |
+| Latest stable Windows release | v2.7.0 | [Setup, Portable, Fast Folder and checksums](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.7.0) |
 | Previous accepted prerelease | v2.5.0-preview.6 | [Preview archive](https://github.com/bubblegump30/DragonStrap/releases/tag/v2.5.0-preview.6) |
-| Current repository source | v2.6.1 | GitHub main; optional features retain documented limitations |
+| Current repository source | v2.7.0 | GitHub main; optional features retain documented limitations |
 
-Download the desired package from the v2.6.1 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
+Download the desired package from the v2.7.0 release and compare its SHA-256 hash with `SHA256SUMS.txt`.
 
-### VirusTotal reports for v2.6.1
+**v2.7.0 scan status:** No VirusTotal report has been verified for these new executables or archives. The historical reports below cover v2.6.1 only. Releases remain unsigned.
+
+### Historical VirusTotal reports for v2.6.1
 
 Reports retrieved directly through VirusTotal via VTAI on **2026-11-08**. Each link identifies the exact published file by SHA-256.
 
@@ -85,6 +105,7 @@ Windows packages remain unsigned, so Windows may display a SmartScreen warning. 
 
 | Version | Milestone | Improvements |
 | --- | --- | --- |
+| **v2.7.0** | Compact Accounts, SYSTEM and Mods | Account-first flat layout with purple accents, sidebar meters, local media replacement/restore preview and Anti-AFK timing/input fixes. |
 | **v2.6.1** | Workspace shortcuts | Compact icon rows, clear labels/descriptions, subtle hover and keyboard focus states; prevents stretched Settings shortcut buttons. |
 | **v2.6.0** | Account workflows | Local groups, multi-select actions with reviewed targets and per-account results, cancellable remaining work, and searchable paginated session history. |
 | **v2.5.1** | Session reliability | Cancel pending launches on closing/Stop all, retry failed Windows policies, release completed-session join tracking and preserve unfinished forms during refresh. |
@@ -144,7 +165,7 @@ Official releases should upload both Windows executables and the generated `dist
 
 ## Version
 
-`2.6.1`
+`2.7.0`
 
 ## Project links
 

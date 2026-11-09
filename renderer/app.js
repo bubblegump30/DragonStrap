@@ -92,7 +92,7 @@ function switchView(name, options = {}) {
   qsa('.view').forEach(view => view.classList.toggle('active', view.dataset.view === name));
 
   const label = active.querySelector('span')?.textContent?.trim() || 'DragonStrap';
-  document.title = name === 'home' ? 'DragonStrap' : `DragonStrap — ${label}`;
+  document.title = `DragonStrap — ${label}`;
   document.documentElement.dataset.view = name;
   localStorage.setItem('dragonstrap.activeView', name);
   active.scrollIntoView({ block: 'nearest' });
@@ -169,90 +169,15 @@ function fpsLabel(value) {
   return Number(value) === 0 ? 'DEFAULT' : String(value);
 }
 
-function homeRenderLabel(mode) {
-  if (mode === 'd3d11') return 'D3D11';
-  if (mode === 'vulkan') return 'Vulkan';
-  return 'Default';
-}
-
-function renderHomePerformanceWidget() {
-  const settings = state.settings || {};
-  const autoApply = settings.performanceAutoApply !== false;
-  const fps = Number(settings.fpsCap ?? 0);
-  const profile = String(settings.launchProfile || 'custom');
-  const profileLabel = profile === 'custom' ? 'Custom' : profile.charAt(0).toUpperCase() + profile.slice(1);
-  if (q('#homePerfFpsValue')) q('#homePerfFpsValue').textContent = fpsLabel(fps);
-  if (q('#homePerfRenderValue')) q('#homePerfRenderValue').textContent = homeRenderLabel(settings.renderMode || 'default');
-  q('#homePerfAutoBtn')?.classList.toggle('active', autoApply);
-  q('#homePerfCustomBtn')?.classList.toggle('active', !autoApply);
-  const dot = q('#homePerfStatusDot');
-  if (dot) {
-    dot.classList.toggle('online', autoApply);
-    dot.classList.toggle('offline', !autoApply);
-  }
-  if (q('#homePerfStatus')) {
-    q('#homePerfStatus').textContent = autoApply
-      ? `Auto-apply enabled · ${profileLabel} · ${fpsLabel(fps)} FPS`
-      : `Manual mode · ${profileLabel} · ${fpsLabel(fps)} FPS`;
-  }
-  if (q('#launchPresetSummary')) {
-    q('#launchPresetSummary').textContent = `Session preset: ${profileLabel} · ${autoApply ? 'Auto-apply on' : 'Manual performance'}`;
-  }
-}
-
-function openPerformanceControl(selector) {
-  switchView('performance');
-  requestAnimationFrame(() => {
-    const target = q(selector);
-    target?.scrollIntoView?.({ behavior:'smooth', block:'center' });
-    if (target?.matches?.('input,button,select,textarea,[tabindex]')) target.focus?.();
-    else target?.querySelector?.('input,button,select,textarea,[tabindex]')?.focus?.();
-  });
-}
-
-async function enableHomePerformanceAuto() {
-  const button = q('#homePerfAutoBtn');
-  if (button) button.disabled = true;
-  try {
-    const center = state.performanceCenter.data?.ok ? state.performanceCenter.data : await refreshPerformanceCenter(false);
-    const recommendation = center?.recommendation?.settings;
-    if (!recommendation) {
-      showToast('Hardware recommendation is unavailable. Opening Performance Center.', true);
-      return openPerformanceControl('#useHardwareRecommendationBtn');
-    }
-    await savePerformancePatch({ ...recommendation, performanceAutoApply:true }, true);
-    renderHomePerformanceWidget();
-    showToast('Hardware-aware settings loaded. Auto-apply is enabled for the next Roblox launch.');
-  } finally {
-    if (button) button.disabled = false;
-  }
-}
-
-async function openHomePerformanceCustom() {
-  await savePerformancePatch({ performanceAutoApply:false }, false);
-  renderHomePerformanceWidget();
-  openPerformanceControl('.perf-presets');
-  showToast('Manual performance mode enabled. Adjust the Performance Center controls as needed.');
-}
-
 function renderPerformanceSettings() {
   if (!state.settings) return;
   const fps = Number(state.settings.fpsCap ?? 240);
   if (q('#fpsRange')) q('#fpsRange').value = String(fps);
-  if (q('#fpsSlider')) {
-    const slider = q('#fpsSlider');
-    slider.value = String(fps);
-    const min = Number(slider.min || 0);
-    const max = Number(slider.max || 240);
-    const pct = ((fps - min) / (max - min)) * 100;
-    slider.style.background = `linear-gradient(0deg,#9a4dff 0 ${pct}%,#191220 ${pct}%)`;
-  }
   if (q('#fpsReadout')) q('#fpsReadout').textContent = fpsLabel(fps);
   if (q('#performanceAutoApply')) q('#performanceAutoApply').checked = state.settings.performanceAutoApply !== false;
   qsa('#renderModeChoice [data-value]').forEach(button => button.classList.toggle('active', button.dataset.value === (state.settings.renderMode || 'default')));
   qsa('#msaaChoice [data-value]').forEach(button => button.classList.toggle('active', button.dataset.value === String(state.settings.msaaMode || 'default')));
   qsa('[data-perf-profile]').forEach(button => button.classList.toggle('active', button.dataset.perfProfile === state.settings.launchProfile));
-  renderHomePerformanceWidget();
 }
 
 async function savePerformancePatch(patch, markCustom = true) {
@@ -1387,8 +1312,7 @@ async function getAppInfo() {
     const info = await window.dragonStrap.getAppInfo();
     state.appInfo = info;
     q('#topVersion').textContent = `v${info.version}`;
-    q('#appVersion').textContent = info.version;
-    if (q('#aboutVersion')) q('#aboutVersion').textContent = info.version;
+    q('#aboutVersion #appVersion').textContent = info.version;
     if (q('#updateCurrentVersion')) q('#updateCurrentVersion').textContent = info.version;
     if (q('#aboutElectron')) q('#aboutElectron').textContent = info.electron ? `v${info.electron}` : '—';
     if (q('#aboutBuildType')) q('#aboutBuildType').textContent = info.distribution || (info.packaged ? 'Packaged' : 'Source / Dev');
@@ -1578,30 +1502,6 @@ function renderRobloxStatus(status) {
   const installed = Boolean(status.installed);
   const studioInstalled = Boolean(status.studioInstalled);
 
-  q('#installGauge').textContent = installed ? 'READY' : 'MISSING';
-  q('#installDetail').textContent = installed ? (status.version || 'Build unavailable') : 'Not detected';
-  q('#installDetail').title = installed ? status.version : '';
-  q('#playerOverviewDial')?.classList.toggle('ready', installed);
-  q('#playerOverviewDial')?.classList.toggle('offline', !installed);
-
-  q('#studioGauge').textContent = studioInstalled ? 'READY' : 'MISSING';
-  q('#studioDetail').textContent = studioInstalled ? (status.studioVersion || 'Build unavailable') : 'Not detected';
-  q('#studioDetail').title = studioInstalled ? status.studioVersion : '';
-  q('#studioOverviewDial')?.classList.toggle('ready', studioInstalled);
-  q('#studioOverviewDial')?.classList.toggle('offline', !studioInstalled);
-
-  const selectedChannel = status.channel || 'LIVE';
-  q('#channelGauge').textContent = selectedChannel;
-  q('#channelDetail').textContent = selectedChannel === 'LIVE' ? 'Official production' : `Selected: ${selectedChannel}`;
-  q('#channelOverviewDial')?.classList.add('ready');
-  q('#channelStatus').textContent = selectedChannel;
-  q('#channelGauge').title = 'Selected deployment channel: ' + selectedChannel;
-
-  q('#playerStatus').textContent = installed ? 'Detected' : 'Not Detected';
-  q('#studioStatus').textContent = studioInstalled ? 'Detected' : 'Not Detected';
-  q('#playerMeter').textContent = installed ? 'Local executable found' : 'Install from Channels';
-  q('#studioMeter').textContent = studioInstalled ? 'Local executable found' : 'Studio is optional';
-  q('#robloxSummary').textContent = installed ? 'Detected' : 'Not Found';
   q('#footerStatus').textContent = installed ? 'ROBLOX READY' : 'ROBLOX NOT DETECTED';
 
   q('#launchPlayerVersion').textContent = installed ? (status.version || 'Build unavailable') : 'Not detected';
@@ -1634,8 +1534,6 @@ function renderRobloxStatus(status) {
   if (q('#studioLaunchTop')) q('#studioLaunchTop').disabled = !studioInstalled || state.launchPending;
   if (q('#studioOpenProjectBtn')) q('#studioOpenProjectBtn').disabled = !studioInstalled || state.launchPending;
 
-  q('#launchState').textContent = installed ? 'ROBLOX PLAYER READY' : 'ROBLOX NOT DETECTED';
-  q('#launchHint').textContent = installed ? 'Press PLAY to launch Roblox.' : 'Install Roblox or refresh detection.';
   renderFirstRunStatus();
 }
 
@@ -1649,7 +1547,7 @@ function renderDashboardScan(phase) {
     : playerReady ? (studioReady ? 'Roblox Player and Studio ready' : 'Roblox Player ready · Studio optional')
       : 'Roblox Player not detected · Install from Channels';
   status.dataset.state = busy || failed ? phase : playerReady ? 'ready' : 'missing';
-  for (const id of ['homeRefresh', 'refreshStatus', 'instanceRefresh', 'launchCenterRefresh']) {
+  for (const id of ['accountStatusRefresh', 'refreshStatus', 'instanceRefresh', 'launchCenterRefresh']) {
     const button = q('#' + id);
     if (button) { button.disabled = busy; button.setAttribute('aria-busy', String(busy)); }
   }
@@ -1662,14 +1560,6 @@ function renderDashboardScan(phase) {
     const last = state.lastSuccessfulScanAt;
     q('#dashboardCheckedAt').textContent = last ? 'Last successful check ' + last.toLocaleTimeString() : 'No successful check yet';
     q('#dashboardCheckedAt').title = last ? last.toLocaleString() : '';
-  }
-  if (busy || failed) {
-    for (const id of ['installGauge', 'studioGauge']) q('#' + id).textContent = busy ? 'CHECK' : 'UNKNOWN';
-    for (const id of ['playerStatus', 'studioStatus', 'robloxSummary']) q('#' + id).textContent = busy ? 'Checking…' : 'Unknown';
-    for (const id of ['playerOverviewDial', 'studioOverviewDial']) q('#' + id)?.classList.remove('ready', 'offline');
-    for (const id of ['playerMeter', 'studioMeter']) q('#' + id).textContent = busy ? 'Scan in progress' : 'Unable to verify installation';
-    q('#launchState').textContent = busy ? 'CHECKING INSTALLATION' : 'INSTALLATION STATUS UNKNOWN';
-    q('#launchHint').textContent = busy ? 'Waiting for detection…' : 'Refresh detection to verify Player availability.';
   }
 }
 
@@ -2086,11 +1976,9 @@ async function loadLaunchHistory() {
 async function launchPlayer(options = {}) {
   if (state.launchPending) return;
   setLaunchBusy(true);
-  q('#launchState').textContent = 'LAUNCHING…';
   try {
     const result = await window.dragonStrap.launchPlayer(options);
     if (result.ok) {
-      q('#launchState').textContent = 'ROBLOX STARTED';
       if (result.performance && !result.performance.ok) {
         showToast(`Roblox launched, but Performance+ was not applied: ${result.performance.message || 'unknown error'}`, true);
       } else {
@@ -2098,7 +1986,6 @@ async function launchPlayer(options = {}) {
       }
       if (result.performance?.ok && !result.performance.skipped) refreshPerformanceState(false);
     } else {
-      q('#launchState').textContent = 'LAUNCH FAILED';
       showToast(result.message || 'Roblox could not be launched.', true);
     }
     setLaunchResult(result, options.target ? 'Experience' : 'Roblox');
@@ -2748,14 +2635,7 @@ async function runMaintenanceSafeRepair() {
   } finally { button.disabled=false; }
 }
 
-q('#homePerfFpsBtn').addEventListener('click', () => openPerformanceControl('#fpsRange'));
-q('#homePerfRenderBtn').addEventListener('click', () => openPerformanceControl('#renderModeChoice'));
-q('#homePerfNetworkBtn').addEventListener('click', () => { switchView('servers'); requestAnimationFrame(() => q('#serverPlaceInput')?.focus()); });
-q('#homePerfChartBtn').addEventListener('click', () => openPerformanceControl('.performance-hero'));
-q('#homePerfAutoBtn').addEventListener('click', enableHomePerformanceAuto);
-q('#homePerfCustomBtn').addEventListener('click', openHomePerformanceCustom);
 
-q('#launchKnob').addEventListener('click', () => launchPlayer({}));
 q('#launchPlayerBtn').addEventListener('click', () => launchPlayer({}));
 q('#launchStudioBtn').addEventListener('click', launchStudio);
 q('#studioLaunchTop').addEventListener('click', launchStudio);
@@ -2802,7 +2682,7 @@ q('#launchInstanceInput').addEventListener('input', scheduleLaunchTargetPreview)
 q('#launchTargetInput').addEventListener('keydown', event => { if (event.key === 'Enter') launchExperience(); });
 q('#launchInstanceInput').addEventListener('keydown', event => { if (event.key === 'Enter') launchExperience(); });
 q('#refreshStatus').addEventListener('click', () => refreshRobloxStatus(true));
-q('#homeRefresh').addEventListener('click', () => refreshRobloxStatus(true));
+q('#accountStatusRefresh').addEventListener('click', () => refreshRobloxStatus(true));
 q('#instanceRefresh').addEventListener('click', () => refreshRobloxStatus(true));
 q('#maintenanceRefreshBtn').addEventListener('click', () => refreshMaintenance(true));
 q('#maintenanceClearDragonBtn').addEventListener('click', () => clearMaintenanceCache('dragonstrap'));
@@ -2851,14 +2731,8 @@ q('#maintenanceExportBtn').addEventListener('click', async () => {
 
 q('#fpsRange').addEventListener('input', event => {
   q('#fpsReadout').textContent = fpsLabel(event.target.value);
-  q('#fpsSlider').value = event.target.value;
 });
 q('#fpsRange').addEventListener('change', event => savePerformancePatch({ fpsCap: Number(event.target.value) }));
-q('#fpsSlider').addEventListener('input', event => {
-  q('#fpsRange').value = event.target.value;
-  q('#fpsReadout').textContent = fpsLabel(event.target.value);
-});
-q('#fpsSlider').addEventListener('change', event => savePerformancePatch({ fpsCap: Number(event.target.value) }));
 qsa('[data-perf-profile]').forEach(button => button.addEventListener('click', () => setProfile(button.dataset.perfProfile)));
 qsa('#renderModeChoice [data-value]').forEach(button => button.addEventListener('click', () => savePerformancePatch({ renderMode: button.dataset.value })));
 qsa('#msaaChoice [data-value]').forEach(button => button.addEventListener('click', () => savePerformancePatch({ msaaMode: button.dataset.value })));
@@ -3085,7 +2959,7 @@ window.dragonStrap.onRobloxStatusChanged(status => {
 
 const restoredView = localStorage.getItem('dragonstrap.activeView');
 if (restoredView && q(`.nav-item[data-tab="${restoredView}"]`)) switchView(restoredView, { deferLoad:true });
-else switchView('home');
+else switchView('accounts');
 
 window.dragonStrap.onUpdateDownloadProgress(progress => {
   state.updates.progress=progress;
@@ -3099,7 +2973,7 @@ window.dragonStrap.onUpdateDownloadProgress(progress => {
 });
 
 (async function initialize() {
-  // DragonStrap 2.0 keeps startup lean: load only shell/home state, then lazy-load feature centers on navigation.
+  // DragonStrap 2.0 keeps startup lean: load only shell state, then lazy-load feature centers on navigation.
   await Promise.all([getAppInfo(), loadSettings()]);
   await refreshRobloxStatus(false);
   if (state.settings?.firstRunComplete === false) openFirstRunGuide();
